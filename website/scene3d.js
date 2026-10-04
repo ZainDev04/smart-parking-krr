@@ -1494,9 +1494,18 @@ function build(models) {
       off.applyAxisAngle(V(0, 1, 0), Math.sin(time * 0.07) * 0.12);
       pos = at.clone().add(off);
     }
-    if (!directing && innerWidth < 980 && activeZone !== "lot") {
-      // narrow screens see less sideways: pull back so each scene still fits
-      pos = at.clone().add(pos.clone().sub(at).multiplyScalar(innerWidth < 600 ? 1.9 : 1.4));
+    // Portrait screens see less sideways. Keep the sideways view of a 5:4
+    // screen: first widen the vertical field of view (up to 60 degrees, more
+    // distorts), then pull the camera back for whatever is still missing.
+    const aspect = innerWidth / innerHeight;
+    const needTan = Math.tan(THREE.MathUtils.degToRad(22.5)) * 1.25 / Math.min(aspect, 1.25);
+    const fov = Math.min(60, THREE.MathUtils.radToDeg(2 * Math.atan(needTan)));
+    if (Math.abs(camera.fov - fov) > 0.01) camera.fov = fov;
+    const back = Math.min(directing ? (director.follow ? 1.2 : 1.35) : 1.9, needTan / Math.tan(THREE.MathUtils.degToRad(fov / 2)));
+    if (back > 1.001) pos = at.clone().add(pos.clone().sub(at).multiplyScalar(back));
+    else if (!directing && innerWidth < 980 && activeZone !== "lot") {
+      // narrow but not portrait (tablets): the panels cover part of the scene
+      pos = at.clone().add(pos.clone().sub(at).multiplyScalar(1.4));
     }
     if (!dragging) { yaw *= Math.pow(0.35, dt); pitch *= Math.pow(0.35, dt); }
     const off = pos.clone().sub(at).applyAxisAngle(V(0, 1, 0), yaw);

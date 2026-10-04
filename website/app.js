@@ -92,7 +92,9 @@
       revealObserver.unobserve(e.target);
       if (e.target._onView) e.target._onView();
     });
-  }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+    // reveal once the top edge is well on screen: a share of the element's own
+    // height left tall blocks (the test table on a phone) blank for a long scroll
+  }, { threshold: 0, rootMargin: "0px 0px -12% 0px" });
   const observe = (node, fn) => { if (!node) return; if (fn) node._onView = fn; revealObserver.observe(node); };
 
   const modeBtn = $("#mode-toggle");

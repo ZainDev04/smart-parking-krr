@@ -230,7 +230,7 @@ a { color: var(--color-accent-ink); text-underline-offset: 3px; }
 .scenario input[type="date"] { font: inherit; color: var(--color-text-primary); background: transparent; border: 1px solid var(--color-border-strong); border-radius: var(--radius-1); padding: 4px 6px; min-height: 32px; }
 .scenario input[type="range"] { width: 150px; accent-color: #f2c230; min-height: 32px; }
 .scenario output { min-width: 5ch; color: var(--color-text-primary); font-weight: 600; font-size: var(--font-size-sm); }
-.scenario__btn { font: inherit; color: var(--color-text-primary); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 4px 0; min-height: 32px; }
+.scenario__btn { font: inherit; color: var(--color-text-primary); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 4px 6px; min-height: 32px; min-width: 32px; }
 .scenario__note { margin: var(--space-2) 0 0; font-size: var(--font-size-xs); color: var(--color-text-muted); max-width: 64ch; min-height: 1.4em; }
 .scenario__note b { color: var(--color-text-primary); }
 .lede { margin-top: var(--space-5); color: var(--color-text-muted); font-size: var(--font-size-lg); line-height: 1.6; opacity: 0; animation: fade-in 900ms var(--ease-out) 450ms forwards; }
@@ -739,3 +739,70 @@ html:not(.is-3d) .quality-toggle { display: none; }
 .footer__credit { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 .footer__credit a { color: inherit; }
 @media (max-width: 480px) { .quality-toggle { display: none; } }
+
+/* ===================================================================== */
+/* Phones. 767px and below: phablets and large phones. 480px and below:  */
+/* phones in portrait (320 iPhone SE, 360-412 standard, 430-448 max).    */
+/* ===================================================================== */
+.brand span { white-space: nowrap; }
+@media (max-width: 767px) {
+  :root { --space-section: 56px; }
+  .topbar__inner { gap: var(--space-4); min-height: 56px; width: min(100% - 32px, var(--wide)); }
+  html { scroll-padding-top: 64px; }
+  .wrap { width: min(100% - 32px, var(--wide)); }
+  .is-3d .stage, .is-3d .stage--full { width: calc(100% - 24px); padding: var(--space-5); border-radius: 14px; }
+  .is-3d .stage .wrap { width: 100%; }
+  .is-3d .hero { padding-inline: 12px; min-height: calc(100svh - 57px); }
+  .is-3d .hero > .hero__copy { padding: 18px; border-radius: 14px; }
+  .is-3d:not(.is-cinema) .lot-panel { width: 100%; max-width: none; }
+  .log { padding: var(--space-5); }
+  .cycle-detail .facts { columns: 1; }
+  .answer { min-height: 0; padding: var(--space-4); }
+  .tree ul { padding-left: var(--space-4); margin-left: 8px; }
+  .figure-btn { padding: var(--space-3); }
+  .lightbox__body { padding: var(--space-3); }
+  .footer { padding: var(--space-6) 0; }
+}
+@media (max-width: 480px) {
+  h1, .is-3d .hero__copy h1 { font-size: 26px; }
+  h2 { font-size: 22px; }
+  .section__intro { font-size: var(--font-size-sm); line-height: 1.6; }
+  .brand { gap: var(--space-3); font-size: 15px; }
+  .mode-toggle { height: 34px; padding: 0 var(--space-3); }
+  .theme-toggle { width: 40px; height: 40px; }
+  .is-3d .stage, .is-3d .stage--full { padding: var(--space-4) 14px; }
+  .is-3d .hero > .hero__copy { padding: 14px; }
+  .scenario { width: 100%; }
+  .scenario input[type="range"] { flex: 1; min-width: 110px; width: auto; }
+  /* full-width buttons that may wrap, so long labels never clip */
+  .lot-controls, .trace-buttons, .answer__tools { width: 100%; }
+  .lot-controls #play, .trace-buttons .btn { flex: 1 1 100%; white-space: normal; text-align: center; line-height: 1.25; }
+  .lot-controls .btn { flex: 1 1 0; min-width: 0; padding-inline: var(--space-4); white-space: normal; text-align: center; line-height: 1.25; }
+  .lot-controls { gap: var(--space-3); }
+  .stepper__bar .btn { flex: 1 1 auto; }
+  .stepper__meter { order: -1; flex-basis: 100%; min-width: 0; }
+  .cycles button { min-height: 58px; padding: var(--space-2) 2px; font-size: 11px; }
+  .cycles button strong { font-size: var(--font-size-sm); }
+  .is-3d .pick__list { grid-template-columns: minmax(0, 1fr); }
+  .pick__opt label { padding: var(--space-3) var(--space-4); }
+  .numbers ul { gap: var(--space-5) var(--space-4); }
+  .numbers strong { font-size: var(--font-size-2xl); }
+  .log__item { grid-template-columns: 44px 1fr; gap: var(--space-1) var(--space-3); }
+  .model pre { padding: var(--space-3); font-size: 12px; }
+  .cases th, .cases td { padding: var(--space-3); }
+  .team { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .footer__inner .btn { width: 100%; white-space: normal; text-align: center; }
+  .driver-dialog, .lightbox { width: calc(100vw - 16px); max-height: calc(100svh - 16px); }
+  .driver-form__body { padding: var(--space-4); max-height: calc(100svh - 160px); }
+  .is-3d.is-cinema .lot-panel { width: calc(100% - 16px); bottom: 8px; }
+  .is-3d.is-cinema .lot-toolbar { padding: var(--space-3) var(--space-4); }
+  .is-3d.is-cinema .lot-controls .btn { flex: 1 1 0; min-height: 40px; }
+}
+@media (max-width: 360px) {
+  .topbar__inner { gap: var(--space-3); width: calc(100% - 24px); }
+  .brand svg { width: 24px; height: 24px; }
+  .brand { font-size: 14px; }
+  .mode-toggle { min-width: 40px; }
+  .wrap { width: calc(100% - 24px); }
+  .cycles { gap: 3px; }
+}
