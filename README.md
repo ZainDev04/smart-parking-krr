@@ -160,7 +160,7 @@ prolog/, ontology/   generated SWI-Prolog program and OWL 2 ontology (opens in P
 docs/report/         the CCP report (.docx, .pdf and its Markdown source)
 docs/generated/      trace sheets used in the report
 docs/figures/        report figures, drawn at print size by tools/figures.py
-docs/viva/           viva guide and presentation script
+docs/viva/           viva guide, presentation script, and a Roman Urdu study guide (asaan_guide.pdf)
 tools/               build scripts
 website/             the project website
 tests/               unit tests
