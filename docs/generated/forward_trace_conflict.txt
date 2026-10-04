@@ -1,20 +1,20 @@
 Priority, conflict and decision firings (morning_rush)
 ============================================================
-Step 31: R23 fires with {X=ali}
-    because student(ali) AND accessibility_badge(ali, no)
-    derive  priority(ali, 1)
+Step 31: R23 fires with {X=zara}
+    because student(zara) AND accessibility_badge(zara, no)
+    derive  priority(zara, 1)
 Step 32: R23 fires with {X=usman}
     because student(usman) AND accessibility_badge(usman, no)
     derive  priority(usman, 1)
-Step 33: R23 fires with {X=zara}
-    because student(zara) AND accessibility_badge(zara, no)
-    derive  priority(zara, 1)
-Step 34: R24 fires with {X=hina}
-    because visitor(hina) AND accessibility_badge(hina, no)
-    derive  priority(hina, 1)
-Step 35: R24 fires with {X=bilal}
+Step 33: R23 fires with {X=ali}
+    because student(ali) AND accessibility_badge(ali, no)
+    derive  priority(ali, 1)
+Step 34: R24 fires with {X=bilal}
     because visitor(bilal) AND accessibility_badge(bilal, no)
     derive  priority(bilal, 1)
+Step 35: R24 fires with {X=hina}
+    because visitor(hina) AND accessibility_badge(hina, no)
+    derive  priority(hina, 1)
 Step 44: R21 fires with {X=sara}
     because person(sara) AND accessibility_badge(sara, yes)
     derive  priority(sara, 3)
@@ -24,21 +24,21 @@ Step 45: R22 fires with {X=ahmed}
 Step 46: R22 fires with {X=fatima}
     because employee(fatima) AND accessibility_badge(fatima, no)
     derive  priority(fatima, 2)
-Step 100: R25 fires with {Y=zara, S=s_a1, TY=850, X=sara, TX=910, PX=3, PY=1}
-    because requests(zara, s_a1, 850) AND requests(sara, s_a1, 910) AND sara \= zara AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(zara, 1) AND 3 > 1
-    derive  loses(zara, s_a1)
-Step 101: R25 fires with {Y=ali, S=s_a1, TY=905, X=sara, TX=910, PX=3, PY=1}
-    because requests(ali, s_a1, 905) AND requests(sara, s_a1, 910) AND sara \= ali AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(ali, 1) AND 3 > 1
-    derive  loses(ali, s_a1)
-Step 102: R25 fires with {Y=usman, S=s_a1, TY=900, X=sara, TX=910, PX=3, PY=1}
+Step 100: R25 fires with {Y=usman, S=s_a1, TY=900, X=sara, TX=910, PX=3, PY=1}
     because requests(usman, s_a1, 900) AND requests(sara, s_a1, 910) AND sara \= usman AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(usman, 1) AND 3 > 1
     derive  loses(usman, s_a1)
-Step 103: R28 fires with {X=bilal, S=s_v1, T=920}
-    because requests(bilal, s_v1, 920) AND can_allocate(bilal, s_v1) AND not loses(bilal, s_v1) AND not double_booked(bilal)
-    derive  allocate(bilal, s_v1)
+Step 101: R25 fires with {Y=zara, S=s_a1, TY=850, X=sara, TX=910, PX=3, PY=1}
+    because requests(zara, s_a1, 850) AND requests(sara, s_a1, 910) AND sara \= zara AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(zara, 1) AND 3 > 1
+    derive  loses(zara, s_a1)
+Step 102: R25 fires with {Y=ali, S=s_a1, TY=905, X=sara, TX=910, PX=3, PY=1}
+    because requests(ali, s_a1, 905) AND requests(sara, s_a1, 910) AND sara \= ali AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(ali, 1) AND 3 > 1
+    derive  loses(ali, s_a1)
+Step 103: R28 fires with {X=ahmed, S=s_e3, T=800}
+    because requests(ahmed, s_e3, 800) AND can_allocate(ahmed, s_e3) AND not loses(ahmed, s_e3) AND not double_booked(ahmed)
+    derive  allocate(ahmed, s_e3)
 Step 104: R28 fires with {X=sara, S=s_a1, T=910}
     because requests(sara, s_a1, 910) AND can_allocate(sara, s_a1) AND not loses(sara, s_a1) AND not double_booked(sara)
     derive  allocate(sara, s_a1)
-Step 105: R28 fires with {X=ahmed, S=s_e3, T=800}
-    because requests(ahmed, s_e3, 800) AND can_allocate(ahmed, s_e3) AND not loses(ahmed, s_e3) AND not double_booked(ahmed)
-    derive  allocate(ahmed, s_e3)
+Step 105: R28 fires with {X=bilal, S=s_v1, T=920}
+    because requests(bilal, s_v1, 920) AND can_allocate(bilal, s_v1) AND not loses(bilal, s_v1) AND not double_booked(bilal)
+    derive  allocate(bilal, s_v1)

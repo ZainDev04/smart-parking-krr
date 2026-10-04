@@ -11,4 +11,3 @@ docs/report/*_new.docx
 .vercel/
 .env*
 node_modules/
-.claude/

@@ -40,7 +40,9 @@ def finalize(path: Path = REPORT, pdf: bool = False) -> int:
         pages = doc.ComputeStatistics(2)       # wdStatisticPages
         doc.Save()
         if pdf:
-            doc.ExportAsFixedFormat(str(path.with_suffix(".pdf").resolve()), 17)   # PDF
+            # 17 = PDF; IncludeDocProps carries the title and authors into the PDF
+            doc.ExportAsFixedFormat(OutputFileName=str(path.with_suffix(".pdf").resolve()),
+                                    ExportFormat=17, IncludeDocProps=True)
         doc.Close(False)
     finally:
         word.Quit()

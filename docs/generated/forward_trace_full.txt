@@ -69,24 +69,24 @@ Initial facts (working memory): 164
 
 Cycle 1 (stratum 0): conflict set = 35 matched rule instances, 35 new fact(s)
 -----------------------------------------------------------------------------
-Step 1: R01 fires with {X=ali}
-    because student(ali)
-    derive  person(ali)
-Step 2: R01 fires with {X=usman}
-    because student(usman)
-    derive  person(usman)
-Step 3: R01 fires with {X=zara}
-    because student(zara)
-    derive  person(zara)
-Step 4: R01 fires with {X=sara}
+Step 1: R01 fires with {X=sara}
     because student(sara)
     derive  person(sara)
-Step 5: R03 fires with {X=hina}
-    because visitor(hina)
-    derive  person(hina)
-Step 6: R03 fires with {X=bilal}
+Step 2: R01 fires with {X=zara}
+    because student(zara)
+    derive  person(zara)
+Step 3: R01 fires with {X=usman}
+    because student(usman)
+    derive  person(usman)
+Step 4: R01 fires with {X=ali}
+    because student(ali)
+    derive  person(ali)
+Step 5: R03 fires with {X=bilal}
     because visitor(bilal)
     derive  person(bilal)
+Step 6: R03 fires with {X=hina}
+    because visitor(hina)
+    derive  person(hina)
 Step 7: R04 fires with {X=ahmed}
     because faculty(ahmed)
     derive  employee(ahmed)
@@ -96,84 +96,84 @@ Step 8: R05 fires with {X=fatima}
 Step 9: R06 fires with {P=p_zara, B=20260701, E=20270630, D=20261002}
     because permit_status(p_zara, active) AND permit_start(p_zara, 20260701) AND permit_expiry(p_zara, 20270630) AND current_date(20261002) AND 20260701 =< 20261002 AND 20270630 >= 20261002
     derive  permit_valid(p_zara)
-Step 10: R06 fires with {P=vp_bilal, B=20261002, E=20261002, D=20261002}
-    because permit_status(vp_bilal, active) AND permit_start(vp_bilal, 20261002) AND permit_expiry(vp_bilal, 20261002) AND current_date(20261002) AND 20261002 =< 20261002 AND 20261002 >= 20261002
-    derive  permit_valid(vp_bilal)
+Step 10: R06 fires with {P=p_sara, B=20260701, E=20270630, D=20261002}
+    because permit_status(p_sara, active) AND permit_start(p_sara, 20260701) AND permit_expiry(p_sara, 20270630) AND current_date(20261002) AND 20260701 =< 20261002 AND 20270630 >= 20261002
+    derive  permit_valid(p_sara)
 Step 11: R06 fires with {P=p_ahmed, B=20260101, E=20271231, D=20261002}
     because permit_status(p_ahmed, active) AND permit_start(p_ahmed, 20260101) AND permit_expiry(p_ahmed, 20271231) AND current_date(20261002) AND 20260101 =< 20261002 AND 20271231 >= 20261002
     derive  permit_valid(p_ahmed)
-Step 12: R06 fires with {P=p_sara, B=20260701, E=20270630, D=20261002}
-    because permit_status(p_sara, active) AND permit_start(p_sara, 20260701) AND permit_expiry(p_sara, 20270630) AND current_date(20261002) AND 20260701 =< 20261002 AND 20270630 >= 20261002
-    derive  permit_valid(p_sara)
+Step 12: R06 fires with {P=p_fatima, B=20260101, E=20271231, D=20261002}
+    because permit_status(p_fatima, active) AND permit_start(p_fatima, 20260101) AND permit_expiry(p_fatima, 20271231) AND current_date(20261002) AND 20260101 =< 20261002 AND 20271231 >= 20261002
+    derive  permit_valid(p_fatima)
 Step 13: R06 fires with {P=p_ali, B=20260701, E=20270630, D=20261002}
     because permit_status(p_ali, active) AND permit_start(p_ali, 20260701) AND permit_expiry(p_ali, 20270630) AND current_date(20261002) AND 20260701 =< 20261002 AND 20270630 >= 20261002
     derive  permit_valid(p_ali)
-Step 14: R06 fires with {P=p_fatima, B=20260101, E=20271231, D=20261002}
-    because permit_status(p_fatima, active) AND permit_start(p_fatima, 20260101) AND permit_expiry(p_fatima, 20271231) AND current_date(20261002) AND 20260101 =< 20261002 AND 20271231 >= 20261002
-    derive  permit_valid(p_fatima)
-Step 15: R07 fires with {X=zara, P=p_zara}
-    because has_permit(zara, p_zara) AND permit_class(p_zara, student_permit) AND student(zara)
-    derive  permit_matches_role(zara, p_zara)
-Step 16: R07 fires with {X=usman, P=p_usman}
+Step 14: R06 fires with {P=vp_bilal, B=20261002, E=20261002, D=20261002}
+    because permit_status(vp_bilal, active) AND permit_start(vp_bilal, 20261002) AND permit_expiry(vp_bilal, 20261002) AND current_date(20261002) AND 20261002 =< 20261002 AND 20261002 >= 20261002
+    derive  permit_valid(vp_bilal)
+Step 15: R07 fires with {X=usman, P=p_usman}
     because has_permit(usman, p_usman) AND permit_class(p_usman, student_permit) AND student(usman)
     derive  permit_matches_role(usman, p_usman)
+Step 16: R07 fires with {X=ali, P=p_ali}
+    because has_permit(ali, p_ali) AND permit_class(p_ali, student_permit) AND student(ali)
+    derive  permit_matches_role(ali, p_ali)
 Step 17: R07 fires with {X=sara, P=p_sara}
     because has_permit(sara, p_sara) AND permit_class(p_sara, student_permit) AND student(sara)
     derive  permit_matches_role(sara, p_sara)
-Step 18: R07 fires with {X=ali, P=p_ali}
-    because has_permit(ali, p_ali) AND permit_class(p_ali, student_permit) AND student(ali)
-    derive  permit_matches_role(ali, p_ali)
+Step 18: R07 fires with {X=zara, P=p_zara}
+    because has_permit(zara, p_zara) AND permit_class(p_zara, student_permit) AND student(zara)
+    derive  permit_matches_role(zara, p_zara)
 Step 19: R09 fires with {X=bilal, P=vp_bilal}
     because has_permit(bilal, vp_bilal) AND permit_class(vp_bilal, visitor_pass) AND visitor(bilal)
     derive  permit_matches_role(bilal, vp_bilal)
-Step 20: R12 fires with {Z=zone_a, O=7, C=22, H=10}
-    because zone_opens(zone_a, 7) AND zone_closes(zone_a, 22) AND current_hour(10) AND 10 >= 7 AND 10 < 22
-    derive  zone_open(zone_a)
-Step 21: R12 fires with {Z=zone_e, O=6, C=23, H=10}
+Step 20: R12 fires with {Z=zone_e, O=6, C=23, H=10}
     because zone_opens(zone_e, 6) AND zone_closes(zone_e, 23) AND current_hour(10) AND 10 >= 6 AND 10 < 23
     derive  zone_open(zone_e)
+Step 21: R12 fires with {Z=zone_a, O=7, C=22, H=10}
+    because zone_opens(zone_a, 7) AND zone_closes(zone_a, 22) AND current_hour(10) AND 10 >= 7 AND 10 < 22
+    derive  zone_open(zone_a)
 Step 22: R12 fires with {Z=zone_v, O=8, C=17, H=10}
     because zone_opens(zone_v, 8) AND zone_closes(zone_v, 17) AND current_hour(10) AND 10 >= 8 AND 10 < 17
     derive  zone_open(zone_v)
-Step 23: R17 fires with {S=s_a4}
-    because space_status(s_a4, vacant)
-    derive  space_free(s_a4)
-Step 24: R17 fires with {S=s_a1}
+Step 23: R17 fires with {S=s_a1}
     because space_status(s_a1, vacant)
     derive  space_free(s_a1)
-Step 25: R17 fires with {S=s_e1}
-    because space_status(s_e1, vacant)
-    derive  space_free(s_e1)
+Step 24: R17 fires with {S=s_a3}
+    because space_status(s_a3, vacant)
+    derive  space_free(s_a3)
+Step 25: R17 fires with {S=s_a4}
+    because space_status(s_a4, vacant)
+    derive  space_free(s_a4)
 Step 26: R17 fires with {S=s_e2}
     because space_status(s_e2, vacant)
     derive  space_free(s_e2)
-Step 27: R17 fires with {S=s_a3}
-    because space_status(s_a3, vacant)
-    derive  space_free(s_a3)
-Step 28: R17 fires with {S=s_v1}
+Step 27: R17 fires with {S=s_v1}
     because space_status(s_v1, vacant)
     derive  space_free(s_v1)
-Step 29: R18 fires with {X=ahmed, S=s_e3, R=r2, D=20261002}
-    because reserved_by(r2, ahmed) AND reserved_space(r2, s_e3) AND reservation_date(r2, 20261002) AND current_date(20261002)
-    derive  holds_reservation(ahmed, s_e3)
-Step 30: R18 fires with {X=zara, S=s_a5, R=r1, D=20261002}
+Step 28: R17 fires with {S=s_e1}
+    because space_status(s_e1, vacant)
+    derive  space_free(s_e1)
+Step 29: R18 fires with {X=zara, S=s_a5, R=r1, D=20261002}
     because reserved_by(r1, zara) AND reserved_space(r1, s_a5) AND reservation_date(r1, 20261002) AND current_date(20261002)
     derive  holds_reservation(zara, s_a5)
-Step 31: R23 fires with {X=ali}
-    because student(ali) AND accessibility_badge(ali, no)
-    derive  priority(ali, 1)
+Step 30: R18 fires with {X=ahmed, S=s_e3, R=r2, D=20261002}
+    because reserved_by(r2, ahmed) AND reserved_space(r2, s_e3) AND reservation_date(r2, 20261002) AND current_date(20261002)
+    derive  holds_reservation(ahmed, s_e3)
+Step 31: R23 fires with {X=zara}
+    because student(zara) AND accessibility_badge(zara, no)
+    derive  priority(zara, 1)
 Step 32: R23 fires with {X=usman}
     because student(usman) AND accessibility_badge(usman, no)
     derive  priority(usman, 1)
-Step 33: R23 fires with {X=zara}
-    because student(zara) AND accessibility_badge(zara, no)
-    derive  priority(zara, 1)
-Step 34: R24 fires with {X=hina}
-    because visitor(hina) AND accessibility_badge(hina, no)
-    derive  priority(hina, 1)
-Step 35: R24 fires with {X=bilal}
+Step 33: R23 fires with {X=ali}
+    because student(ali) AND accessibility_badge(ali, no)
+    derive  priority(ali, 1)
+Step 34: R24 fires with {X=bilal}
     because visitor(bilal) AND accessibility_badge(bilal, no)
     derive  priority(bilal, 1)
+Step 35: R24 fires with {X=hina}
+    because visitor(hina) AND accessibility_badge(hina, no)
+    derive  priority(hina, 1)
 
 Cycle 2 (stratum 0): conflict set = 46 matched rule instances, 11 new fact(s)
 -----------------------------------------------------------------------------
@@ -183,24 +183,24 @@ Step 36: R02 fires with {X=ahmed}
 Step 37: R02 fires with {X=fatima}
     because employee(fatima)
     derive  person(fatima)
-Step 38: R08 fires with {X=ahmed, P=p_ahmed}
-    because has_permit(ahmed, p_ahmed) AND permit_class(p_ahmed, employee_permit) AND employee(ahmed)
-    derive  permit_matches_role(ahmed, p_ahmed)
-Step 39: R08 fires with {X=fatima, P=p_fatima}
+Step 38: R08 fires with {X=fatima, P=p_fatima}
     because has_permit(fatima, p_fatima) AND permit_class(p_fatima, employee_permit) AND employee(fatima)
     derive  permit_matches_role(fatima, p_fatima)
+Step 39: R08 fires with {X=ahmed, P=p_ahmed}
+    because has_permit(ahmed, p_ahmed) AND permit_class(p_ahmed, employee_permit) AND employee(ahmed)
+    derive  permit_matches_role(ahmed, p_ahmed)
 Step 40: R10 fires with {X=sara, P=p_sara}
     because permit_matches_role(sara, p_sara) AND permit_valid(p_sara)
     derive  authorized(sara, p_sara)
 Step 41: R10 fires with {X=ali, P=p_ali}
     because permit_matches_role(ali, p_ali) AND permit_valid(p_ali)
     derive  authorized(ali, p_ali)
-Step 42: R10 fires with {X=zara, P=p_zara}
-    because permit_matches_role(zara, p_zara) AND permit_valid(p_zara)
-    derive  authorized(zara, p_zara)
-Step 43: R10 fires with {X=bilal, P=vp_bilal}
+Step 42: R10 fires with {X=bilal, P=vp_bilal}
     because permit_matches_role(bilal, vp_bilal) AND permit_valid(vp_bilal)
     derive  authorized(bilal, vp_bilal)
+Step 43: R10 fires with {X=zara, P=p_zara}
+    because permit_matches_role(zara, p_zara) AND permit_valid(p_zara)
+    derive  authorized(zara, p_zara)
 Step 44: R21 fires with {X=sara}
     because person(sara) AND accessibility_badge(sara, yes)
     derive  priority(sara, 3)
@@ -219,156 +219,156 @@ Step 47: R10 fires with {X=fatima, P=p_fatima}
 Step 48: R10 fires with {X=ahmed, P=p_ahmed}
     because permit_matches_role(ahmed, p_ahmed) AND permit_valid(p_ahmed)
     derive  authorized(ahmed, p_ahmed)
-Step 49: R11 fires with {X=sara, P=p_sara}
-    because authorized(sara, p_sara)
-    derive  authorized_driver(sara)
-Step 50: R11 fires with {X=ali, P=p_ali}
-    because authorized(ali, p_ali)
-    derive  authorized_driver(ali)
-Step 51: R11 fires with {X=zara, P=p_zara}
-    because authorized(zara, p_zara)
-    derive  authorized_driver(zara)
-Step 52: R11 fires with {X=bilal, P=vp_bilal}
+Step 49: R11 fires with {X=bilal, P=vp_bilal}
     because authorized(bilal, vp_bilal)
     derive  authorized_driver(bilal)
-Step 53: R13 fires with {X=sara, Z=zone_a, P=p_sara, C=student_permit, T=student_zone}
-    because authorized(sara, p_sara) AND permit_class(p_sara, student_permit) AND grants(student_permit, student_zone) AND zone_type(zone_a, student_zone) AND zone_open(zone_a)
-    derive  zone_access(sara, zone_a)
-Step 54: R13 fires with {X=ali, Z=zone_a, P=p_ali, C=student_permit, T=student_zone}
-    because authorized(ali, p_ali) AND permit_class(p_ali, student_permit) AND grants(student_permit, student_zone) AND zone_type(zone_a, student_zone) AND zone_open(zone_a)
-    derive  zone_access(ali, zone_a)
-Step 55: R13 fires with {X=zara, Z=zone_a, P=p_zara, C=student_permit, T=student_zone}
-    because authorized(zara, p_zara) AND permit_class(p_zara, student_permit) AND grants(student_permit, student_zone) AND zone_type(zone_a, student_zone) AND zone_open(zone_a)
-    derive  zone_access(zara, zone_a)
-Step 56: R13 fires with {X=bilal, Z=zone_v, P=vp_bilal, C=visitor_pass, T=visitor_zone}
+Step 50: R11 fires with {X=zara, P=p_zara}
+    because authorized(zara, p_zara)
+    derive  authorized_driver(zara)
+Step 51: R11 fires with {X=sara, P=p_sara}
+    because authorized(sara, p_sara)
+    derive  authorized_driver(sara)
+Step 52: R11 fires with {X=ali, P=p_ali}
+    because authorized(ali, p_ali)
+    derive  authorized_driver(ali)
+Step 53: R13 fires with {X=bilal, Z=zone_v, P=vp_bilal, C=visitor_pass, T=visitor_zone}
     because authorized(bilal, vp_bilal) AND permit_class(vp_bilal, visitor_pass) AND grants(visitor_pass, visitor_zone) AND zone_type(zone_v, visitor_zone) AND zone_open(zone_v)
     derive  zone_access(bilal, zone_v)
+Step 54: R13 fires with {X=zara, Z=zone_a, P=p_zara, C=student_permit, T=student_zone}
+    because authorized(zara, p_zara) AND permit_class(p_zara, student_permit) AND grants(student_permit, student_zone) AND zone_type(zone_a, student_zone) AND zone_open(zone_a)
+    derive  zone_access(zara, zone_a)
+Step 55: R13 fires with {X=sara, Z=zone_a, P=p_sara, C=student_permit, T=student_zone}
+    because authorized(sara, p_sara) AND permit_class(p_sara, student_permit) AND grants(student_permit, student_zone) AND zone_type(zone_a, student_zone) AND zone_open(zone_a)
+    derive  zone_access(sara, zone_a)
+Step 56: R13 fires with {X=ali, Z=zone_a, P=p_ali, C=student_permit, T=student_zone}
+    because authorized(ali, p_ali) AND permit_class(p_ali, student_permit) AND grants(student_permit, student_zone) AND zone_type(zone_a, student_zone) AND zone_open(zone_a)
+    derive  zone_access(ali, zone_a)
 
 Cycle 4 (stratum 0): conflict set = 73 matched rule instances, 17 new fact(s)
 -----------------------------------------------------------------------------
-Step 57: R11 fires with {X=ahmed, P=p_ahmed}
-    because authorized(ahmed, p_ahmed)
-    derive  authorized_driver(ahmed)
-Step 58: R11 fires with {X=fatima, P=p_fatima}
+Step 57: R11 fires with {X=fatima, P=p_fatima}
     because authorized(fatima, p_fatima)
     derive  authorized_driver(fatima)
-Step 59: R13 fires with {X=ahmed, Z=zone_e, P=p_ahmed, C=employee_permit, T=employee_zone}
-    because authorized(ahmed, p_ahmed) AND permit_class(p_ahmed, employee_permit) AND grants(employee_permit, employee_zone) AND zone_type(zone_e, employee_zone) AND zone_open(zone_e)
-    derive  zone_access(ahmed, zone_e)
-Step 60: R13 fires with {X=fatima, Z=zone_e, P=p_fatima, C=employee_permit, T=employee_zone}
+Step 58: R11 fires with {X=ahmed, P=p_ahmed}
+    because authorized(ahmed, p_ahmed)
+    derive  authorized_driver(ahmed)
+Step 59: R13 fires with {X=fatima, Z=zone_e, P=p_fatima, C=employee_permit, T=employee_zone}
     because authorized(fatima, p_fatima) AND permit_class(p_fatima, employee_permit) AND grants(employee_permit, employee_zone) AND zone_type(zone_e, employee_zone) AND zone_open(zone_e)
     derive  zone_access(fatima, zone_e)
+Step 60: R13 fires with {X=ahmed, Z=zone_e, P=p_ahmed, C=employee_permit, T=employee_zone}
+    because authorized(ahmed, p_ahmed) AND permit_class(p_ahmed, employee_permit) AND grants(employee_permit, employee_zone) AND zone_type(zone_e, employee_zone) AND zone_open(zone_e)
+    derive  zone_access(ahmed, zone_e)
 Step 61: R14 fires with {X=zara, S=s_a5, Z=zone_a, V=car_zara, VT=car, ST=standard}
     because zone_access(zara, zone_a) AND located_in(s_a5, zone_a) AND owns(zara, car_zara) AND vehicle_type(car_zara, car) AND space_type(s_a5, standard) AND fits(car, standard)
     derive  suitable_space(zara, s_a5)
-Step 62: R14 fires with {X=zara, S=s_a3, Z=zone_a, V=car_zara, VT=car, ST=accessible}
-    because zone_access(zara, zone_a) AND located_in(s_a3, zone_a) AND owns(zara, car_zara) AND vehicle_type(car_zara, car) AND space_type(s_a3, accessible) AND fits(car, accessible)
-    derive  suitable_space(zara, s_a3)
+Step 62: R14 fires with {X=zara, S=s_a2, Z=zone_a, V=car_zara, VT=car, ST=standard}
+    because zone_access(zara, zone_a) AND located_in(s_a2, zone_a) AND owns(zara, car_zara) AND vehicle_type(car_zara, car) AND space_type(s_a2, standard) AND fits(car, standard)
+    derive  suitable_space(zara, s_a2)
 Step 63: R14 fires with {X=zara, S=s_a1, Z=zone_a, V=car_zara, VT=car, ST=standard}
     because zone_access(zara, zone_a) AND located_in(s_a1, zone_a) AND owns(zara, car_zara) AND vehicle_type(car_zara, car) AND space_type(s_a1, standard) AND fits(car, standard)
     derive  suitable_space(zara, s_a1)
-Step 64: R14 fires with {X=zara, S=s_a2, Z=zone_a, V=car_zara, VT=car, ST=standard}
-    because zone_access(zara, zone_a) AND located_in(s_a2, zone_a) AND owns(zara, car_zara) AND vehicle_type(car_zara, car) AND space_type(s_a2, standard) AND fits(car, standard)
-    derive  suitable_space(zara, s_a2)
-Step 65: R14 fires with {X=ali, S=s_a5, Z=zone_a, V=car_ali, VT=car, ST=standard}
-    because zone_access(ali, zone_a) AND located_in(s_a5, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a5, standard) AND fits(car, standard)
-    derive  suitable_space(ali, s_a5)
-Step 66: R14 fires with {X=ali, S=s_a3, Z=zone_a, V=car_ali, VT=car, ST=accessible}
-    because zone_access(ali, zone_a) AND located_in(s_a3, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a3, accessible) AND fits(car, accessible)
-    derive  suitable_space(ali, s_a3)
-Step 67: R14 fires with {X=ali, S=s_a1, Z=zone_a, V=car_ali, VT=car, ST=standard}
-    because zone_access(ali, zone_a) AND located_in(s_a1, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a1, standard) AND fits(car, standard)
-    derive  suitable_space(ali, s_a1)
-Step 68: R14 fires with {X=ali, S=s_a2, Z=zone_a, V=car_ali, VT=car, ST=standard}
-    because zone_access(ali, zone_a) AND located_in(s_a2, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a2, standard) AND fits(car, standard)
-    derive  suitable_space(ali, s_a2)
-Step 69: R14 fires with {X=bilal, S=s_v1, Z=zone_v, V=car_bilal, VT=car, ST=standard}
-    because zone_access(bilal, zone_v) AND located_in(s_v1, zone_v) AND owns(bilal, car_bilal) AND vehicle_type(car_bilal, car) AND space_type(s_v1, standard) AND fits(car, standard)
-    derive  suitable_space(bilal, s_v1)
-Step 70: R14 fires with {X=sara, S=s_a5, Z=zone_a, V=car_sara, VT=car, ST=standard}
+Step 64: R14 fires with {X=zara, S=s_a3, Z=zone_a, V=car_zara, VT=car, ST=accessible}
+    because zone_access(zara, zone_a) AND located_in(s_a3, zone_a) AND owns(zara, car_zara) AND vehicle_type(car_zara, car) AND space_type(s_a3, accessible) AND fits(car, accessible)
+    derive  suitable_space(zara, s_a3)
+Step 65: R14 fires with {X=sara, S=s_a5, Z=zone_a, V=car_sara, VT=car, ST=standard}
     because zone_access(sara, zone_a) AND located_in(s_a5, zone_a) AND owns(sara, car_sara) AND vehicle_type(car_sara, car) AND space_type(s_a5, standard) AND fits(car, standard)
     derive  suitable_space(sara, s_a5)
-Step 71: R14 fires with {X=sara, S=s_a3, Z=zone_a, V=car_sara, VT=car, ST=accessible}
-    because zone_access(sara, zone_a) AND located_in(s_a3, zone_a) AND owns(sara, car_sara) AND vehicle_type(car_sara, car) AND space_type(s_a3, accessible) AND fits(car, accessible)
-    derive  suitable_space(sara, s_a3)
-Step 72: R14 fires with {X=sara, S=s_a1, Z=zone_a, V=car_sara, VT=car, ST=standard}
-    because zone_access(sara, zone_a) AND located_in(s_a1, zone_a) AND owns(sara, car_sara) AND vehicle_type(car_sara, car) AND space_type(s_a1, standard) AND fits(car, standard)
-    derive  suitable_space(sara, s_a1)
-Step 73: R14 fires with {X=sara, S=s_a2, Z=zone_a, V=car_sara, VT=car, ST=standard}
+Step 66: R14 fires with {X=sara, S=s_a2, Z=zone_a, V=car_sara, VT=car, ST=standard}
     because zone_access(sara, zone_a) AND located_in(s_a2, zone_a) AND owns(sara, car_sara) AND vehicle_type(car_sara, car) AND space_type(s_a2, standard) AND fits(car, standard)
     derive  suitable_space(sara, s_a2)
+Step 67: R14 fires with {X=sara, S=s_a1, Z=zone_a, V=car_sara, VT=car, ST=standard}
+    because zone_access(sara, zone_a) AND located_in(s_a1, zone_a) AND owns(sara, car_sara) AND vehicle_type(car_sara, car) AND space_type(s_a1, standard) AND fits(car, standard)
+    derive  suitable_space(sara, s_a1)
+Step 68: R14 fires with {X=sara, S=s_a3, Z=zone_a, V=car_sara, VT=car, ST=accessible}
+    because zone_access(sara, zone_a) AND located_in(s_a3, zone_a) AND owns(sara, car_sara) AND vehicle_type(car_sara, car) AND space_type(s_a3, accessible) AND fits(car, accessible)
+    derive  suitable_space(sara, s_a3)
+Step 69: R14 fires with {X=ali, S=s_a5, Z=zone_a, V=car_ali, VT=car, ST=standard}
+    because zone_access(ali, zone_a) AND located_in(s_a5, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a5, standard) AND fits(car, standard)
+    derive  suitable_space(ali, s_a5)
+Step 70: R14 fires with {X=ali, S=s_a2, Z=zone_a, V=car_ali, VT=car, ST=standard}
+    because zone_access(ali, zone_a) AND located_in(s_a2, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a2, standard) AND fits(car, standard)
+    derive  suitable_space(ali, s_a2)
+Step 71: R14 fires with {X=ali, S=s_a1, Z=zone_a, V=car_ali, VT=car, ST=standard}
+    because zone_access(ali, zone_a) AND located_in(s_a1, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a1, standard) AND fits(car, standard)
+    derive  suitable_space(ali, s_a1)
+Step 72: R14 fires with {X=ali, S=s_a3, Z=zone_a, V=car_ali, VT=car, ST=accessible}
+    because zone_access(ali, zone_a) AND located_in(s_a3, zone_a) AND owns(ali, car_ali) AND vehicle_type(car_ali, car) AND space_type(s_a3, accessible) AND fits(car, accessible)
+    derive  suitable_space(ali, s_a3)
+Step 73: R14 fires with {X=bilal, S=s_v1, Z=zone_v, V=car_bilal, VT=car, ST=standard}
+    because zone_access(bilal, zone_v) AND located_in(s_v1, zone_v) AND owns(bilal, car_bilal) AND vehicle_type(car_bilal, car) AND space_type(s_v1, standard) AND fits(car, standard)
+    derive  suitable_space(bilal, s_v1)
 
 Cycle 5 (stratum 0): conflict set = 87 matched rule instances, 14 new fact(s)
 -----------------------------------------------------------------------------
-Step 74: R14 fires with {X=ahmed, S=s_e2, Z=zone_e, V=ev_ahmed, VT=electric_car, ST=ev_charging}
-    because zone_access(ahmed, zone_e) AND located_in(s_e2, zone_e) AND owns(ahmed, ev_ahmed) AND vehicle_type(ev_ahmed, electric_car) AND space_type(s_e2, ev_charging) AND fits(electric_car, ev_charging)
-    derive  suitable_space(ahmed, s_e2)
-Step 75: R14 fires with {X=ahmed, S=s_e3, Z=zone_e, V=ev_ahmed, VT=electric_car, ST=standard}
-    because zone_access(ahmed, zone_e) AND located_in(s_e3, zone_e) AND owns(ahmed, ev_ahmed) AND vehicle_type(ev_ahmed, electric_car) AND space_type(s_e3, standard) AND fits(electric_car, standard)
-    derive  suitable_space(ahmed, s_e3)
-Step 76: R14 fires with {X=ahmed, S=s_e1, Z=zone_e, V=ev_ahmed, VT=electric_car, ST=standard}
+Step 74: R14 fires with {X=ahmed, S=s_e1, Z=zone_e, V=ev_ahmed, VT=electric_car, ST=standard}
     because zone_access(ahmed, zone_e) AND located_in(s_e1, zone_e) AND owns(ahmed, ev_ahmed) AND vehicle_type(ev_ahmed, electric_car) AND space_type(s_e1, standard) AND fits(electric_car, standard)
     derive  suitable_space(ahmed, s_e1)
-Step 77: R15 fires with {X=sara, S=s_a1, T=standard}
-    because suitable_space(sara, s_a1) AND space_type(s_a1, standard) AND open_type(standard)
-    derive  eligible_for_space(sara, s_a1)
-Step 78: R15 fires with {X=ali, S=s_a1, T=standard}
-    because suitable_space(ali, s_a1) AND space_type(s_a1, standard) AND open_type(standard)
-    derive  eligible_for_space(ali, s_a1)
+Step 75: R14 fires with {X=ahmed, S=s_e2, Z=zone_e, V=ev_ahmed, VT=electric_car, ST=ev_charging}
+    because zone_access(ahmed, zone_e) AND located_in(s_e2, zone_e) AND owns(ahmed, ev_ahmed) AND vehicle_type(ev_ahmed, electric_car) AND space_type(s_e2, ev_charging) AND fits(electric_car, ev_charging)
+    derive  suitable_space(ahmed, s_e2)
+Step 76: R14 fires with {X=ahmed, S=s_e3, Z=zone_e, V=ev_ahmed, VT=electric_car, ST=standard}
+    because zone_access(ahmed, zone_e) AND located_in(s_e3, zone_e) AND owns(ahmed, ev_ahmed) AND vehicle_type(ev_ahmed, electric_car) AND space_type(s_e3, standard) AND fits(electric_car, standard)
+    derive  suitable_space(ahmed, s_e3)
+Step 77: R15 fires with {X=ali, S=s_a5, T=standard}
+    because suitable_space(ali, s_a5) AND space_type(s_a5, standard) AND open_type(standard)
+    derive  eligible_for_space(ali, s_a5)
+Step 78: R15 fires with {X=sara, S=s_a5, T=standard}
+    because suitable_space(sara, s_a5) AND space_type(s_a5, standard) AND open_type(standard)
+    derive  eligible_for_space(sara, s_a5)
 Step 79: R15 fires with {X=zara, S=s_a2, T=standard}
     because suitable_space(zara, s_a2) AND space_type(s_a2, standard) AND open_type(standard)
     derive  eligible_for_space(zara, s_a2)
-Step 80: R15 fires with {X=sara, S=s_a5, T=standard}
-    because suitable_space(sara, s_a5) AND space_type(s_a5, standard) AND open_type(standard)
-    derive  eligible_for_space(sara, s_a5)
-Step 81: R15 fires with {X=sara, S=s_a2, T=standard}
-    because suitable_space(sara, s_a2) AND space_type(s_a2, standard) AND open_type(standard)
-    derive  eligible_for_space(sara, s_a2)
-Step 82: R15 fires with {X=zara, S=s_a5, T=standard}
-    because suitable_space(zara, s_a5) AND space_type(s_a5, standard) AND open_type(standard)
-    derive  eligible_for_space(zara, s_a5)
-Step 83: R15 fires with {X=ali, S=s_a5, T=standard}
-    because suitable_space(ali, s_a5) AND space_type(s_a5, standard) AND open_type(standard)
-    derive  eligible_for_space(ali, s_a5)
-Step 84: R15 fires with {X=ali, S=s_a2, T=standard}
+Step 80: R15 fires with {X=ali, S=s_a1, T=standard}
+    because suitable_space(ali, s_a1) AND space_type(s_a1, standard) AND open_type(standard)
+    derive  eligible_for_space(ali, s_a1)
+Step 81: R15 fires with {X=ali, S=s_a2, T=standard}
     because suitable_space(ali, s_a2) AND space_type(s_a2, standard) AND open_type(standard)
     derive  eligible_for_space(ali, s_a2)
-Step 85: R15 fires with {X=bilal, S=s_v1, T=standard}
+Step 82: R15 fires with {X=sara, S=s_a2, T=standard}
+    because suitable_space(sara, s_a2) AND space_type(s_a2, standard) AND open_type(standard)
+    derive  eligible_for_space(sara, s_a2)
+Step 83: R15 fires with {X=bilal, S=s_v1, T=standard}
     because suitable_space(bilal, s_v1) AND space_type(s_v1, standard) AND open_type(standard)
     derive  eligible_for_space(bilal, s_v1)
-Step 86: R15 fires with {X=zara, S=s_a1, T=standard}
+Step 84: R15 fires with {X=zara, S=s_a1, T=standard}
     because suitable_space(zara, s_a1) AND space_type(s_a1, standard) AND open_type(standard)
     derive  eligible_for_space(zara, s_a1)
+Step 85: R15 fires with {X=zara, S=s_a5, T=standard}
+    because suitable_space(zara, s_a5) AND space_type(s_a5, standard) AND open_type(standard)
+    derive  eligible_for_space(zara, s_a5)
+Step 86: R15 fires with {X=sara, S=s_a1, T=standard}
+    because suitable_space(sara, s_a1) AND space_type(s_a1, standard) AND open_type(standard)
+    derive  eligible_for_space(sara, s_a1)
 Step 87: R16 fires with {X=sara, S=s_a3}
     because suitable_space(sara, s_a3) AND space_type(s_a3, accessible) AND accessibility_badge(sara, yes)
     derive  eligible_for_space(sara, s_a3)
 
 Cycle 6 (stratum 0): conflict set = 96 matched rule instances, 9 new fact(s)
 ----------------------------------------------------------------------------
-Step 88: R15 fires with {X=ahmed, S=s_e3, T=standard}
-    because suitable_space(ahmed, s_e3) AND space_type(s_e3, standard) AND open_type(standard)
-    derive  eligible_for_space(ahmed, s_e3)
-Step 89: R15 fires with {X=ahmed, S=s_e1, T=standard}
+Step 88: R15 fires with {X=ahmed, S=s_e1, T=standard}
     because suitable_space(ahmed, s_e1) AND space_type(s_e1, standard) AND open_type(standard)
     derive  eligible_for_space(ahmed, s_e1)
-Step 90: R15 fires with {X=ahmed, S=s_e2, T=ev_charging}
+Step 89: R15 fires with {X=ahmed, S=s_e2, T=ev_charging}
     because suitable_space(ahmed, s_e2) AND space_type(s_e2, ev_charging) AND open_type(ev_charging)
     derive  eligible_for_space(ahmed, s_e2)
-Step 91: R19 fires with {X=sara, S=s_a3}
-    because eligible_for_space(sara, s_a3) AND space_free(s_a3)
-    derive  can_allocate(sara, s_a3)
-Step 92: R19 fires with {X=sara, S=s_a1}
-    because eligible_for_space(sara, s_a1) AND space_free(s_a1)
-    derive  can_allocate(sara, s_a1)
-Step 93: R19 fires with {X=bilal, S=s_v1}
+Step 90: R15 fires with {X=ahmed, S=s_e3, T=standard}
+    because suitable_space(ahmed, s_e3) AND space_type(s_e3, standard) AND open_type(standard)
+    derive  eligible_for_space(ahmed, s_e3)
+Step 91: R19 fires with {X=bilal, S=s_v1}
     because eligible_for_space(bilal, s_v1) AND space_free(s_v1)
     derive  can_allocate(bilal, s_v1)
+Step 92: R19 fires with {X=ali, S=s_a1}
+    because eligible_for_space(ali, s_a1) AND space_free(s_a1)
+    derive  can_allocate(ali, s_a1)
+Step 93: R19 fires with {X=sara, S=s_a3}
+    because eligible_for_space(sara, s_a3) AND space_free(s_a3)
+    derive  can_allocate(sara, s_a3)
 Step 94: R19 fires with {X=zara, S=s_a1}
     because eligible_for_space(zara, s_a1) AND space_free(s_a1)
     derive  can_allocate(zara, s_a1)
-Step 95: R19 fires with {X=ali, S=s_a1}
-    because eligible_for_space(ali, s_a1) AND space_free(s_a1)
-    derive  can_allocate(ali, s_a1)
+Step 95: R19 fires with {X=sara, S=s_a1}
+    because eligible_for_space(sara, s_a1) AND space_free(s_a1)
+    derive  can_allocate(sara, s_a1)
 Step 96: R20 fires with {X=zara, S=s_a5}
     because eligible_for_space(zara, s_a5) AND space_status(s_a5, reserved) AND holds_reservation(zara, s_a5)
     derive  can_allocate(zara, s_a5)
@@ -384,15 +384,15 @@ Step 98: R19 fires with {X=ahmed, S=s_e2}
 Step 99: R20 fires with {X=ahmed, S=s_e3}
     because eligible_for_space(ahmed, s_e3) AND space_status(s_e3, reserved) AND holds_reservation(ahmed, s_e3)
     derive  can_allocate(ahmed, s_e3)
-Step 100: R25 fires with {Y=zara, S=s_a1, TY=850, X=sara, TX=910, PX=3, PY=1}
-    because requests(zara, s_a1, 850) AND requests(sara, s_a1, 910) AND sara \= zara AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(zara, 1) AND 3 > 1
-    derive  loses(zara, s_a1)
-Step 101: R25 fires with {Y=ali, S=s_a1, TY=905, X=sara, TX=910, PX=3, PY=1}
-    because requests(ali, s_a1, 905) AND requests(sara, s_a1, 910) AND sara \= ali AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(ali, 1) AND 3 > 1
-    derive  loses(ali, s_a1)
-Step 102: R25 fires with {Y=usman, S=s_a1, TY=900, X=sara, TX=910, PX=3, PY=1}
+Step 100: R25 fires with {Y=usman, S=s_a1, TY=900, X=sara, TX=910, PX=3, PY=1}
     because requests(usman, s_a1, 900) AND requests(sara, s_a1, 910) AND sara \= usman AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(usman, 1) AND 3 > 1
     derive  loses(usman, s_a1)
+Step 101: R25 fires with {Y=zara, S=s_a1, TY=850, X=sara, TX=910, PX=3, PY=1}
+    because requests(zara, s_a1, 850) AND requests(sara, s_a1, 910) AND sara \= zara AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(zara, 1) AND 3 > 1
+    derive  loses(zara, s_a1)
+Step 102: R25 fires with {Y=ali, S=s_a1, TY=905, X=sara, TX=910, PX=3, PY=1}
+    because requests(ali, s_a1, 905) AND requests(sara, s_a1, 910) AND sara \= ali AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(ali, 1) AND 3 > 1
+    derive  loses(ali, s_a1)
 
 Cycle 8 (stratum 0): conflict set = 104 matched rule instances, 0 new fact(s)
 -----------------------------------------------------------------------------
@@ -400,15 +400,15 @@ Cycle 8 (stratum 0): conflict set = 104 matched rule instances, 0 new fact(s)
 
 Cycle 9 (stratum 1): conflict set = 3 matched rule instances, 3 new fact(s)
 ---------------------------------------------------------------------------
-Step 103: R28 fires with {X=bilal, S=s_v1, T=920}
-    because requests(bilal, s_v1, 920) AND can_allocate(bilal, s_v1) AND not loses(bilal, s_v1) AND not double_booked(bilal)
-    derive  allocate(bilal, s_v1)
+Step 103: R28 fires with {X=ahmed, S=s_e3, T=800}
+    because requests(ahmed, s_e3, 800) AND can_allocate(ahmed, s_e3) AND not loses(ahmed, s_e3) AND not double_booked(ahmed)
+    derive  allocate(ahmed, s_e3)
 Step 104: R28 fires with {X=sara, S=s_a1, T=910}
     because requests(sara, s_a1, 910) AND can_allocate(sara, s_a1) AND not loses(sara, s_a1) AND not double_booked(sara)
     derive  allocate(sara, s_a1)
-Step 105: R28 fires with {X=ahmed, S=s_e3, T=800}
-    because requests(ahmed, s_e3, 800) AND can_allocate(ahmed, s_e3) AND not loses(ahmed, s_e3) AND not double_booked(ahmed)
-    derive  allocate(ahmed, s_e3)
+Step 105: R28 fires with {X=bilal, S=s_v1, T=920}
+    because requests(bilal, s_v1, 920) AND can_allocate(bilal, s_v1) AND not loses(bilal, s_v1) AND not double_booked(bilal)
+    derive  allocate(bilal, s_v1)
 
 Cycle 10 (stratum 1): conflict set = 3 matched rule instances, 0 new fact(s)
 ----------------------------------------------------------------------------

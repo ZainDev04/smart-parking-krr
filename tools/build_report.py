@@ -1057,6 +1057,14 @@ def build() -> Path:
     doc = setup()
     render(doc, ctx, (DOCS / "report" / "report.md").read_text(encoding="utf-8"))
     finish_sections(doc)
+    # document properties (Word copies title and author into the exported PDF)
+    props = doc.core_properties
+    props.title = "Smart Parking Access and Space Allocation Reasoning System"
+    props.subject = "CT-351 Knowledge Representation and Reasoning, Complex Computing Problem"
+    props.author = "Group 12: " + ", ".join(name for name, *_ in TEAM)
+    props.last_modified_by = props.author
+    props.comments = ""
+    props.category = "CCP report"
     out = OUT
     try:
         doc.save(out)
