@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Parking KRR</title>
+<meta name="description" content="A knowledge-based system that decides who may park in which bay on a university campus, and explains every refusal. CT-351 Complex Computing Problem, NED University, Group 12.">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f6f6f3" media="(prefers-color-scheme: light)">
+<script>
+  // Before first paint: apply a saved theme, and decide whether the 3D scene
+  // can run (WebGL available, no reduced-motion request, not switched off).
+  (function () {
+    var d = document.documentElement, t = null, m = null;
+    try { t = localStorage.getItem("krr-theme"); m = localStorage.getItem("krr-3d"); } catch (e) {}
+    d.setAttribute("data-theme", t === "light" ? "light" : "dark");
+    var gl = false;
+    try { var c = document.createElement("canvas"); gl = !!(c.getContext("webgl2") || c.getContext("webgl")); } catch (e) {}
+    var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (gl && !calm && m !== "off") d.classList.add("is-3d");
+  })();
+</script>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000'/%3E%3Cpath d='M9 25V7h8a6 6 0 0 1 0 12h-8' fill='none' stroke='%23f2c230' stroke-width='3.2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="loader" id="loader" aria-hidden="true"><div class="loader__bar"><span id="loader-fill"></span></div><p>Building the car park</p></div>
+
+<header class="topbar">
+  <nav class="topbar__inner" aria-label="Sections">
+    <a class="brand" href="#top" aria-label="Smart Parking KRR, back to top">
+      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#161619"/><path d="M9 25V7h8a6 6 0 0 1 0 12h-8" fill="none" stroke="#f2c230" stroke-width="3.2"/></svg>
+      <span>Smart Parking KRR</span>
+    </a>
+    <ul class="navlinks" id="navlinks">
+      <li><a href="#rush">Morning rush</a></li>
+      <li><a href="#decide">How it decides</a></li>
+      <li><a href="#why">Ask why</a></li>
+      <li class="only-3d"><a href="#network3d">Network</a></li>
+      <li><a href="#models">Representations</a></li>
+      <li><a href="#tests">Tests</a></li>
+      <li><a href="#team">Team</a></li>
+      <li class="nav-indicator" id="nav-indicator" aria-hidden="true"></li>
+    </ul>
+    <button class="mode-toggle" id="mode-toggle" type="button" aria-pressed="true">3D</button>
+    <button class="mode-toggle quality-toggle" id="quality-toggle" type="button" aria-label="3D quality: click to change" hidden>Auto</button>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <a class="btn btn--primary btn--small" href="assets/Smart_Parking_KRR_CCP_Report.pdf" download>Download report</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="wrap hero__copy">
+    <h1 id="hero-title" data-split>Who parks where, and why not</h1>
+    <p class="lede">Eight drivers ask the campus gate for a bay. A knowledge-based system checks permits, zones, opening hours, vehicle fit, accessibility, reservations and priority, then parks the winners and tells everyone else the exact rule that stopped them.</p>
+    <p class="hint only-3d">Press Replay the morning to watch it from the driver's seat. Drag to look around, scroll to fly through the reasoning.</p>
+    <div class="scenario" role="group" aria-labelledby="scn-label">
+      <span class="scenario__label" id="scn-label">Scenario clock</span>
+      <label class="sr-only" for="scn-date">Date</label>
+      <input type="date" id="scn-date" value="2026-10-02" min="2000-01-01" max="2099-12-31">
+      <label class="sr-only" for="scn-hour">Hour</label>
+      <input type="range" id="scn-hour" min="0" max="23" step="1" value="10">
+      <output id="scn-hour-out" for="scn-hour">10:00</output>
+      <button class="scenario__btn" id="scn-now" type="button">Now</button>
+      <button class="scenario__btn" id="scn-reset" type="button" hidden>Back to the report run</button>
+    </div>
+    <p class="scenario__note" id="scn-note" aria-live="polite"></p>
+    <ul class="added" id="added" aria-label="Drivers you added" hidden></ul>
+  </div>
+
+  <div class="wrap" id="rush">
+    <div class="lot-panel">
+      <div class="lot-toolbar">
+        <div class="clock" aria-hidden="true"><span id="clock-time">08:00</span><span id="clock-note">Requests arriving</span></div>
+        <div class="lot-controls">
+          <button class="btn btn--primary" id="play" type="button">Replay the morning</button>
+          <button class="btn btn--ghost" id="skip" type="button">Show result</button>
+          <button class="btn btn--ghost" id="add-driver" type="button">Add a driver</button>
+        </div>
+      </div>
+      <div class="lot-scroll" tabindex="0" role="region" aria-label="Car park map, scroll sideways on small screens">
+        <svg id="lot" viewBox="0 0 1000 460" role="img" aria-labelledby="lot-title lot-desc">
+          <title id="lot-title">Campus car park</title>
+          <desc id="lot-desc">Student zone with five bays, employee zone with three bays and visitor zone with one bay. Cars queue at the gate in request order, then park in their allocated bay or are turned away. The decision log lists the same results as text.</desc>
+        </svg>
+      </div>
+      <p class="sr-only" aria-live="polite" id="lot-status"></p>
+    </div>
+
+  </div>
+</section>
+
+<section class="numbers-sec" id="numbers-sec" aria-label="Decisions and this morning's run in numbers">
+  <div class="stage stage--full">
+    <div class="wrap log-wrap">
+      <div class="log reveal" aria-labelledby="log-title">
+        <h2 class="log__title" id="log-title">Decisions</h2>
+        <ol class="log__list" id="log"></ol>
+      </div>
+    </div>
+    <div class="wrap numbers reveal">
+      <ul id="numbers"></ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="decide" aria-labelledby="decide-title">
+  <div class="stage stage--left">
+    <div class="wrap reveal">
+      <h2 class="section__title" id="decide-title">How it decides</h2>
+      <p class="section__intro">Forward chaining starts from the facts and fires every rule whose conditions hold, cycle after cycle, until nothing new appears. Step through the ten cycles of this morning's run, or play them all.</p>
+      <p class="hint only-3d">In the knowledge core, the 28 rules circle the facts. Each new fact flies out of the rule that derived it.</p>
+    </div>
+    <div class="wrap reveal">
+      <div class="stepper">
+        <div class="stepper__bar">
+          <button class="btn btn--ghost" id="cyc-prev" type="button">Previous cycle</button>
+          <div class="stepper__meter" aria-hidden="true">
+            <div class="meter"><div class="meter__fill" id="cyc-meter"></div></div>
+            <span id="cyc-count"></span>
+          </div>
+          <button class="btn btn--ghost" id="cyc-play" type="button">Play all cycles</button>
+          <button class="btn btn--primary" id="cyc-next" type="button">Next cycle</button>
+        </div>
+        <ol class="cycles" id="cycles" aria-label="Inference cycles"></ol>
+        <div class="cycle-detail" id="cycle-detail" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="why" aria-labelledby="why-title">
+  <div class="stage stage--right">
+    <div class="wrap reveal">
+      <h2 class="section__title" id="why-title">Ask why</h2>
+      <p class="section__intro">Backward chaining starts from a question and works back to the facts. Pick a request: an allocation comes with its proof, a refusal with the first condition that failed.</p>
+      <p class="hint only-3d">The proof grows as a tower beside this panel: yellow blocks are rules, green dots are stored facts. Point at a block to read it.</p>
+    </div>
+    <div class="wrap why reveal">
+      <fieldset class="pick">
+        <legend>Request</legend>
+        <div class="pick__list" id="pick"></div>
+      </fieldset>
+      <div class="answer" id="answer" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section only-3d" id="network3d" aria-labelledby="net-title">
+  <div class="stage stage--left">
+    <div class="wrap reveal">
+      <h2 class="section__title" id="net-title">Walk the semantic network</h2>
+      <p class="section__intro">This is the worked example from the report: Ali, Zara's reservation r1 and the bays, zones and values around them. Drag to turn it. Tracing a path lights up the chain of links that one rule relies on.</p>
+      <div class="trace-buttons">
+        <button class="btn btn--primary" type="button" data-trace="r13">Trace the permit path (R13)</button>
+        <button class="btn btn--ghost" type="button" data-trace="r14">Trace the vehicle path (R14)</button>
+      </div>
+      <p class="trace-caption" id="trace-caption" aria-live="polite">Blue nodes are classes, green nodes are individuals and amber nodes are values.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="models" aria-labelledby="models-title">
+  <div class="stage stage--full">
+    <div class="wrap reveal">
+      <h2 class="section__title" id="models-title">One car park, five representations</h2>
+      <p class="section__intro">Each formalism covers what the others cannot. They share one vocabulary, and a unit test fails if any of them uses a name the others do not.</p>
+    </div>
+    <div class="wrap models" id="model-list"></div>
+  </div>
+</section>
+
+<section class="section" id="tests" aria-labelledby="tests-title">
+  <div class="stage stage--right">
+    <div class="wrap reveal">
+      <h2 class="section__title" id="tests-title">Tested on twelve situations</h2>
+      <p class="section__intro" id="tests-intro"></p>
+      <p class="hint only-3d">Each of the twelve beacons lights green when its case passes.</p>
+    </div>
+    <div class="wrap">
+      <div class="table-scroll" tabindex="0" role="region" aria-labelledby="tests-title">
+        <table class="cases animate" id="cases-table">
+          <thead><tr><th scope="col">Case</th><th scope="col">Situation</th><th scope="col">Goals checked</th><th scope="col">Result</th></tr></thead>
+          <tbody id="cases"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="team" aria-labelledby="team-title">
+  <div class="stage stage--left">
+    <div class="wrap reveal">
+      <h2 class="section__title" id="team-title">Team</h2>
+      <p class="section__intro">Group 12, 7th semester. Each member owned one part from design to code to report chapter.</p>
+    </div>
+    <div class="wrap">
+      <ul class="team" id="team-list">
+        <li style="--d:0ms"><h3>Syed Mohmmad Huzaifa</h3><p class="team__roll">AI-23022</p><p>Problem statement, knowledge acquisition, frames and the ParkingSession script.</p></li>
+        <li style="--d:150ms"><h3>Maaz ur Rehman</h3><p class="team__roll">AI-23036</p><p>Semantic network, description logic reasoner and the expressivity analysis.</p></li>
+        <li style="--d:300ms"><h3>Owais Tariq</h3><p class="team__roll">AI-23037</p><p>First-order logic, the Horn rule base and forward chaining.</p></li>
+        <li style="--d:450ms"><h3>Shaikh Muhammad Zain</h3><p class="team__roll">AI-23306</p><p>Backward chaining, why-not explanations, the interfaces and the test suite.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <p>CT-351 Knowledge Representation and Reasoning, Complex Computing Problem. Department of Computer Science and Information Technology, NED University of Engineering and Technology. Course instructor: Miss Dure Shahwar.</p>
+    <p class="footer__credit">Car and cone models: <a href="https://kenney.nl/assets/car-kit">Car Kit by Kenney</a>, CC0. In-browser Python: <a href="https://pyodide.org">Pyodide</a>.</p>
+    <a class="btn btn--ghost" href="assets/Smart_Parking_KRR_CCP_Report.pdf" download>Download the full report (PDF)</a>
+  </div>
+</footer>
+
+<dialog class="lightbox driver-dialog" id="driver-dialog" aria-labelledby="driver-title">
+  <form method="dialog" id="driver-form" novalidate>
+    <div class="lightbox__head">
+      <h2 id="driver-title">Add a driver</h2>
+      <button class="btn btn--ghost btn--small" value="cancel" formnovalidate type="submit">Close</button>
+    </div>
+    <div class="driver-form__body">
+      <p class="muted">The new driver joins the morning queue. The Python engine turns the form into facts, re-runs forward chaining for everyone and explains the decision.</p>
+      <div class="field"><label for="drv-name">Name</label><input id="drv-name" name="name" required maxlength="16" autocomplete="off" spellcheck="false" placeholder="e.g. omar"></div>
+      <div class="field"><label for="drv-role">Role</label><select id="drv-role" name="role"><option value="student">Student</option><option value="faculty">Faculty</option><option value="staff">Staff</option><option value="visitor">Visitor</option></select></div>
+      <div class="field"><label for="drv-vehicle">Vehicle</label><select id="drv-vehicle" name="vehicle"><option value="car">Car</option><option value="electric_car">Electric car</option><option value="motorbike">Motorbike</option></select></div>
+      <div class="field"><label for="drv-permit">Permit or pass</label><select id="drv-permit" name="permit"><option value="valid">Valid today</option><option value="expired">Expired yesterday</option><option value="not_started">Starts tomorrow</option><option value="none">None</option></select></div>
+      <div class="field"><label for="drv-space">Bay wanted</label><select id="drv-space" name="space"></select></div>
+      <div class="field"><label for="drv-time">Arrives at</label><input id="drv-time" name="time" type="time" required></div>
+      <label class="check"><input id="drv-badge" name="badge" type="checkbox"> Holds an accessibility badge</label>
+      <p class="form-error" id="drv-error" role="alert"></p>
+    </div>
+    <div class="driver-form__foot">
+      <button class="btn btn--primary" id="drv-submit" value="add" type="submit">Add and decide</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-title">
+  <div class="lightbox__head">
+    <h2 id="lightbox-title"></h2>
+    <button class="btn btn--ghost btn--small" id="lightbox-close" type="button">Close</button>
+  </div>
+  <div class="lightbox__body"><img id="lightbox-img" alt=""></div>
+</dialog>
+
+<noscript><p class="noscript">The car park animation and the interactive sections need JavaScript. The full report is available as a PDF from the link at the top.</p></noscript>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script type="module" src="scene3d.js"></script>
+</body>
+</html>
