@@ -9,12 +9,12 @@ Step 32: R23 fires with {X=usman}
 Step 33: R23 fires with {X=zara}
     because student(zara) AND accessibility_badge(zara, no)
     derive  priority(zara, 1)
-Step 34: R24 fires with {X=bilal}
-    because visitor(bilal) AND accessibility_badge(bilal, no)
-    derive  priority(bilal, 1)
-Step 35: R24 fires with {X=hina}
+Step 34: R24 fires with {X=hina}
     because visitor(hina) AND accessibility_badge(hina, no)
     derive  priority(hina, 1)
+Step 35: R24 fires with {X=bilal}
+    because visitor(bilal) AND accessibility_badge(bilal, no)
+    derive  priority(bilal, 1)
 Step 44: R21 fires with {X=sara}
     because person(sara) AND accessibility_badge(sara, yes)
     derive  priority(sara, 3)
@@ -27,12 +27,12 @@ Step 46: R22 fires with {X=fatima}
 Step 100: R25 fires with {Y=zara, S=s_a1, TY=850, X=sara, TX=910, PX=3, PY=1}
     because requests(zara, s_a1, 850) AND requests(sara, s_a1, 910) AND sara \= zara AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(zara, 1) AND 3 > 1
     derive  loses(zara, s_a1)
-Step 101: R25 fires with {Y=usman, S=s_a1, TY=900, X=sara, TX=910, PX=3, PY=1}
-    because requests(usman, s_a1, 900) AND requests(sara, s_a1, 910) AND sara \= usman AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(usman, 1) AND 3 > 1
-    derive  loses(usman, s_a1)
-Step 102: R25 fires with {Y=ali, S=s_a1, TY=905, X=sara, TX=910, PX=3, PY=1}
+Step 101: R25 fires with {Y=ali, S=s_a1, TY=905, X=sara, TX=910, PX=3, PY=1}
     because requests(ali, s_a1, 905) AND requests(sara, s_a1, 910) AND sara \= ali AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(ali, 1) AND 3 > 1
     derive  loses(ali, s_a1)
+Step 102: R25 fires with {Y=usman, S=s_a1, TY=900, X=sara, TX=910, PX=3, PY=1}
+    because requests(usman, s_a1, 900) AND requests(sara, s_a1, 910) AND sara \= usman AND can_allocate(sara, s_a1) AND priority(sara, 3) AND priority(usman, 1) AND 3 > 1
+    derive  loses(usman, s_a1)
 Step 103: R28 fires with {X=bilal, S=s_v1, T=920}
     because requests(bilal, s_v1, 920) AND can_allocate(bilal, s_v1) AND not loses(bilal, s_v1) AND not double_booked(bilal)
     derive  allocate(bilal, s_v1)

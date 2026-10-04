@@ -13,17 +13,17 @@ Cycle 1 (stratum 0)
 Step 12: R06 fires with {P=p_sara, B=20260701, E=20270630, D=20261002}
     because permit_status(p_sara, active) AND permit_start(p_sara, 20260701) AND permit_expiry(p_sara, 20270630) AND current_date(20261002) AND 20260701 =< 20261002 AND 20270630 >= 20261002
     derive  permit_valid(p_sara)
-Step 16: R07 fires with {X=sara, P=p_sara}
+Step 17: R07 fires with {X=sara, P=p_sara}
     because has_permit(sara, p_sara) AND permit_class(p_sara, student_permit) AND student(sara)
     derive  permit_matches_role(sara, p_sara)
-Step 22: R12 fires with {Z=zone_a, O=7, C=22, H=10}
+Step 20: R12 fires with {Z=zone_a, O=7, C=22, H=10}
     because zone_opens(zone_a, 7) AND zone_closes(zone_a, 22) AND current_hour(10) AND 10 >= 7 AND 10 < 22
     derive  zone_open(zone_a)
-Step 25: R17 fires with {S=s_a1}
+Step 24: R17 fires with {S=s_a1}
     because space_status(s_a1, vacant)
     derive  space_free(s_a1)
 Cycle 2 (stratum 0)
-Step 42: R10 fires with {X=sara, P=p_sara}
+Step 40: R10 fires with {X=sara, P=p_sara}
     because permit_matches_role(sara, p_sara) AND permit_valid(p_sara)
     derive  authorized(sara, p_sara)
 Cycle 3 (stratum 0)
@@ -31,15 +31,15 @@ Step 53: R13 fires with {X=sara, Z=zone_a, P=p_sara, C=student_permit, T=student
     because authorized(sara, p_sara) AND permit_class(p_sara, student_permit) AND grants(student_permit, student_zone) AND zone_type(zone_a, student_zone) AND zone_open(zone_a)
     derive  zone_access(sara, zone_a)
 Cycle 4 (stratum 0)
-Step 65: R14 fires with {X=sara, S=s_a1, Z=zone_a, V=car_sara, VT=car, ST=standard}
+Step 72: R14 fires with {X=sara, S=s_a1, Z=zone_a, V=car_sara, VT=car, ST=standard}
     because zone_access(sara, zone_a) AND located_in(s_a1, zone_a) AND owns(sara, car_sara) AND vehicle_type(car_sara, car) AND space_type(s_a1, standard) AND fits(car, standard)
     derive  suitable_space(sara, s_a1)
 Cycle 5 (stratum 0)
-Step 78: R15 fires with {X=sara, S=s_a1, T=standard}
+Step 77: R15 fires with {X=sara, S=s_a1, T=standard}
     because suitable_space(sara, s_a1) AND space_type(s_a1, standard) AND open_type(standard)
     derive  eligible_for_space(sara, s_a1)
 Cycle 6 (stratum 0)
-Step 94: R19 fires with {X=sara, S=s_a1}
+Step 92: R19 fires with {X=sara, S=s_a1}
     because eligible_for_space(sara, s_a1) AND space_free(s_a1)
     derive  can_allocate(sara, s_a1)
 Cycle 9 (stratum 1)

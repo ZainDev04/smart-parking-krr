@@ -610,7 +610,7 @@ Every case passes with both engines. The cases exercise each requirement of sect
 - For every derived predicate in all 13 scenarios, backward chaining with all variables free returns exactly the set of facts forward chaining derives. The engines are written independently, so this is the strongest check we have.
 - All 12 FOL statements hold on the main model; F04 fails on the TC12 data with the counterexample x = ali, as it should.
 - The DL ABox of the main scenario is consistent, and DL realization of AuthorizedDriver matches authorized_driver for all eight people.
-- The generated Prolog program is parsed back by a unit test and contains exactly the same facts and rules.
+- The generated Prolog program is parsed back by a unit test and contains exactly the same facts and rules. Loaded in SWI-Prolog 10, it proves exactly the conclusions the Python forward chainer derives in all 13 scenarios, including the IC4 violation in TC12, and it loads without warnings. `python main.py prolog` repeats this check, and GitHub Actions runs it on every push.
 - The suite has {{stat unit_tests}} unit tests, all passing.
 
 We did not measure speed or accuracy on real traffic, because there is no real traffic data; the claims above are about logical correctness on our scenarios.

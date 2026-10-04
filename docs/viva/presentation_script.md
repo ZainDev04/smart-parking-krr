@@ -32,7 +32,7 @@ Forward chaining starts from 164 facts and fires every rule whose conditions hol
 
 "Backward chaining works the other way. It starts from a question, for example can_allocate(ahmed, S), and works back through the rules to the facts, with unification and backtracking, like Prolog. It returns three bays and a proof tree for each. When a goal fails, our explainer reports the first condition that blocked it. Ali was refused because Sara outranked him; Fatima because a motorbike fits no bay in her zone.
 
-To check correctness, the two engines were written independently, and for every derived fact in all 13 scenarios they give exactly the same answers. Twelve test cases cover every requirement, and 68 unit tests pass. The same knowledge base is also exported as a Prolog program and an OWL ontology.
+To check correctness, the two engines were written independently, and for every derived fact in all 13 scenarios they give exactly the same answers. Twelve test cases cover every requirement, and 70 unit tests pass. The same knowledge base is also exported as a Prolog program and an OWL ontology, and SWI-Prolog gives the same answers as our engine in every scenario.
 
 In short: frames and DL describe the domain, FOL states what must always hold, and Horn clauses decide quickly and explain every answer. Thank you."
 

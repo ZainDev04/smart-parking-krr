@@ -82,12 +82,29 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The generated Prolog program can be queried on its own:
+The generated Prolog program runs in [SWI-Prolog](https://www.swi-prolog.org) on its own:
 
 ```
 swipl prolog/smart_parking.pl
 ?- allocate(sara, S).
 S = s_a1.
+?- show_allocations.
+allocate(ahmed, s_e3)
+allocate(bilal, s_v1)
+allocate(sara, s_a1)
+?- consistent.
+true.
+```
+
+`python main.py prolog` loads the program for every scenario in SWI-Prolog and checks that it proves exactly what the Python engine derives:
+
+```
+  ok   morning_rush                      105 conclusions in Python,  105 in Prolog
+  ok   tc01_valid_student                100 conclusions in Python,  100 in Prolog
+  ...
+  ok   tc12_inconsistent_abox            102 conclusions in Python,  102 in Prolog
+
+13 scenarios, 0 differences.
 ```
 
 ## Tests
@@ -96,7 +113,7 @@ S = s_a1.
 python -m unittest discover -s tests -v
 ```
 
-68 tests cover the parser and unifier, every representation, both engines, the explainer, the website's scenario clock and added drivers, and the check that forward and backward chaining agree. GitHub Actions runs them on Python 3.10 and 3.12 on every push.
+70 tests cover the parser and unifier, every representation, both engines, the explainer, the website's scenario clock and added drivers, the check that forward and backward chaining agree, and the SWI-Prolog check above (skipped when swipl is not installed). GitHub Actions installs SWI-Prolog and runs everything on Python 3.10 and 3.12 on every push.
 
 The twelve scenario test cases from the report:
 

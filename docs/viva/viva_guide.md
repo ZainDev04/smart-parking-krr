@@ -183,7 +183,7 @@ Owners:
     - The forward closure is checked to be a model of every rule.
     - Each firing is checked to use only facts that were already known.
     - All 12 test cases match their expected results.
-    - The generated Prolog file allows a third, external check in SWI-Prolog.
+    - The generated Prolog file is a third, external check: loaded in SWI-Prolog it proves exactly the same conclusions as the Python forward chainer in all 13 scenarios. Run `python main.py prolog` to show it.
 
 41. How does the "why not" explanation work?
     For each rule that could conclude the goal, it finds how far the body can be proved and reports the first blocked literal. If that literal is derived, it explains it one level deeper. Example: allocate(fatima, s_e1) is blocked at fits(motorbike, standard).
@@ -198,11 +198,12 @@ Owners:
     - krr/export: Prolog, OWL, diagrams.
     - main.py: CLI.
     - app.py: Streamlit UI.
-    - tests: 68 unit tests.
+    - tests: 70 unit tests.
 
 ## Demonstration checklist for the viva
 
 1. python main.py cases: all 12 cases, both engines agree.
+   Then python main.py prolog: SWI-Prolog agrees with Python on all 13 scenarios.
 2. streamlit run app.py, Forward chaining tab: move the cycle slider from 1 to 10.
 3. Backward chaining tab: query can_allocate(ahmed, S) and show the three answers and the proof tree.
 4. Query allocate(ali, s_a1) in the main scenario: show the "why not" explanation (Sara won on priority).
