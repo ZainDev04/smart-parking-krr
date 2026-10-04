@@ -1,0 +1,631 @@
+?- can_allocate(ahmed, S).
+
+   1  GOAL    can_allocate(ahmed, S)
+   2  RULE    try R19: can_allocate(X, S) :- eligible_for_space(X, S), space_free(S).
+   3          subgoals: eligible_for_space(ahmed, S_1), space_free(S_1)
+   4      GOAL    eligible_for_space(ahmed, S_1)
+   5      RULE    try R15: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, T), open_type(T).
+   6              subgoals: suitable_space(ahmed, S_2), space_type(S_2, T_2), open_type(T_2)
+   7          GOAL    suitable_space(ahmed, S_2)
+   8          RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+   9                  subgoals: zone_access(ahmed, Z_3), located_in(S_3, Z_3), owns(ahmed, V_3), vehicle_type(V_3, VT_3), space_type(S_3, ST_3), fits(VT_3, ST_3)
+  10              GOAL    zone_access(ahmed, Z_3)
+  11              RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+  12                      subgoals: authorized(ahmed, P_4), permit_class(P_4, C_4), grants(C_4, T_4), zone_type(Z_4, T_4), zone_open(Z_4)
+  13                  GOAL    authorized(ahmed, P_4)
+  14                  RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+  15                          subgoals: permit_matches_role(ahmed, P_5), permit_valid(P_5)
+  16                      GOAL    permit_matches_role(ahmed, P_5)
+  17                      RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+  18                              subgoals: has_permit(ahmed, P_6), permit_class(P_6, student_permit), student(ahmed)
+  19                          GOAL    has_permit(ahmed, P_6)
+  20                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+  21                          GOAL    permit_class(p_ahmed, student_permit)
+  22                          FAIL    permit_class(p_ahmed, student_permit)  (no fact matches and no rule succeeds)
+  23                      RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+  24                              subgoals: has_permit(ahmed, P_7), permit_class(P_7, employee_permit), employee(ahmed)
+  25                          GOAL    has_permit(ahmed, P_7)
+  26                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+  27                          GOAL    permit_class(p_ahmed, employee_permit)
+  28                          FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+  29                          GOAL    employee(ahmed)
+  30                          RULE    try R04: employee(X) :- faculty(X).
+  31                                  subgoals: faculty(ahmed)
+  32                              GOAL    faculty(ahmed)
+  33                              FACT    faculty(ahmed)  matches the stored fact
+  34                          PROVED  employee(ahmed)  by R04
+  35                      PROVED  permit_matches_role(ahmed, p_ahmed)  by R08
+  36                      GOAL    permit_valid(p_ahmed)
+  37                      RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+  38                              subgoals: permit_status(p_ahmed, active), permit_start(p_ahmed, B_9), permit_expiry(p_ahmed, E_9), current_date(D_9), B_9 =< D_9, E_9 >= D_9
+  39                          GOAL    permit_status(p_ahmed, active)
+  40                          FACT    permit_status(p_ahmed, active)  matches the stored fact
+  41                          GOAL    permit_start(p_ahmed, B_9)
+  42                          FACT    permit_start(p_ahmed, 20260101)  matches the stored fact
+  43                          GOAL    permit_expiry(p_ahmed, E_9)
+  44                          FACT    permit_expiry(p_ahmed, 20271231)  matches the stored fact
+  45                          GOAL    current_date(D_9)
+  46                          FACT    current_date(20261002)  matches the stored fact
+  47                          BUILTIN 20260101 =< 20261002  is true
+  48                          BUILTIN 20271231 >= 20261002  is true
+  49                      PROVED  permit_valid(p_ahmed)  by R06
+  50                  PROVED  authorized(ahmed, p_ahmed)  by R10
+  51                  GOAL    permit_class(p_ahmed, C_4)
+  52                  FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+  53                  GOAL    grants(employee_permit, T_4)
+  54                  FACT    grants(employee_permit, employee_zone)  matches the stored fact
+  55                  GOAL    zone_type(Z_4, employee_zone)
+  56                  FACT    zone_type(zone_e, employee_zone)  matches the stored fact
+  57                  GOAL    zone_open(zone_e)
+  58                  RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+  59                          subgoals: zone_opens(zone_e, O_10), zone_closes(zone_e, C_10), current_hour(H_10), H_10 >= O_10, H_10 < C_10
+  60                      GOAL    zone_opens(zone_e, O_10)
+  61                      FACT    zone_opens(zone_e, 6)  matches the stored fact
+  62                      GOAL    zone_closes(zone_e, C_10)
+  63                      FACT    zone_closes(zone_e, 23)  matches the stored fact
+  64                      GOAL    current_hour(H_10)
+  65                      FACT    current_hour(10)  matches the stored fact
+  66                      BUILTIN 10 >= 6  is true
+  67                      BUILTIN 10 < 23  is true
+  68                  PROVED  zone_open(zone_e)  by R12
+  69              PROVED  zone_access(ahmed, zone_e)  by R13
+  70              GOAL    located_in(S_3, zone_e)
+  71              FACT    located_in(s_e1, zone_e)  matches the stored fact
+  72              GOAL    owns(ahmed, V_3)
+  73              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+  74              GOAL    vehicle_type(ev_ahmed, VT_3)
+  75              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+  76              GOAL    space_type(s_e1, ST_3)
+  77              FACT    space_type(s_e1, standard)  matches the stored fact
+  78              GOAL    fits(electric_car, standard)
+  79              FACT    fits(electric_car, standard)  matches the stored fact
+  80          PROVED  suitable_space(ahmed, s_e1)  by R14
+  81          GOAL    space_type(s_e1, T_2)
+  82          FACT    space_type(s_e1, standard)  matches the stored fact
+  83          GOAL    open_type(standard)
+  84          FACT    open_type(standard)  matches the stored fact
+  85      PROVED  eligible_for_space(ahmed, s_e1)  by R15
+  86      GOAL    space_free(s_e1)
+  87      RULE    try R17: space_free(S) :- space_status(S, vacant).
+  88              subgoals: space_status(s_e1, vacant)
+  89          GOAL    space_status(s_e1, vacant)
+  90          FACT    space_status(s_e1, vacant)  matches the stored fact
+  91      PROVED  space_free(s_e1)  by R17
+  92  PROVED  can_allocate(ahmed, s_e1)  by R19
+  93              FACT    located_in(s_e2, zone_e)  matches the stored fact
+  94              GOAL    owns(ahmed, V_3)
+  95              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+  96              GOAL    vehicle_type(ev_ahmed, VT_3)
+  97              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+  98              GOAL    space_type(s_e2, ST_3)
+  99              FACT    space_type(s_e2, ev_charging)  matches the stored fact
+ 100              GOAL    fits(electric_car, ev_charging)
+ 101              FACT    fits(electric_car, ev_charging)  matches the stored fact
+ 102          PROVED  suitable_space(ahmed, s_e2)  by R14
+ 103          GOAL    space_type(s_e2, T_2)
+ 104          FACT    space_type(s_e2, ev_charging)  matches the stored fact
+ 105          GOAL    open_type(ev_charging)
+ 106          FACT    open_type(ev_charging)  matches the stored fact
+ 107      PROVED  eligible_for_space(ahmed, s_e2)  by R15
+ 108      GOAL    space_free(s_e2)
+ 109      RULE    try R17: space_free(S) :- space_status(S, vacant).
+ 110              subgoals: space_status(s_e2, vacant)
+ 111          GOAL    space_status(s_e2, vacant)
+ 112          FACT    space_status(s_e2, vacant)  matches the stored fact
+ 113      PROVED  space_free(s_e2)  by R17
+ 114  PROVED  can_allocate(ahmed, s_e2)  by R19
+ 115              FACT    located_in(s_e3, zone_e)  matches the stored fact
+ 116              GOAL    owns(ahmed, V_3)
+ 117              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 118              GOAL    vehicle_type(ev_ahmed, VT_3)
+ 119              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 120              GOAL    space_type(s_e3, ST_3)
+ 121              FACT    space_type(s_e3, standard)  matches the stored fact
+ 122              GOAL    fits(electric_car, standard)
+ 123              FACT    fits(electric_car, standard)  matches the stored fact
+ 124          PROVED  suitable_space(ahmed, s_e3)  by R14
+ 125          GOAL    space_type(s_e3, T_2)
+ 126          FACT    space_type(s_e3, standard)  matches the stored fact
+ 127          GOAL    open_type(standard)
+ 128          FACT    open_type(standard)  matches the stored fact
+ 129      PROVED  eligible_for_space(ahmed, s_e3)  by R15
+ 130      GOAL    space_free(s_e3)
+ 131      RULE    try R17: space_free(S) :- space_status(S, vacant).
+ 132              subgoals: space_status(s_e3, vacant)
+ 133          GOAL    space_status(s_e3, vacant)
+ 134          FAIL    space_status(s_e3, vacant)  (no fact matches and no rule succeeds)
+ 135      FAIL    space_free(s_e3)  (no fact matches and no rule succeeds)
+ 136                          RULE    try R05: employee(X) :- staff(X).
+ 137                                  subgoals: staff(ahmed)
+ 138                              GOAL    staff(ahmed)
+ 139                              FAIL    staff(ahmed)  (no fact matches and no rule succeeds)
+ 140                      RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 141                              subgoals: has_permit(ahmed, P_15), permit_class(P_15, visitor_pass), visitor(ahmed)
+ 142                          GOAL    has_permit(ahmed, P_15)
+ 143                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 144                          GOAL    permit_class(p_ahmed, visitor_pass)
+ 145                          FAIL    permit_class(p_ahmed, visitor_pass)  (no fact matches and no rule succeeds)
+ 146      RULE    try R16: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, accessible), accessibility_badge(X, yes).
+ 147              subgoals: suitable_space(ahmed, S_16), space_type(S_16, accessible), accessibility_badge(ahmed, yes)
+ 148          GOAL    suitable_space(ahmed, S_16)
+ 149          RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+ 150                  subgoals: zone_access(ahmed, Z_17), located_in(S_17, Z_17), owns(ahmed, V_17), vehicle_type(V_17, VT_17), space_type(S_17, ST_17), fits(VT_17, ST_17)
+ 151              GOAL    zone_access(ahmed, Z_17)
+ 152              RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+ 153                      subgoals: authorized(ahmed, P_18), permit_class(P_18, C_18), grants(C_18, T_18), zone_type(Z_18, T_18), zone_open(Z_18)
+ 154                  GOAL    authorized(ahmed, P_18)
+ 155                  RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+ 156                          subgoals: permit_matches_role(ahmed, P_19), permit_valid(P_19)
+ 157                      GOAL    permit_matches_role(ahmed, P_19)
+ 158                      RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+ 159                              subgoals: has_permit(ahmed, P_20), permit_class(P_20, student_permit), student(ahmed)
+ 160                          GOAL    has_permit(ahmed, P_20)
+ 161                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 162                          GOAL    permit_class(p_ahmed, student_permit)
+ 163                          FAIL    permit_class(p_ahmed, student_permit)  (no fact matches and no rule succeeds)
+ 164                      RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+ 165                              subgoals: has_permit(ahmed, P_21), permit_class(P_21, employee_permit), employee(ahmed)
+ 166                          GOAL    has_permit(ahmed, P_21)
+ 167                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 168                          GOAL    permit_class(p_ahmed, employee_permit)
+ 169                          FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+ 170                          GOAL    employee(ahmed)
+ 171                          RULE    try R04: employee(X) :- faculty(X).
+ 172                                  subgoals: faculty(ahmed)
+ 173                              GOAL    faculty(ahmed)
+ 174                              FACT    faculty(ahmed)  matches the stored fact
+ 175                          PROVED  employee(ahmed)  by R04
+ 176                      PROVED  permit_matches_role(ahmed, p_ahmed)  by R08
+ 177                      GOAL    permit_valid(p_ahmed)
+ 178                      RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+ 179                              subgoals: permit_status(p_ahmed, active), permit_start(p_ahmed, B_23), permit_expiry(p_ahmed, E_23), current_date(D_23), B_23 =< D_23, E_23 >= D_23
+ 180                          GOAL    permit_status(p_ahmed, active)
+ 181                          FACT    permit_status(p_ahmed, active)  matches the stored fact
+ 182                          GOAL    permit_start(p_ahmed, B_23)
+ 183                          FACT    permit_start(p_ahmed, 20260101)  matches the stored fact
+ 184                          GOAL    permit_expiry(p_ahmed, E_23)
+ 185                          FACT    permit_expiry(p_ahmed, 20271231)  matches the stored fact
+ 186                          GOAL    current_date(D_23)
+ 187                          FACT    current_date(20261002)  matches the stored fact
+ 188                          BUILTIN 20260101 =< 20261002  is true
+ 189                          BUILTIN 20271231 >= 20261002  is true
+ 190                      PROVED  permit_valid(p_ahmed)  by R06
+ 191                  PROVED  authorized(ahmed, p_ahmed)  by R10
+ 192                  GOAL    permit_class(p_ahmed, C_18)
+ 193                  FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+ 194                  GOAL    grants(employee_permit, T_18)
+ 195                  FACT    grants(employee_permit, employee_zone)  matches the stored fact
+ 196                  GOAL    zone_type(Z_18, employee_zone)
+ 197                  FACT    zone_type(zone_e, employee_zone)  matches the stored fact
+ 198                  GOAL    zone_open(zone_e)
+ 199                  RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+ 200                          subgoals: zone_opens(zone_e, O_24), zone_closes(zone_e, C_24), current_hour(H_24), H_24 >= O_24, H_24 < C_24
+ 201                      GOAL    zone_opens(zone_e, O_24)
+ 202                      FACT    zone_opens(zone_e, 6)  matches the stored fact
+ 203                      GOAL    zone_closes(zone_e, C_24)
+ 204                      FACT    zone_closes(zone_e, 23)  matches the stored fact
+ 205                      GOAL    current_hour(H_24)
+ 206                      FACT    current_hour(10)  matches the stored fact
+ 207                      BUILTIN 10 >= 6  is true
+ 208                      BUILTIN 10 < 23  is true
+ 209                  PROVED  zone_open(zone_e)  by R12
+ 210              PROVED  zone_access(ahmed, zone_e)  by R13
+ 211              GOAL    located_in(S_17, zone_e)
+ 212              FACT    located_in(s_e1, zone_e)  matches the stored fact
+ 213              GOAL    owns(ahmed, V_17)
+ 214              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 215              GOAL    vehicle_type(ev_ahmed, VT_17)
+ 216              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 217              GOAL    space_type(s_e1, ST_17)
+ 218              FACT    space_type(s_e1, standard)  matches the stored fact
+ 219              GOAL    fits(electric_car, standard)
+ 220              FACT    fits(electric_car, standard)  matches the stored fact
+ 221          PROVED  suitable_space(ahmed, s_e1)  by R14
+ 222          GOAL    space_type(s_e1, accessible)
+ 223          FAIL    space_type(s_e1, accessible)  (no fact matches and no rule succeeds)
+ 224              FACT    located_in(s_e2, zone_e)  matches the stored fact
+ 225              GOAL    owns(ahmed, V_17)
+ 226              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 227              GOAL    vehicle_type(ev_ahmed, VT_17)
+ 228              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 229              GOAL    space_type(s_e2, ST_17)
+ 230              FACT    space_type(s_e2, ev_charging)  matches the stored fact
+ 231              GOAL    fits(electric_car, ev_charging)
+ 232              FACT    fits(electric_car, ev_charging)  matches the stored fact
+ 233          PROVED  suitable_space(ahmed, s_e2)  by R14
+ 234          GOAL    space_type(s_e2, accessible)
+ 235          FAIL    space_type(s_e2, accessible)  (no fact matches and no rule succeeds)
+ 236              FACT    located_in(s_e3, zone_e)  matches the stored fact
+ 237              GOAL    owns(ahmed, V_17)
+ 238              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 239              GOAL    vehicle_type(ev_ahmed, VT_17)
+ 240              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 241              GOAL    space_type(s_e3, ST_17)
+ 242              FACT    space_type(s_e3, standard)  matches the stored fact
+ 243              GOAL    fits(electric_car, standard)
+ 244              FACT    fits(electric_car, standard)  matches the stored fact
+ 245          PROVED  suitable_space(ahmed, s_e3)  by R14
+ 246          GOAL    space_type(s_e3, accessible)
+ 247          FAIL    space_type(s_e3, accessible)  (no fact matches and no rule succeeds)
+ 248                          RULE    try R05: employee(X) :- staff(X).
+ 249                                  subgoals: staff(ahmed)
+ 250                              GOAL    staff(ahmed)
+ 251                              FAIL    staff(ahmed)  (no fact matches and no rule succeeds)
+ 252                      RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 253                              subgoals: has_permit(ahmed, P_26), permit_class(P_26, visitor_pass), visitor(ahmed)
+ 254                          GOAL    has_permit(ahmed, P_26)
+ 255                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 256                          GOAL    permit_class(p_ahmed, visitor_pass)
+ 257                          FAIL    permit_class(p_ahmed, visitor_pass)  (no fact matches and no rule succeeds)
+ 258  RULE    try R20: can_allocate(X, S) :- eligible_for_space(X, S), space_status(S, reserved), holds_reservation(X, S).
+ 259          subgoals: eligible_for_space(ahmed, S_27), space_status(S_27, reserved), holds_reservation(ahmed, S_27)
+ 260      GOAL    eligible_for_space(ahmed, S_27)
+ 261      RULE    try R15: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, T), open_type(T).
+ 262              subgoals: suitable_space(ahmed, S_28), space_type(S_28, T_28), open_type(T_28)
+ 263          GOAL    suitable_space(ahmed, S_28)
+ 264          RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+ 265                  subgoals: zone_access(ahmed, Z_29), located_in(S_29, Z_29), owns(ahmed, V_29), vehicle_type(V_29, VT_29), space_type(S_29, ST_29), fits(VT_29, ST_29)
+ 266              GOAL    zone_access(ahmed, Z_29)
+ 267              RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+ 268                      subgoals: authorized(ahmed, P_30), permit_class(P_30, C_30), grants(C_30, T_30), zone_type(Z_30, T_30), zone_open(Z_30)
+ 269                  GOAL    authorized(ahmed, P_30)
+ 270                  RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+ 271                          subgoals: permit_matches_role(ahmed, P_31), permit_valid(P_31)
+ 272                      GOAL    permit_matches_role(ahmed, P_31)
+ 273                      RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+ 274                              subgoals: has_permit(ahmed, P_32), permit_class(P_32, student_permit), student(ahmed)
+ 275                          GOAL    has_permit(ahmed, P_32)
+ 276                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 277                          GOAL    permit_class(p_ahmed, student_permit)
+ 278                          FAIL    permit_class(p_ahmed, student_permit)  (no fact matches and no rule succeeds)
+ 279                      RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+ 280                              subgoals: has_permit(ahmed, P_33), permit_class(P_33, employee_permit), employee(ahmed)
+ 281                          GOAL    has_permit(ahmed, P_33)
+ 282                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 283                          GOAL    permit_class(p_ahmed, employee_permit)
+ 284                          FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+ 285                          GOAL    employee(ahmed)
+ 286                          RULE    try R04: employee(X) :- faculty(X).
+ 287                                  subgoals: faculty(ahmed)
+ 288                              GOAL    faculty(ahmed)
+ 289                              FACT    faculty(ahmed)  matches the stored fact
+ 290                          PROVED  employee(ahmed)  by R04
+ 291                      PROVED  permit_matches_role(ahmed, p_ahmed)  by R08
+ 292                      GOAL    permit_valid(p_ahmed)
+ 293                      RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+ 294                              subgoals: permit_status(p_ahmed, active), permit_start(p_ahmed, B_35), permit_expiry(p_ahmed, E_35), current_date(D_35), B_35 =< D_35, E_35 >= D_35
+ 295                          GOAL    permit_status(p_ahmed, active)
+ 296                          FACT    permit_status(p_ahmed, active)  matches the stored fact
+ 297                          GOAL    permit_start(p_ahmed, B_35)
+ 298                          FACT    permit_start(p_ahmed, 20260101)  matches the stored fact
+ 299                          GOAL    permit_expiry(p_ahmed, E_35)
+ 300                          FACT    permit_expiry(p_ahmed, 20271231)  matches the stored fact
+ 301                          GOAL    current_date(D_35)
+ 302                          FACT    current_date(20261002)  matches the stored fact
+ 303                          BUILTIN 20260101 =< 20261002  is true
+ 304                          BUILTIN 20271231 >= 20261002  is true
+ 305                      PROVED  permit_valid(p_ahmed)  by R06
+ 306                  PROVED  authorized(ahmed, p_ahmed)  by R10
+ 307                  GOAL    permit_class(p_ahmed, C_30)
+ 308                  FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+ 309                  GOAL    grants(employee_permit, T_30)
+ 310                  FACT    grants(employee_permit, employee_zone)  matches the stored fact
+ 311                  GOAL    zone_type(Z_30, employee_zone)
+ 312                  FACT    zone_type(zone_e, employee_zone)  matches the stored fact
+ 313                  GOAL    zone_open(zone_e)
+ 314                  RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+ 315                          subgoals: zone_opens(zone_e, O_36), zone_closes(zone_e, C_36), current_hour(H_36), H_36 >= O_36, H_36 < C_36
+ 316                      GOAL    zone_opens(zone_e, O_36)
+ 317                      FACT    zone_opens(zone_e, 6)  matches the stored fact
+ 318                      GOAL    zone_closes(zone_e, C_36)
+ 319                      FACT    zone_closes(zone_e, 23)  matches the stored fact
+ 320                      GOAL    current_hour(H_36)
+ 321                      FACT    current_hour(10)  matches the stored fact
+ 322                      BUILTIN 10 >= 6  is true
+ 323                      BUILTIN 10 < 23  is true
+ 324                  PROVED  zone_open(zone_e)  by R12
+ 325              PROVED  zone_access(ahmed, zone_e)  by R13
+ 326              GOAL    located_in(S_29, zone_e)
+ 327              FACT    located_in(s_e1, zone_e)  matches the stored fact
+ 328              GOAL    owns(ahmed, V_29)
+ 329              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 330              GOAL    vehicle_type(ev_ahmed, VT_29)
+ 331              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 332              GOAL    space_type(s_e1, ST_29)
+ 333              FACT    space_type(s_e1, standard)  matches the stored fact
+ 334              GOAL    fits(electric_car, standard)
+ 335              FACT    fits(electric_car, standard)  matches the stored fact
+ 336          PROVED  suitable_space(ahmed, s_e1)  by R14
+ 337          GOAL    space_type(s_e1, T_28)
+ 338          FACT    space_type(s_e1, standard)  matches the stored fact
+ 339          GOAL    open_type(standard)
+ 340          FACT    open_type(standard)  matches the stored fact
+ 341      PROVED  eligible_for_space(ahmed, s_e1)  by R15
+ 342      GOAL    space_status(s_e1, reserved)
+ 343      FAIL    space_status(s_e1, reserved)  (no fact matches and no rule succeeds)
+ 344              FACT    located_in(s_e2, zone_e)  matches the stored fact
+ 345              GOAL    owns(ahmed, V_29)
+ 346              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 347              GOAL    vehicle_type(ev_ahmed, VT_29)
+ 348              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 349              GOAL    space_type(s_e2, ST_29)
+ 350              FACT    space_type(s_e2, ev_charging)  matches the stored fact
+ 351              GOAL    fits(electric_car, ev_charging)
+ 352              FACT    fits(electric_car, ev_charging)  matches the stored fact
+ 353          PROVED  suitable_space(ahmed, s_e2)  by R14
+ 354          GOAL    space_type(s_e2, T_28)
+ 355          FACT    space_type(s_e2, ev_charging)  matches the stored fact
+ 356          GOAL    open_type(ev_charging)
+ 357          FACT    open_type(ev_charging)  matches the stored fact
+ 358      PROVED  eligible_for_space(ahmed, s_e2)  by R15
+ 359      GOAL    space_status(s_e2, reserved)
+ 360      FAIL    space_status(s_e2, reserved)  (no fact matches and no rule succeeds)
+ 361              FACT    located_in(s_e3, zone_e)  matches the stored fact
+ 362              GOAL    owns(ahmed, V_29)
+ 363              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 364              GOAL    vehicle_type(ev_ahmed, VT_29)
+ 365              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 366              GOAL    space_type(s_e3, ST_29)
+ 367              FACT    space_type(s_e3, standard)  matches the stored fact
+ 368              GOAL    fits(electric_car, standard)
+ 369              FACT    fits(electric_car, standard)  matches the stored fact
+ 370          PROVED  suitable_space(ahmed, s_e3)  by R14
+ 371          GOAL    space_type(s_e3, T_28)
+ 372          FACT    space_type(s_e3, standard)  matches the stored fact
+ 373          GOAL    open_type(standard)
+ 374          FACT    open_type(standard)  matches the stored fact
+ 375      PROVED  eligible_for_space(ahmed, s_e3)  by R15
+ 376      GOAL    space_status(s_e3, reserved)
+ 377      FACT    space_status(s_e3, reserved)  matches the stored fact
+ 378      GOAL    holds_reservation(ahmed, s_e3)
+ 379      RULE    try R18: holds_reservation(X, S) :- reserved_by(R, X), reserved_space(R, S), reservation_date(R, D), current_date(D).
+ 380              subgoals: reserved_by(R_37, ahmed), reserved_space(R_37, s_e3), reservation_date(R_37, D_37), current_date(D_37)
+ 381          GOAL    reserved_by(R_37, ahmed)
+ 382          FACT    reserved_by(r2, ahmed)  matches the stored fact
+ 383          GOAL    reserved_space(r2, s_e3)
+ 384          FACT    reserved_space(r2, s_e3)  matches the stored fact
+ 385          GOAL    reservation_date(r2, D_37)
+ 386          FACT    reservation_date(r2, 20261002)  matches the stored fact
+ 387          GOAL    current_date(20261002)
+ 388          FACT    current_date(20261002)  matches the stored fact
+ 389      PROVED  holds_reservation(ahmed, s_e3)  by R18
+ 390  PROVED  can_allocate(ahmed, s_e3)  by R20
+ 391                          RULE    try R05: employee(X) :- staff(X).
+ 392                                  subgoals: staff(ahmed)
+ 393                              GOAL    staff(ahmed)
+ 394                              FAIL    staff(ahmed)  (no fact matches and no rule succeeds)
+ 395                      RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 396                              subgoals: has_permit(ahmed, P_39), permit_class(P_39, visitor_pass), visitor(ahmed)
+ 397                          GOAL    has_permit(ahmed, P_39)
+ 398                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 399                          GOAL    permit_class(p_ahmed, visitor_pass)
+ 400                          FAIL    permit_class(p_ahmed, visitor_pass)  (no fact matches and no rule succeeds)
+ 401      RULE    try R16: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, accessible), accessibility_badge(X, yes).
+ 402              subgoals: suitable_space(ahmed, S_40), space_type(S_40, accessible), accessibility_badge(ahmed, yes)
+ 403          GOAL    suitable_space(ahmed, S_40)
+ 404          RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+ 405                  subgoals: zone_access(ahmed, Z_41), located_in(S_41, Z_41), owns(ahmed, V_41), vehicle_type(V_41, VT_41), space_type(S_41, ST_41), fits(VT_41, ST_41)
+ 406              GOAL    zone_access(ahmed, Z_41)
+ 407              RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+ 408                      subgoals: authorized(ahmed, P_42), permit_class(P_42, C_42), grants(C_42, T_42), zone_type(Z_42, T_42), zone_open(Z_42)
+ 409                  GOAL    authorized(ahmed, P_42)
+ 410                  RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+ 411                          subgoals: permit_matches_role(ahmed, P_43), permit_valid(P_43)
+ 412                      GOAL    permit_matches_role(ahmed, P_43)
+ 413                      RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+ 414                              subgoals: has_permit(ahmed, P_44), permit_class(P_44, student_permit), student(ahmed)
+ 415                          GOAL    has_permit(ahmed, P_44)
+ 416                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 417                          GOAL    permit_class(p_ahmed, student_permit)
+ 418                          FAIL    permit_class(p_ahmed, student_permit)  (no fact matches and no rule succeeds)
+ 419                      RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+ 420                              subgoals: has_permit(ahmed, P_45), permit_class(P_45, employee_permit), employee(ahmed)
+ 421                          GOAL    has_permit(ahmed, P_45)
+ 422                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 423                          GOAL    permit_class(p_ahmed, employee_permit)
+ 424                          FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+ 425                          GOAL    employee(ahmed)
+ 426                          RULE    try R04: employee(X) :- faculty(X).
+ 427                                  subgoals: faculty(ahmed)
+ 428                              GOAL    faculty(ahmed)
+ 429                              FACT    faculty(ahmed)  matches the stored fact
+ 430                          PROVED  employee(ahmed)  by R04
+ 431                      PROVED  permit_matches_role(ahmed, p_ahmed)  by R08
+ 432                      GOAL    permit_valid(p_ahmed)
+ 433                      RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+ 434                              subgoals: permit_status(p_ahmed, active), permit_start(p_ahmed, B_47), permit_expiry(p_ahmed, E_47), current_date(D_47), B_47 =< D_47, E_47 >= D_47
+ 435                          GOAL    permit_status(p_ahmed, active)
+ 436                          FACT    permit_status(p_ahmed, active)  matches the stored fact
+ 437                          GOAL    permit_start(p_ahmed, B_47)
+ 438                          FACT    permit_start(p_ahmed, 20260101)  matches the stored fact
+ 439                          GOAL    permit_expiry(p_ahmed, E_47)
+ 440                          FACT    permit_expiry(p_ahmed, 20271231)  matches the stored fact
+ 441                          GOAL    current_date(D_47)
+ 442                          FACT    current_date(20261002)  matches the stored fact
+ 443                          BUILTIN 20260101 =< 20261002  is true
+ 444                          BUILTIN 20271231 >= 20261002  is true
+ 445                      PROVED  permit_valid(p_ahmed)  by R06
+ 446                  PROVED  authorized(ahmed, p_ahmed)  by R10
+ 447                  GOAL    permit_class(p_ahmed, C_42)
+ 448                  FACT    permit_class(p_ahmed, employee_permit)  matches the stored fact
+ 449                  GOAL    grants(employee_permit, T_42)
+ 450                  FACT    grants(employee_permit, employee_zone)  matches the stored fact
+ 451                  GOAL    zone_type(Z_42, employee_zone)
+ 452                  FACT    zone_type(zone_e, employee_zone)  matches the stored fact
+ 453                  GOAL    zone_open(zone_e)
+ 454                  RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+ 455                          subgoals: zone_opens(zone_e, O_48), zone_closes(zone_e, C_48), current_hour(H_48), H_48 >= O_48, H_48 < C_48
+ 456                      GOAL    zone_opens(zone_e, O_48)
+ 457                      FACT    zone_opens(zone_e, 6)  matches the stored fact
+ 458                      GOAL    zone_closes(zone_e, C_48)
+ 459                      FACT    zone_closes(zone_e, 23)  matches the stored fact
+ 460                      GOAL    current_hour(H_48)
+ 461                      FACT    current_hour(10)  matches the stored fact
+ 462                      BUILTIN 10 >= 6  is true
+ 463                      BUILTIN 10 < 23  is true
+ 464                  PROVED  zone_open(zone_e)  by R12
+ 465              PROVED  zone_access(ahmed, zone_e)  by R13
+ 466              GOAL    located_in(S_41, zone_e)
+ 467              FACT    located_in(s_e1, zone_e)  matches the stored fact
+ 468              GOAL    owns(ahmed, V_41)
+ 469              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 470              GOAL    vehicle_type(ev_ahmed, VT_41)
+ 471              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 472              GOAL    space_type(s_e1, ST_41)
+ 473              FACT    space_type(s_e1, standard)  matches the stored fact
+ 474              GOAL    fits(electric_car, standard)
+ 475              FACT    fits(electric_car, standard)  matches the stored fact
+ 476          PROVED  suitable_space(ahmed, s_e1)  by R14
+ 477          GOAL    space_type(s_e1, accessible)
+ 478          FAIL    space_type(s_e1, accessible)  (no fact matches and no rule succeeds)
+ 479              FACT    located_in(s_e2, zone_e)  matches the stored fact
+ 480              GOAL    owns(ahmed, V_41)
+ 481              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 482              GOAL    vehicle_type(ev_ahmed, VT_41)
+ 483              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 484              GOAL    space_type(s_e2, ST_41)
+ 485              FACT    space_type(s_e2, ev_charging)  matches the stored fact
+ 486              GOAL    fits(electric_car, ev_charging)
+ 487              FACT    fits(electric_car, ev_charging)  matches the stored fact
+ 488          PROVED  suitable_space(ahmed, s_e2)  by R14
+ 489          GOAL    space_type(s_e2, accessible)
+ 490          FAIL    space_type(s_e2, accessible)  (no fact matches and no rule succeeds)
+ 491              FACT    located_in(s_e3, zone_e)  matches the stored fact
+ 492              GOAL    owns(ahmed, V_41)
+ 493              FACT    owns(ahmed, ev_ahmed)  matches the stored fact
+ 494              GOAL    vehicle_type(ev_ahmed, VT_41)
+ 495              FACT    vehicle_type(ev_ahmed, electric_car)  matches the stored fact
+ 496              GOAL    space_type(s_e3, ST_41)
+ 497              FACT    space_type(s_e3, standard)  matches the stored fact
+ 498              GOAL    fits(electric_car, standard)
+ 499              FACT    fits(electric_car, standard)  matches the stored fact
+ 500          PROVED  suitable_space(ahmed, s_e3)  by R14
+ 501          GOAL    space_type(s_e3, accessible)
+ 502          FAIL    space_type(s_e3, accessible)  (no fact matches and no rule succeeds)
+ 503                          RULE    try R05: employee(X) :- staff(X).
+ 504                                  subgoals: staff(ahmed)
+ 505                              GOAL    staff(ahmed)
+ 506                              FAIL    staff(ahmed)  (no fact matches and no rule succeeds)
+ 507                      RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 508                              subgoals: has_permit(ahmed, P_50), permit_class(P_50, visitor_pass), visitor(ahmed)
+ 509                          GOAL    has_permit(ahmed, P_50)
+ 510                          FACT    has_permit(ahmed, p_ahmed)  matches the stored fact
+ 511                          GOAL    permit_class(p_ahmed, visitor_pass)
+ 512                          FAIL    permit_class(p_ahmed, visitor_pass)  (no fact matches and no rule succeeds)
+
+can_allocate(ahmed, S): PROVED. Answers: S=s_e1; S=s_e2; S=s_e3
+
+Proof tree 1:
+can_allocate(ahmed, s_e1)   [R19]
+├── eligible_for_space(ahmed, s_e1)   [R15]
+│   ├── suitable_space(ahmed, s_e1)   [R14]
+│   │   ├── zone_access(ahmed, zone_e)   [R13]
+│   │   │   ├── authorized(ahmed, p_ahmed)   [R10]
+│   │   │   │   ├── permit_matches_role(ahmed, p_ahmed)   [R08]
+│   │   │   │   │   ├── has_permit(ahmed, p_ahmed)   [fact]
+│   │   │   │   │   ├── permit_class(p_ahmed, employee_permit)   [fact]
+│   │   │   │   │   └── employee(ahmed)   [R04]
+│   │   │   │   │       └── faculty(ahmed)   [fact]
+│   │   │   │   └── permit_valid(p_ahmed)   [R06]
+│   │   │   │       ├── permit_status(p_ahmed, active)   [fact]
+│   │   │   │       ├── permit_start(p_ahmed, 20260101)   [fact]
+│   │   │   │       ├── permit_expiry(p_ahmed, 20271231)   [fact]
+│   │   │   │       ├── current_date(20261002)   [fact]
+│   │   │   │       ├── 20260101 =< 20261002   [built-in]
+│   │   │   │       └── 20271231 >= 20261002   [built-in]
+│   │   │   ├── permit_class(p_ahmed, employee_permit)   [fact]
+│   │   │   ├── grants(employee_permit, employee_zone)   [fact]
+│   │   │   ├── zone_type(zone_e, employee_zone)   [fact]
+│   │   │   └── zone_open(zone_e)   [R12]
+│   │   │       ├── zone_opens(zone_e, 6)   [fact]
+│   │   │       ├── zone_closes(zone_e, 23)   [fact]
+│   │   │       ├── current_hour(10)   [fact]
+│   │   │       ├── 10 >= 6   [built-in]
+│   │   │       └── 10 < 23   [built-in]
+│   │   ├── located_in(s_e1, zone_e)   [fact]
+│   │   ├── owns(ahmed, ev_ahmed)   [fact]
+│   │   ├── vehicle_type(ev_ahmed, electric_car)   [fact]
+│   │   ├── space_type(s_e1, standard)   [fact]
+│   │   └── fits(electric_car, standard)   [fact]
+│   ├── space_type(s_e1, standard)   [fact]
+│   └── open_type(standard)   [fact]
+└── space_free(s_e1)   [R17]
+    └── space_status(s_e1, vacant)   [fact]
+
+Proof tree 2:
+can_allocate(ahmed, s_e2)   [R19]
+├── eligible_for_space(ahmed, s_e2)   [R15]
+│   ├── suitable_space(ahmed, s_e2)   [R14]
+│   │   ├── zone_access(ahmed, zone_e)   [R13]
+│   │   │   ├── authorized(ahmed, p_ahmed)   [R10]
+│   │   │   │   ├── permit_matches_role(ahmed, p_ahmed)   [R08]
+│   │   │   │   │   ├── has_permit(ahmed, p_ahmed)   [fact]
+│   │   │   │   │   ├── permit_class(p_ahmed, employee_permit)   [fact]
+│   │   │   │   │   └── employee(ahmed)   [R04]
+│   │   │   │   │       └── faculty(ahmed)   [fact]
+│   │   │   │   └── permit_valid(p_ahmed)   [R06]
+│   │   │   │       ├── permit_status(p_ahmed, active)   [fact]
+│   │   │   │       ├── permit_start(p_ahmed, 20260101)   [fact]
+│   │   │   │       ├── permit_expiry(p_ahmed, 20271231)   [fact]
+│   │   │   │       ├── current_date(20261002)   [fact]
+│   │   │   │       ├── 20260101 =< 20261002   [built-in]
+│   │   │   │       └── 20271231 >= 20261002   [built-in]
+│   │   │   ├── permit_class(p_ahmed, employee_permit)   [fact]
+│   │   │   ├── grants(employee_permit, employee_zone)   [fact]
+│   │   │   ├── zone_type(zone_e, employee_zone)   [fact]
+│   │   │   └── zone_open(zone_e)   [R12]
+│   │   │       ├── zone_opens(zone_e, 6)   [fact]
+│   │   │       ├── zone_closes(zone_e, 23)   [fact]
+│   │   │       ├── current_hour(10)   [fact]
+│   │   │       ├── 10 >= 6   [built-in]
+│   │   │       └── 10 < 23   [built-in]
+│   │   ├── located_in(s_e2, zone_e)   [fact]
+│   │   ├── owns(ahmed, ev_ahmed)   [fact]
+│   │   ├── vehicle_type(ev_ahmed, electric_car)   [fact]
+│   │   ├── space_type(s_e2, ev_charging)   [fact]
+│   │   └── fits(electric_car, ev_charging)   [fact]
+│   ├── space_type(s_e2, ev_charging)   [fact]
+│   └── open_type(ev_charging)   [fact]
+└── space_free(s_e2)   [R17]
+    └── space_status(s_e2, vacant)   [fact]
+
+Proof tree 3:
+can_allocate(ahmed, s_e3)   [R20]
+├── eligible_for_space(ahmed, s_e3)   [R15]
+│   ├── suitable_space(ahmed, s_e3)   [R14]
+│   │   ├── zone_access(ahmed, zone_e)   [R13]
+│   │   │   ├── authorized(ahmed, p_ahmed)   [R10]
+│   │   │   │   ├── permit_matches_role(ahmed, p_ahmed)   [R08]
+│   │   │   │   │   ├── has_permit(ahmed, p_ahmed)   [fact]
+│   │   │   │   │   ├── permit_class(p_ahmed, employee_permit)   [fact]
+│   │   │   │   │   └── employee(ahmed)   [R04]
+│   │   │   │   │       └── faculty(ahmed)   [fact]
+│   │   │   │   └── permit_valid(p_ahmed)   [R06]
+│   │   │   │       ├── permit_status(p_ahmed, active)   [fact]
+│   │   │   │       ├── permit_start(p_ahmed, 20260101)   [fact]
+│   │   │   │       ├── permit_expiry(p_ahmed, 20271231)   [fact]
+│   │   │   │       ├── current_date(20261002)   [fact]
+│   │   │   │       ├── 20260101 =< 20261002   [built-in]
+│   │   │   │       └── 20271231 >= 20261002   [built-in]
+│   │   │   ├── permit_class(p_ahmed, employee_permit)   [fact]
+│   │   │   ├── grants(employee_permit, employee_zone)   [fact]
+│   │   │   ├── zone_type(zone_e, employee_zone)   [fact]
+│   │   │   └── zone_open(zone_e)   [R12]
+│   │   │       ├── zone_opens(zone_e, 6)   [fact]
+│   │   │       ├── zone_closes(zone_e, 23)   [fact]
+│   │   │       ├── current_hour(10)   [fact]
+│   │   │       ├── 10 >= 6   [built-in]
+│   │   │       └── 10 < 23   [built-in]
+│   │   ├── located_in(s_e3, zone_e)   [fact]
+│   │   ├── owns(ahmed, ev_ahmed)   [fact]
+│   │   ├── vehicle_type(ev_ahmed, electric_car)   [fact]
+│   │   ├── space_type(s_e3, standard)   [fact]
+│   │   └── fits(electric_car, standard)   [fact]
+│   ├── space_type(s_e3, standard)   [fact]
+│   └── open_type(standard)   [fact]
+├── space_status(s_e3, reserved)   [fact]
+└── holds_reservation(ahmed, s_e3)   [R18]
+    ├── reserved_by(r2, ahmed)   [fact]
+    ├── reserved_space(r2, s_e3)   [fact]
+    ├── reservation_date(r2, 20261002)   [fact]
+    └── current_date(20261002)   [fact]

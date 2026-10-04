@@ -1,0 +1,74 @@
+flowchart LR
+    n0["Person"]
+    n1["Student"]
+    n2["Employee"]
+    n3["Faculty"]
+    n4["Staff"]
+    n5["Visitor"]
+    n6["Vehicle"]
+    n7["ParkingPermit"]
+    n8["ParkingFacility"]
+    n9["ParkingZone"]
+    n10["ParkingSpace"]
+    n11["AccessibleSpace"]
+    n12["EVChargingSpace"]
+    n13["MotorbikeSpace"]
+    n14["Reservation"]
+    n15(["VehicleType"])
+    n16(["PermitClass"])
+    n17(["ZoneType"])
+    n18(["SpaceType"])
+    n19("ali")
+    n20("car_ali")
+    n21("p_ali")
+    n22("r1")
+    n23("zara")
+    n24("s_a5")
+    n25("car_zara")
+    n26("p_zara")
+    n27("zone_a")
+    n28("ned_lot")
+    n0 -->|"owns"| n6
+    n0 -->|"has-a"| n7
+    n1 -->|"is-a"| n0
+    n2 -->|"is-a"| n0
+    n3 -->|"is-a"| n2
+    n4 -->|"is-a"| n2
+    n5 -->|"is-a"| n0
+    n6 -->|"has-type"| n15
+    n7 -->|"has-class"| n16
+    n9 -->|"has-type"| n17
+    n9 -->|"part-of"| n8
+    n10 -->|"part-of"| n9
+    n10 -->|"has-type"| n18
+    n11 -->|"is-a"| n10
+    n12 -->|"is-a"| n10
+    n13 -->|"is-a"| n10
+    n14 -->|"made-by"| n0
+    n14 -->|"for-space"| n10
+    n16 -->|"grants"| n17
+    n15 -->|"fits"| n18
+    n19 -.->|"instance-of"| n1
+    n19 -->|"owns"| n20
+    n19 -->|"has-a"| n21
+    n22 -.->|"instance-of"| n14
+    n22 -->|"made-by"| n23
+    n22 -->|"for-space"| n24
+    n20 -.->|"instance-of"| n6
+    n21 -.->|"instance-of"| n7
+    n23 -.->|"instance-of"| n1
+    n23 -->|"owns"| n25
+    n23 -->|"has-a"| n26
+    n24 -.->|"instance-of"| n10
+    n24 -->|"part-of"| n27
+    n25 -.->|"instance-of"| n6
+    n26 -.->|"instance-of"| n7
+    n27 -.->|"instance-of"| n9
+    n27 -->|"part-of"| n28
+    n28 -.->|"instance-of"| n8
+    classDef conceptNode fill:#dbeafe,stroke:#1e40af,color:#0f172a
+    class n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14 conceptNode
+    classDef valueNode fill:#fef3c7,stroke:#b45309,color:#0f172a
+    class n15,n16,n17,n18 valueNode
+    classDef individualNode fill:#dcfce7,stroke:#15803d,color:#0f172a
+    class n19,n20,n21,n22,n23,n24,n25,n26,n27,n28 individualNode

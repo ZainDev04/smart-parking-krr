@@ -1,0 +1,22 @@
+flowchart TD
+    A["Goal list := query"] --> B{"Goal list empty?"}
+    B -->|yes| Z["Success: return bindings and proof tree"]
+    B -->|no| C["Take the first goal G"]
+    C --> D{"Kind of G"}
+    D -->|comparison| E{"Evaluate"}
+    E -->|true| B
+    E -->|false| X["Fail: backtrack"]
+    D -->|not A| N{"Can A be proved?"}
+    N -->|no| B
+    N -->|yes| X
+    D -->|atom| L{"Variant of an<br/>ancestor goal?"}
+    L -->|yes| X
+    L -->|no| F["Try stored facts that unify with G"]
+    F -->|match| B
+    F -->|none left| R["Try rules whose head unifies with G<br/>(rename variables first)"]
+    R -->|unifies| S["Replace G by the rule body<br/>(new subgoals, depth + 1)"]
+    S --> B
+    R -->|none left| X
+    X --> Y{"Earlier choice point?"}
+    Y -->|yes| F
+    Y -->|no| W["Failure: explain the first blocked literal"]

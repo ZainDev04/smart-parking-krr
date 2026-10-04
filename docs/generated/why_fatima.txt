@@ -1,0 +1,7 @@
+allocate(fatima, s_e1) cannot be proved. Reasons, rule by rule:
+  R28 blocked at can_allocate(fatima, s_e1)
+    R19 blocked at eligible_for_space(fatima, s_e1)
+      R15 blocked at suitable_space(fatima, s_e1)
+        R14 blocked at fits(motorbike, standard)  (no such fact is stored)
+      R16 blocked at suitable_space(fatima, s_e1)  (explained above)
+    R20 blocked at eligible_for_space(fatima, s_e1)  (explained above)

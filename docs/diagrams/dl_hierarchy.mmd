@@ -1,0 +1,59 @@
+flowchart RL
+    Student["Student"]
+    Person["Person"]
+    Employee["Employee"]
+    Faculty["Faculty"]
+    Staff["Staff"]
+    Visitor["Visitor"]
+    BadgeHolder["BadgeHolder"]
+    NonBadgeHolder["NonBadgeHolder"]
+    StudentPermit["StudentPermit"]
+    ParkingPermit["ParkingPermit"]
+    EmployeePermit["EmployeePermit"]
+    VisitorPass["VisitorPass"]
+    ValidPermit["ValidPermit"]
+    AccessibleSpace["AccessibleSpace"]
+    ParkingSpace["ParkingSpace"]
+    EVChargingSpace["EVChargingSpace"]
+    MotorbikeSpace["MotorbikeSpace"]
+    ParkingZone["ParkingZone"]
+    ParkingFacility["ParkingFacility"]
+    Reservation["Reservation"]
+    Vehicle["Vehicle"]
+    Motorbike["Motorbike"]
+    ElectricCar["ElectricCar"]
+    Car["Car"]
+    ValidPermitHolder(["ValidPermitHolder"])
+    AuthorizedStudent(["AuthorizedStudent"])
+    AuthorizedEmployee(["AuthorizedEmployee"])
+    AuthorizedVisitor(["AuthorizedVisitor"])
+    AuthorizedDriver(["AuthorizedDriver"])
+    Student --> Person
+    Employee --> Person
+    Faculty --> Employee
+    Staff --> Employee
+    Visitor --> Person
+    BadgeHolder --> Person
+    NonBadgeHolder --> Person
+    StudentPermit --> ParkingPermit
+    EmployeePermit --> ParkingPermit
+    VisitorPass --> ParkingPermit
+    ValidPermit --> ParkingPermit
+    AccessibleSpace --> ParkingSpace
+    EVChargingSpace --> ParkingSpace
+    MotorbikeSpace --> ParkingSpace
+    Motorbike --> Vehicle
+    ElectricCar --> Vehicle
+    Car --> Vehicle
+    ValidPermitHolder -.-> Person
+    AuthorizedStudent -.-> AuthorizedDriver
+    AuthorizedStudent -.-> Student
+    AuthorizedStudent -.-> ValidPermitHolder
+    AuthorizedEmployee -.-> AuthorizedDriver
+    AuthorizedEmployee -.-> Employee
+    AuthorizedEmployee -.-> ValidPermitHolder
+    AuthorizedVisitor -.-> AuthorizedDriver
+    AuthorizedVisitor -.-> ValidPermitHolder
+    AuthorizedVisitor -.-> Visitor
+    classDef defined fill:#fef3c7,stroke:#b45309
+    class AuthorizedDriver,AuthorizedEmployee,AuthorizedStudent,AuthorizedVisitor,ValidPermitHolder defined

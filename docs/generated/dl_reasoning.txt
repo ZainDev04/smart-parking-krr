@@ -1,0 +1,74 @@
+TBox
+  T01  Student ⊑ Person
+  T02  Employee ⊑ Person
+  T03  Faculty ⊑ Employee
+  T04  Staff ⊑ Employee
+  T05  Visitor ⊑ Person
+  T06  BadgeHolder ⊑ Person
+  T07  NonBadgeHolder ⊑ Person
+  T08  StudentPermit ⊑ ParkingPermit
+  T09  EmployeePermit ⊑ ParkingPermit
+  T10  VisitorPass ⊑ ParkingPermit
+  T11  ValidPermit ⊑ ParkingPermit
+  T12  AccessibleSpace ⊑ ParkingSpace
+  T13  EVChargingSpace ⊑ ParkingSpace
+  T14  MotorbikeSpace ⊑ ParkingSpace
+  T15  ParkingSpace ⊑ ∃locatedIn.ParkingZone
+  T16  ParkingZone ⊑ ∃partOf.ParkingFacility
+  T17  Reservation ⊑ ∃madeBy.Person ⊓ ∃forSpace.ParkingSpace
+  T18  Vehicle ⊑ ∃owns⁻.Person
+  T19  AccessibleSpace ⊑ ∀allocatedTo.BadgeHolder
+  T20  MotorbikeSpace ⊑ ∀allocatedTo.∃owns.Motorbike
+  T21  Motorbike ⊑ Vehicle
+  T22  ElectricCar ⊑ Vehicle
+  T23  Car ⊑ Vehicle
+  T24  ValidPermitHolder ≡ Person ⊓ ∃hasPermit.ValidPermit
+  T25  AuthorizedStudent ≡ Student ⊓ ∃hasPermit.(ValidPermit ⊓ StudentPermit)
+  T26  AuthorizedEmployee ≡ Employee ⊓ ∃hasPermit.(ValidPermit ⊓ EmployeePermit)
+  T27  AuthorizedVisitor ≡ Visitor ⊓ ∃hasPermit.(ValidPermit ⊓ VisitorPass)
+  T28  AuthorizedDriver ≡ AuthorizedStudent ⊔ AuthorizedEmployee ⊔ AuthorizedVisitor
+  D01  Student ⊓ Employee ⊑ ⊥
+  D02  Student ⊓ Visitor ⊑ ⊥
+  D03  Employee ⊓ Visitor ⊑ ⊥
+  D04  Faculty ⊓ Staff ⊑ ⊥
+  D05  BadgeHolder ⊓ NonBadgeHolder ⊑ ⊥
+  D06  StudentPermit ⊓ EmployeePermit ⊑ ⊥
+  D07  StudentPermit ⊓ VisitorPass ⊑ ⊥
+  D08  EmployeePermit ⊓ VisitorPass ⊑ ⊥
+  D09  AccessibleSpace ⊓ EVChargingSpace ⊑ ⊥
+  D10  AccessibleSpace ⊓ MotorbikeSpace ⊑ ⊥
+  D11  EVChargingSpace ⊓ MotorbikeSpace ⊑ ⊥
+  D12  Motorbike ⊓ ElectricCar ⊑ ⊥
+  D13  Motorbike ⊓ Car ⊑ ⊥
+  D14  Car ⊓ ElectricCar ⊑ ⊥
+  D15  Person ⊓ Vehicle ⊑ ⊥
+  D16  Person ⊓ ParkingSpace ⊑ ⊥
+  D17  ParkingSpace ⊓ ParkingZone ⊑ ⊥
+
+Inferred subsumptions
+  ValidPermitHolder ⊑ Person
+  AuthorizedStudent ⊑ Student
+  AuthorizedStudent ⊑ Person
+  AuthorizedStudent ⊑ ValidPermitHolder
+  AuthorizedStudent ⊑ AuthorizedDriver
+  AuthorizedEmployee ⊑ Person
+  AuthorizedEmployee ⊑ Employee
+  AuthorizedEmployee ⊑ ValidPermitHolder
+  AuthorizedEmployee ⊑ AuthorizedDriver
+  AuthorizedVisitor ⊑ Person
+  AuthorizedVisitor ⊑ Visitor
+  AuthorizedVisitor ⊑ ValidPermitHolder
+  AuthorizedVisitor ⊑ AuthorizedDriver
+
+Realization
+  ali     AuthorizedDriver, AuthorizedStudent, NonBadgeHolder, Person, Student, ValidPermitHolder
+  sara    AuthorizedDriver, AuthorizedStudent, BadgeHolder, Person, Student, ValidPermitHolder
+  usman   NonBadgeHolder, Person, Student
+  zara    AuthorizedDriver, AuthorizedStudent, NonBadgeHolder, Person, Student, ValidPermitHolder
+  ahmed   AuthorizedDriver, AuthorizedEmployee, Employee, Faculty, NonBadgeHolder, Person, ValidPermitHolder
+  fatima  AuthorizedDriver, AuthorizedEmployee, Employee, NonBadgeHolder, Person, Staff, ValidPermitHolder
+  bilal   AuthorizedDriver, AuthorizedVisitor, NonBadgeHolder, Person, ValidPermitHolder, Visitor
+  hina    NonBadgeHolder, Person, Visitor
+
+Consistency: consistent
+TC12 consistency: ali is both Employee and Student, which D01 declares disjoint

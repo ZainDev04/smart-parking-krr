@@ -1,0 +1,44 @@
+flowchart LR
+    n0["Person"]
+    n1["Student"]
+    n2["Employee"]
+    n3["Faculty"]
+    n4["Staff"]
+    n5["Visitor"]
+    n6["Vehicle"]
+    n7["ParkingPermit"]
+    n8["ParkingFacility"]
+    n9["ParkingZone"]
+    n10["ParkingSpace"]
+    n11["AccessibleSpace"]
+    n12["EVChargingSpace"]
+    n13["MotorbikeSpace"]
+    n14["Reservation"]
+    n15(["VehicleType"])
+    n16(["PermitClass"])
+    n17(["ZoneType"])
+    n18(["SpaceType"])
+    n0 -->|"owns"| n6
+    n0 -->|"has-a"| n7
+    n1 -->|"is-a"| n0
+    n2 -->|"is-a"| n0
+    n3 -->|"is-a"| n2
+    n4 -->|"is-a"| n2
+    n5 -->|"is-a"| n0
+    n6 -->|"has-type"| n15
+    n7 -->|"has-class"| n16
+    n9 -->|"has-type"| n17
+    n9 -->|"part-of"| n8
+    n10 -->|"part-of"| n9
+    n10 -->|"has-type"| n18
+    n11 -->|"is-a"| n10
+    n12 -->|"is-a"| n10
+    n13 -->|"is-a"| n10
+    n14 -->|"made-by"| n0
+    n14 -->|"for-space"| n10
+    n16 -->|"grants"| n17
+    n15 -->|"fits"| n18
+    classDef conceptNode fill:#dbeafe,stroke:#1e40af,color:#0f172a
+    class n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14 conceptNode
+    classDef valueNode fill:#fef3c7,stroke:#b45309,color:#0f172a
+    class n15,n16,n17,n18 valueNode

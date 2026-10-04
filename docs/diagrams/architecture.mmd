@@ -1,0 +1,38 @@
+flowchart LR
+    subgraph L1["1. Presentation"]
+        direction TB
+        CLI["main.py<br/>command line"]
+        WEB["app.py<br/>Streamlit UI"]
+    end
+    subgraph L2["2. Inference engines"]
+        direction TB
+        FC["Forward chainer<br/>data-driven"]
+        BC["Backward chainer<br/>goal-driven"]
+        EX["Why-not<br/>explainer"]
+        DLR["DL reasoner"]
+        MC["FOL model<br/>checker"]
+    end
+    subgraph L3["3. Knowledge base (single source of truth)"]
+        direction TB
+        F["Facts<br/>frames + policy + context"]
+        R["Horn rules R01-R28<br/>constraints IC1-IC7"]
+    end
+    subgraph L4["4. Knowledge representation"]
+        direction TB
+        FR["Frames, facets,<br/>defaults"]
+        SC["ParkingSession<br/>script"]
+        SN["Semantic<br/>network"]
+        DL["DL TBox"]
+        FOL["FOL<br/>statements"]
+    end
+    subgraph L5["5. Generated artefacts"]
+        direction TB
+        PL["Prolog program"]
+        OWL["OWL ontology"]
+        TR["Trace sheets"]
+        REP["Word report"]
+    end
+    L1 -->|queries| L2
+    L2 -->|reads| L3
+    L4 -->|frames become facts| L3
+    L3 -->|exported to| L5

@@ -1,0 +1,48 @@
+F01  ∀s (parking_space(s) → ∃z (parking_zone(z) ∧ located_in(s, z)))
+     Every parking space lies in some parking zone.
+     Horn: Not Horn: ∃ in the conclusion. Mirrors DL axiom T15.
+     Model check: holds
+F02  ∀s ∀z1 ∀z2 ((located_in(s, z1) ∧ located_in(s, z2)) → z1 = z2)
+     A space lies in at most one zone (located_in is functional).
+     Horn: Not Horn without equality; enforced by the frame facet cardinality=single.
+     Model check: holds
+F03  ∀x (person(x) → (student(x) ∨ employee(x) ∨ visitor(x)))
+     Every person is a student, an employee or a visitor.
+     Horn: Not Horn: three positive literals in the conclusion (covering axiom).
+     Model check: holds
+F04  ∀x ¬(student(x) ∧ employee(x))
+     Nobody is both a student and an employee.
+     Horn: Horn denial clause IC4; DL axiom D01.
+     Model check: holds
+F05  ∀x ∀y ∀s ((allocate(x, s) ∧ allocate(y, s)) → x = y)
+     A space is allocated to at most one person.
+     Horn: Horn denial clause IC1 (uses ≠ instead of =).
+     Model check: holds
+F06  ∀x ∀s (allocate(x, s) → ¬space_status(s, occupied))
+     An occupied space is never allocated.
+     Horn: Horn denial clause IC3.
+     Model check: holds
+F07  ∀x ∀s ((allocate(x, s) ∧ space_type(s, accessible)) → accessibility_badge(x, yes))
+     Whoever is allocated an accessible bay holds a badge.
+     Horn: Consequence of R16 and R28 (a safety property, checked on the model). Same meaning as DL axiom T19.
+     Model check: holds
+F08  ∀x (authorized_driver(x) → ∃p (has_permit(x, p) ∧ permit_valid(p)))
+     Every authorized driver holds at least one valid permit.
+     Horn: Follows from R06-R11; the ∃ cannot be written as a Horn conclusion.
+     Model check: holds
+F09  ∃s (located_in(s, zone_a) ∧ space_free(s))
+     There is at least one free space in the student zone.
+     Horn: An existential query; backward chaining answers it with ?- located_in(S, zone_a), space_free(S).
+     Model check: holds
+F10  ∀x ((visitor(x) ∧ ¬∃p has_permit(x, p)) → ¬authorized_driver(x))
+     A visitor with no permit or pass is not an authorized driver.
+     Horn: Not derivable in classical FOL from R01-R28 alone; true under the closed-world assumption the Horn engine uses (negation as failure).
+     Model check: holds
+F11  ∀x ∀s (allocate(x, s) → ∃t requests(x, s, t))
+     Every allocation answers a request.
+     Horn: Follows from R28, whose body starts with requests(X, S, T).
+     Model check: holds
+F12  ∀p (permit_valid(p) → ∃b ∃e ∃d (permit_start(p, b) ∧ permit_expiry(p, e) ∧ current_date(d) ∧ b ≤ d ∧ e ≥ d))
+     A valid permit is in force today: it has started and has not expired.
+     Horn: The 'only if' half of R06 (Clark completion of permit_valid).
+     Model check: holds

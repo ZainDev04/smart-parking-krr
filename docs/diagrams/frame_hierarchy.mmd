@@ -1,0 +1,82 @@
+classDiagram
+    direction LR
+    class Person {
+        fullName : str
+        accessibilityBadge : symbol default=no
+        owns : Vehicle [many]
+        hasPermit : ParkingPermit [many]
+    }
+    class Student {
+        studentId : str
+        department : str
+    }
+    class Employee {
+        employeeId : str
+        department : str
+    }
+    class Faculty {
+        designation : str default=Lecturer
+    }
+    class Staff {
+        jobTitle : str
+    }
+    class Visitor {
+        purpose : str default=campus visit
+        hostDepartment : str
+    }
+    class Vehicle {
+        plateNo : str
+        vehicleType : symbol default=car
+    }
+    class ParkingPermit {
+        permitClass : symbol
+        status : symbol default=active
+        startDate : int
+        expiryDate : int
+    }
+    class ParkingFacility {
+        campus : str default=NED University main campus
+    }
+    class ParkingZone {
+        zoneType : symbol
+        openHour : int default=7
+        closeHour : int default=22
+        partOf : ParkingFacility
+        capacity : int if-needed
+    }
+    class ParkingSpace {
+        locatedIn : ParkingZone
+        spaceType : symbol default=standard
+        status : symbol default=vacant
+        zoneType : symbol if-needed
+    }
+    class AccessibleSpace {
+        spaceType : symbol default=accessible
+        widthMetres : str default=3.6
+    }
+    class EVChargingSpace {
+        spaceType : symbol default=ev_charging
+        chargerKW : int default=7
+    }
+    class MotorbikeSpace {
+        spaceType : symbol default=motorbike
+    }
+    class Reservation {
+        madeBy : Person
+        forSpace : ParkingSpace
+        date : int
+    }
+    Person <|-- Student : ISA
+    Person <|-- Employee : ISA
+    Employee <|-- Faculty : ISA
+    Employee <|-- Staff : ISA
+    Person <|-- Visitor : ISA
+    ParkingSpace <|-- AccessibleSpace : ISA
+    ParkingSpace <|-- EVChargingSpace : ISA
+    ParkingSpace <|-- MotorbikeSpace : ISA
+    Person --> Vehicle : owns
+    Person --> ParkingPermit : hasPermit
+    ParkingZone --> ParkingFacility : partOf
+    ParkingSpace --> ParkingZone : locatedIn
+    Reservation --> Person : madeBy
+    Reservation --> ParkingSpace : forSpace

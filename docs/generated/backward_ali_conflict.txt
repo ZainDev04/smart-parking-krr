@@ -1,0 +1,509 @@
+?- allocate(ali, s_a1).
+
+   1  GOAL    allocate(ali, s_a1)
+   2  RULE    try R28: allocate(X, S) :- requests(X, S, T), can_allocate(X, S), not loses(X, S), not double_booked(X).
+   3          subgoals: requests(ali, s_a1, T_1), can_allocate(ali, s_a1), not loses(ali, s_a1), not double_booked(ali)
+   4      GOAL    requests(ali, s_a1, T_1)
+   5      FACT    requests(ali, s_a1, 905)  matches the stored fact
+   6      GOAL    can_allocate(ali, s_a1)
+   7      RULE    try R19: can_allocate(X, S) :- eligible_for_space(X, S), space_free(S).
+   8              subgoals: eligible_for_space(ali, s_a1), space_free(s_a1)
+   9          GOAL    eligible_for_space(ali, s_a1)
+  10          RULE    try R15: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, T), open_type(T).
+  11                  subgoals: suitable_space(ali, s_a1), space_type(s_a1, T_3), open_type(T_3)
+  12              GOAL    suitable_space(ali, s_a1)
+  13              RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+  14                      subgoals: zone_access(ali, Z_4), located_in(s_a1, Z_4), owns(ali, V_4), vehicle_type(V_4, VT_4), space_type(s_a1, ST_4), fits(VT_4, ST_4)
+  15                  GOAL    zone_access(ali, Z_4)
+  16                  RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+  17                          subgoals: authorized(ali, P_5), permit_class(P_5, C_5), grants(C_5, T_5), zone_type(Z_5, T_5), zone_open(Z_5)
+  18                      GOAL    authorized(ali, P_5)
+  19                      RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+  20                              subgoals: permit_matches_role(ali, P_6), permit_valid(P_6)
+  21                          GOAL    permit_matches_role(ali, P_6)
+  22                          RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+  23                                  subgoals: has_permit(ali, P_7), permit_class(P_7, student_permit), student(ali)
+  24                              GOAL    has_permit(ali, P_7)
+  25                              FACT    has_permit(ali, p_ali)  matches the stored fact
+  26                              GOAL    permit_class(p_ali, student_permit)
+  27                              FACT    permit_class(p_ali, student_permit)  matches the stored fact
+  28                              GOAL    student(ali)
+  29                              FACT    student(ali)  matches the stored fact
+  30                          PROVED  permit_matches_role(ali, p_ali)  by R07
+  31                          GOAL    permit_valid(p_ali)
+  32                          RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+  33                                  subgoals: permit_status(p_ali, active), permit_start(p_ali, B_8), permit_expiry(p_ali, E_8), current_date(D_8), B_8 =< D_8, E_8 >= D_8
+  34                              GOAL    permit_status(p_ali, active)
+  35                              FACT    permit_status(p_ali, active)  matches the stored fact
+  36                              GOAL    permit_start(p_ali, B_8)
+  37                              FACT    permit_start(p_ali, 20260701)  matches the stored fact
+  38                              GOAL    permit_expiry(p_ali, E_8)
+  39                              FACT    permit_expiry(p_ali, 20270630)  matches the stored fact
+  40                              GOAL    current_date(D_8)
+  41                              FACT    current_date(20261002)  matches the stored fact
+  42                              BUILTIN 20260701 =< 20261002  is true
+  43                              BUILTIN 20270630 >= 20261002  is true
+  44                          PROVED  permit_valid(p_ali)  by R06
+  45                      PROVED  authorized(ali, p_ali)  by R10
+  46                      GOAL    permit_class(p_ali, C_5)
+  47                      FACT    permit_class(p_ali, student_permit)  matches the stored fact
+  48                      GOAL    grants(student_permit, T_5)
+  49                      FACT    grants(student_permit, student_zone)  matches the stored fact
+  50                      GOAL    zone_type(Z_5, student_zone)
+  51                      FACT    zone_type(zone_a, student_zone)  matches the stored fact
+  52                      GOAL    zone_open(zone_a)
+  53                      RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+  54                              subgoals: zone_opens(zone_a, O_9), zone_closes(zone_a, C_9), current_hour(H_9), H_9 >= O_9, H_9 < C_9
+  55                          GOAL    zone_opens(zone_a, O_9)
+  56                          FACT    zone_opens(zone_a, 7)  matches the stored fact
+  57                          GOAL    zone_closes(zone_a, C_9)
+  58                          FACT    zone_closes(zone_a, 22)  matches the stored fact
+  59                          GOAL    current_hour(H_9)
+  60                          FACT    current_hour(10)  matches the stored fact
+  61                          BUILTIN 10 >= 7  is true
+  62                          BUILTIN 10 < 22  is true
+  63                      PROVED  zone_open(zone_a)  by R12
+  64                  PROVED  zone_access(ali, zone_a)  by R13
+  65                  GOAL    located_in(s_a1, zone_a)
+  66                  FACT    located_in(s_a1, zone_a)  matches the stored fact
+  67                  GOAL    owns(ali, V_4)
+  68                  FACT    owns(ali, car_ali)  matches the stored fact
+  69                  GOAL    vehicle_type(car_ali, VT_4)
+  70                  FACT    vehicle_type(car_ali, car)  matches the stored fact
+  71                  GOAL    space_type(s_a1, ST_4)
+  72                  FACT    space_type(s_a1, standard)  matches the stored fact
+  73                  GOAL    fits(car, standard)
+  74                  FACT    fits(car, standard)  matches the stored fact
+  75              PROVED  suitable_space(ali, s_a1)  by R14
+  76              GOAL    space_type(s_a1, T_3)
+  77              FACT    space_type(s_a1, standard)  matches the stored fact
+  78              GOAL    open_type(standard)
+  79              FACT    open_type(standard)  matches the stored fact
+  80          PROVED  eligible_for_space(ali, s_a1)  by R15
+  81          GOAL    space_free(s_a1)
+  82          RULE    try R17: space_free(S) :- space_status(S, vacant).
+  83                  subgoals: space_status(s_a1, vacant)
+  84              GOAL    space_status(s_a1, vacant)
+  85              FACT    space_status(s_a1, vacant)  matches the stored fact
+  86          PROVED  space_free(s_a1)  by R17
+  87      PROVED  can_allocate(ali, s_a1)  by R19
+  88      NOT     try to prove loses(ali, s_a1); 'not' succeeds only if this fails
+  89          GOAL    loses(ali, s_a1)
+  90          RULE    try R25: loses(Y, S) :- requests(Y, S, TY), requests(X, S, TX), X \= Y, can_allocate(X, S), priority(X, PX), priority(Y, PY), PX > PY.
+  91                  subgoals: requests(ali, s_a1, TY_11), requests(X_11, s_a1, TX_11), X_11 \= ali, can_allocate(X_11, s_a1), priority(X_11, PX_11), priority(ali, PY_11), PX_11 > PY_11
+  92              GOAL    requests(ali, s_a1, TY_11)
+  93              FACT    requests(ali, s_a1, 905)  matches the stored fact
+  94              GOAL    requests(X_11, s_a1, TX_11)
+  95              FACT    requests(ali, s_a1, 905)  matches the stored fact
+  96              BUILTIN ali \= ali  is false
+  97              FACT    requests(sara, s_a1, 910)  matches the stored fact
+  98              BUILTIN sara \= ali  is true
+  99              GOAL    can_allocate(sara, s_a1)
+ 100              RULE    try R19: can_allocate(X, S) :- eligible_for_space(X, S), space_free(S).
+ 101                      subgoals: eligible_for_space(sara, s_a1), space_free(s_a1)
+ 102                  GOAL    eligible_for_space(sara, s_a1)
+ 103                  RULE    try R15: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, T), open_type(T).
+ 104                          subgoals: suitable_space(sara, s_a1), space_type(s_a1, T_13), open_type(T_13)
+ 105                      GOAL    suitable_space(sara, s_a1)
+ 106                      RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+ 107                              subgoals: zone_access(sara, Z_14), located_in(s_a1, Z_14), owns(sara, V_14), vehicle_type(V_14, VT_14), space_type(s_a1, ST_14), fits(VT_14, ST_14)
+ 108                          GOAL    zone_access(sara, Z_14)
+ 109                          RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+ 110                                  subgoals: authorized(sara, P_15), permit_class(P_15, C_15), grants(C_15, T_15), zone_type(Z_15, T_15), zone_open(Z_15)
+ 111                              GOAL    authorized(sara, P_15)
+ 112                              RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+ 113                                      subgoals: permit_matches_role(sara, P_16), permit_valid(P_16)
+ 114                                  GOAL    permit_matches_role(sara, P_16)
+ 115                                  RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+ 116                                          subgoals: has_permit(sara, P_17), permit_class(P_17, student_permit), student(sara)
+ 117                                      GOAL    has_permit(sara, P_17)
+ 118                                      FACT    has_permit(sara, p_sara)  matches the stored fact
+ 119                                      GOAL    permit_class(p_sara, student_permit)
+ 120                                      FACT    permit_class(p_sara, student_permit)  matches the stored fact
+ 121                                      GOAL    student(sara)
+ 122                                      FACT    student(sara)  matches the stored fact
+ 123                                  PROVED  permit_matches_role(sara, p_sara)  by R07
+ 124                                  GOAL    permit_valid(p_sara)
+ 125                                  RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+ 126                                          subgoals: permit_status(p_sara, active), permit_start(p_sara, B_18), permit_expiry(p_sara, E_18), current_date(D_18), B_18 =< D_18, E_18 >= D_18
+ 127                                      GOAL    permit_status(p_sara, active)
+ 128                                      FACT    permit_status(p_sara, active)  matches the stored fact
+ 129                                      GOAL    permit_start(p_sara, B_18)
+ 130                                      FACT    permit_start(p_sara, 20260701)  matches the stored fact
+ 131                                      GOAL    permit_expiry(p_sara, E_18)
+ 132                                      FACT    permit_expiry(p_sara, 20270630)  matches the stored fact
+ 133                                      GOAL    current_date(D_18)
+ 134                                      FACT    current_date(20261002)  matches the stored fact
+ 135                                      BUILTIN 20260701 =< 20261002  is true
+ 136                                      BUILTIN 20270630 >= 20261002  is true
+ 137                                  PROVED  permit_valid(p_sara)  by R06
+ 138                              PROVED  authorized(sara, p_sara)  by R10
+ 139                              GOAL    permit_class(p_sara, C_15)
+ 140                              FACT    permit_class(p_sara, student_permit)  matches the stored fact
+ 141                              GOAL    grants(student_permit, T_15)
+ 142                              FACT    grants(student_permit, student_zone)  matches the stored fact
+ 143                              GOAL    zone_type(Z_15, student_zone)
+ 144                              FACT    zone_type(zone_a, student_zone)  matches the stored fact
+ 145                              GOAL    zone_open(zone_a)
+ 146                              RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+ 147                                      subgoals: zone_opens(zone_a, O_19), zone_closes(zone_a, C_19), current_hour(H_19), H_19 >= O_19, H_19 < C_19
+ 148                                  GOAL    zone_opens(zone_a, O_19)
+ 149                                  FACT    zone_opens(zone_a, 7)  matches the stored fact
+ 150                                  GOAL    zone_closes(zone_a, C_19)
+ 151                                  FACT    zone_closes(zone_a, 22)  matches the stored fact
+ 152                                  GOAL    current_hour(H_19)
+ 153                                  FACT    current_hour(10)  matches the stored fact
+ 154                                  BUILTIN 10 >= 7  is true
+ 155                                  BUILTIN 10 < 22  is true
+ 156                              PROVED  zone_open(zone_a)  by R12
+ 157                          PROVED  zone_access(sara, zone_a)  by R13
+ 158                          GOAL    located_in(s_a1, zone_a)
+ 159                          FACT    located_in(s_a1, zone_a)  matches the stored fact
+ 160                          GOAL    owns(sara, V_14)
+ 161                          FACT    owns(sara, car_sara)  matches the stored fact
+ 162                          GOAL    vehicle_type(car_sara, VT_14)
+ 163                          FACT    vehicle_type(car_sara, car)  matches the stored fact
+ 164                          GOAL    space_type(s_a1, ST_14)
+ 165                          FACT    space_type(s_a1, standard)  matches the stored fact
+ 166                          GOAL    fits(car, standard)
+ 167                          FACT    fits(car, standard)  matches the stored fact
+ 168                      PROVED  suitable_space(sara, s_a1)  by R14
+ 169                      GOAL    space_type(s_a1, T_13)
+ 170                      FACT    space_type(s_a1, standard)  matches the stored fact
+ 171                      GOAL    open_type(standard)
+ 172                      FACT    open_type(standard)  matches the stored fact
+ 173                  PROVED  eligible_for_space(sara, s_a1)  by R15
+ 174                  GOAL    space_free(s_a1)
+ 175                  RULE    try R17: space_free(S) :- space_status(S, vacant).
+ 176                          subgoals: space_status(s_a1, vacant)
+ 177                      GOAL    space_status(s_a1, vacant)
+ 178                      FACT    space_status(s_a1, vacant)  matches the stored fact
+ 179                  PROVED  space_free(s_a1)  by R17
+ 180              PROVED  can_allocate(sara, s_a1)  by R19
+ 181              GOAL    priority(sara, PX_11)
+ 182              RULE    try R21: priority(X, 3) :- person(X), accessibility_badge(X, yes).
+ 183                      subgoals: person(sara), accessibility_badge(sara, yes)
+ 184                  GOAL    person(sara)
+ 185                  RULE    try R01: person(X) :- student(X).
+ 186                          subgoals: student(sara)
+ 187                      GOAL    student(sara)
+ 188                      FACT    student(sara)  matches the stored fact
+ 189                  PROVED  person(sara)  by R01
+ 190                  GOAL    accessibility_badge(sara, yes)
+ 191                  FACT    accessibility_badge(sara, yes)  matches the stored fact
+ 192              PROVED  priority(sara, 3)  by R21
+ 193              GOAL    priority(ali, PY_11)
+ 194              RULE    try R21: priority(X, 3) :- person(X), accessibility_badge(X, yes).
+ 195                      subgoals: person(ali), accessibility_badge(ali, yes)
+ 196                  GOAL    person(ali)
+ 197                  RULE    try R01: person(X) :- student(X).
+ 198                          subgoals: student(ali)
+ 199                      GOAL    student(ali)
+ 200                      FACT    student(ali)  matches the stored fact
+ 201                  PROVED  person(ali)  by R01
+ 202                  GOAL    accessibility_badge(ali, yes)
+ 203                  FAIL    accessibility_badge(ali, yes)  (no fact matches and no rule succeeds)
+ 204                  RULE    try R02: person(X) :- employee(X).
+ 205                          subgoals: employee(ali)
+ 206                      GOAL    employee(ali)
+ 207                      RULE    try R04: employee(X) :- faculty(X).
+ 208                              subgoals: faculty(ali)
+ 209                          GOAL    faculty(ali)
+ 210                          FAIL    faculty(ali)  (no fact matches and no rule succeeds)
+ 211                      RULE    try R05: employee(X) :- staff(X).
+ 212                              subgoals: staff(ali)
+ 213                          GOAL    staff(ali)
+ 214                          FAIL    staff(ali)  (no fact matches and no rule succeeds)
+ 215                      FAIL    employee(ali)  (no fact matches and no rule succeeds)
+ 216                  RULE    try R03: person(X) :- visitor(X).
+ 217                          subgoals: visitor(ali)
+ 218                      GOAL    visitor(ali)
+ 219                      FAIL    visitor(ali)  (no fact matches and no rule succeeds)
+ 220              RULE    try R22: priority(X, 2) :- employee(X), accessibility_badge(X, no).
+ 221                      subgoals: employee(ali), accessibility_badge(ali, no)
+ 222                  GOAL    employee(ali)
+ 223                  RULE    try R04: employee(X) :- faculty(X).
+ 224                          subgoals: faculty(ali)
+ 225                      GOAL    faculty(ali)
+ 226                      FAIL    faculty(ali)  (no fact matches and no rule succeeds)
+ 227                  RULE    try R05: employee(X) :- staff(X).
+ 228                          subgoals: staff(ali)
+ 229                      GOAL    staff(ali)
+ 230                      FAIL    staff(ali)  (no fact matches and no rule succeeds)
+ 231                  FAIL    employee(ali)  (no fact matches and no rule succeeds)
+ 232              RULE    try R23: priority(X, 1) :- student(X), accessibility_badge(X, no).
+ 233                      subgoals: student(ali), accessibility_badge(ali, no)
+ 234                  GOAL    student(ali)
+ 235                  FACT    student(ali)  matches the stored fact
+ 236                  GOAL    accessibility_badge(ali, no)
+ 237                  FACT    accessibility_badge(ali, no)  matches the stored fact
+ 238              PROVED  priority(ali, 1)  by R23
+ 239              BUILTIN 3 > 1  is true
+ 240          PROVED  loses(ali, s_a1)  by R25
+ 241      FAIL    not loses(ali, s_a1)  (the goal was proved, so 'not' fails)
+ 242                          RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+ 243                                  subgoals: has_permit(ali, P_33), permit_class(P_33, employee_permit), employee(ali)
+ 244                              GOAL    has_permit(ali, P_33)
+ 245                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 246                              GOAL    permit_class(p_ali, employee_permit)
+ 247                              FAIL    permit_class(p_ali, employee_permit)  (no fact matches and no rule succeeds)
+ 248                          RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 249                                  subgoals: has_permit(ali, P_34), permit_class(P_34, visitor_pass), visitor(ali)
+ 250                              GOAL    has_permit(ali, P_34)
+ 251                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 252                              GOAL    permit_class(p_ali, visitor_pass)
+ 253                              FAIL    permit_class(p_ali, visitor_pass)  (no fact matches and no rule succeeds)
+ 254          RULE    try R16: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, accessible), accessibility_badge(X, yes).
+ 255                  subgoals: suitable_space(ali, s_a1), space_type(s_a1, accessible), accessibility_badge(ali, yes)
+ 256              GOAL    suitable_space(ali, s_a1)
+ 257              RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+ 258                      subgoals: zone_access(ali, Z_36), located_in(s_a1, Z_36), owns(ali, V_36), vehicle_type(V_36, VT_36), space_type(s_a1, ST_36), fits(VT_36, ST_36)
+ 259                  GOAL    zone_access(ali, Z_36)
+ 260                  RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+ 261                          subgoals: authorized(ali, P_37), permit_class(P_37, C_37), grants(C_37, T_37), zone_type(Z_37, T_37), zone_open(Z_37)
+ 262                      GOAL    authorized(ali, P_37)
+ 263                      RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+ 264                              subgoals: permit_matches_role(ali, P_38), permit_valid(P_38)
+ 265                          GOAL    permit_matches_role(ali, P_38)
+ 266                          RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+ 267                                  subgoals: has_permit(ali, P_39), permit_class(P_39, student_permit), student(ali)
+ 268                              GOAL    has_permit(ali, P_39)
+ 269                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 270                              GOAL    permit_class(p_ali, student_permit)
+ 271                              FACT    permit_class(p_ali, student_permit)  matches the stored fact
+ 272                              GOAL    student(ali)
+ 273                              FACT    student(ali)  matches the stored fact
+ 274                          PROVED  permit_matches_role(ali, p_ali)  by R07
+ 275                          GOAL    permit_valid(p_ali)
+ 276                          RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+ 277                                  subgoals: permit_status(p_ali, active), permit_start(p_ali, B_40), permit_expiry(p_ali, E_40), current_date(D_40), B_40 =< D_40, E_40 >= D_40
+ 278                              GOAL    permit_status(p_ali, active)
+ 279                              FACT    permit_status(p_ali, active)  matches the stored fact
+ 280                              GOAL    permit_start(p_ali, B_40)
+ 281                              FACT    permit_start(p_ali, 20260701)  matches the stored fact
+ 282                              GOAL    permit_expiry(p_ali, E_40)
+ 283                              FACT    permit_expiry(p_ali, 20270630)  matches the stored fact
+ 284                              GOAL    current_date(D_40)
+ 285                              FACT    current_date(20261002)  matches the stored fact
+ 286                              BUILTIN 20260701 =< 20261002  is true
+ 287                              BUILTIN 20270630 >= 20261002  is true
+ 288                          PROVED  permit_valid(p_ali)  by R06
+ 289                      PROVED  authorized(ali, p_ali)  by R10
+ 290                      GOAL    permit_class(p_ali, C_37)
+ 291                      FACT    permit_class(p_ali, student_permit)  matches the stored fact
+ 292                      GOAL    grants(student_permit, T_37)
+ 293                      FACT    grants(student_permit, student_zone)  matches the stored fact
+ 294                      GOAL    zone_type(Z_37, student_zone)
+ 295                      FACT    zone_type(zone_a, student_zone)  matches the stored fact
+ 296                      GOAL    zone_open(zone_a)
+ 297                      RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+ 298                              subgoals: zone_opens(zone_a, O_41), zone_closes(zone_a, C_41), current_hour(H_41), H_41 >= O_41, H_41 < C_41
+ 299                          GOAL    zone_opens(zone_a, O_41)
+ 300                          FACT    zone_opens(zone_a, 7)  matches the stored fact
+ 301                          GOAL    zone_closes(zone_a, C_41)
+ 302                          FACT    zone_closes(zone_a, 22)  matches the stored fact
+ 303                          GOAL    current_hour(H_41)
+ 304                          FACT    current_hour(10)  matches the stored fact
+ 305                          BUILTIN 10 >= 7  is true
+ 306                          BUILTIN 10 < 22  is true
+ 307                      PROVED  zone_open(zone_a)  by R12
+ 308                  PROVED  zone_access(ali, zone_a)  by R13
+ 309                  GOAL    located_in(s_a1, zone_a)
+ 310                  FACT    located_in(s_a1, zone_a)  matches the stored fact
+ 311                  GOAL    owns(ali, V_36)
+ 312                  FACT    owns(ali, car_ali)  matches the stored fact
+ 313                  GOAL    vehicle_type(car_ali, VT_36)
+ 314                  FACT    vehicle_type(car_ali, car)  matches the stored fact
+ 315                  GOAL    space_type(s_a1, ST_36)
+ 316                  FACT    space_type(s_a1, standard)  matches the stored fact
+ 317                  GOAL    fits(car, standard)
+ 318                  FACT    fits(car, standard)  matches the stored fact
+ 319              PROVED  suitable_space(ali, s_a1)  by R14
+ 320              GOAL    space_type(s_a1, accessible)
+ 321              FAIL    space_type(s_a1, accessible)  (no fact matches and no rule succeeds)
+ 322                          RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+ 323                                  subgoals: has_permit(ali, P_42), permit_class(P_42, employee_permit), employee(ali)
+ 324                              GOAL    has_permit(ali, P_42)
+ 325                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 326                              GOAL    permit_class(p_ali, employee_permit)
+ 327                              FAIL    permit_class(p_ali, employee_permit)  (no fact matches and no rule succeeds)
+ 328                          RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 329                                  subgoals: has_permit(ali, P_43), permit_class(P_43, visitor_pass), visitor(ali)
+ 330                              GOAL    has_permit(ali, P_43)
+ 331                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 332                              GOAL    permit_class(p_ali, visitor_pass)
+ 333                              FAIL    permit_class(p_ali, visitor_pass)  (no fact matches and no rule succeeds)
+ 334      RULE    try R20: can_allocate(X, S) :- eligible_for_space(X, S), space_status(S, reserved), holds_reservation(X, S).
+ 335              subgoals: eligible_for_space(ali, s_a1), space_status(s_a1, reserved), holds_reservation(ali, s_a1)
+ 336          GOAL    eligible_for_space(ali, s_a1)
+ 337          RULE    try R15: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, T), open_type(T).
+ 338                  subgoals: suitable_space(ali, s_a1), space_type(s_a1, T_45), open_type(T_45)
+ 339              GOAL    suitable_space(ali, s_a1)
+ 340              RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+ 341                      subgoals: zone_access(ali, Z_46), located_in(s_a1, Z_46), owns(ali, V_46), vehicle_type(V_46, VT_46), space_type(s_a1, ST_46), fits(VT_46, ST_46)
+ 342                  GOAL    zone_access(ali, Z_46)
+ 343                  RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+ 344                          subgoals: authorized(ali, P_47), permit_class(P_47, C_47), grants(C_47, T_47), zone_type(Z_47, T_47), zone_open(Z_47)
+ 345                      GOAL    authorized(ali, P_47)
+ 346                      RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+ 347                              subgoals: permit_matches_role(ali, P_48), permit_valid(P_48)
+ 348                          GOAL    permit_matches_role(ali, P_48)
+ 349                          RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+ 350                                  subgoals: has_permit(ali, P_49), permit_class(P_49, student_permit), student(ali)
+ 351                              GOAL    has_permit(ali, P_49)
+ 352                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 353                              GOAL    permit_class(p_ali, student_permit)
+ 354                              FACT    permit_class(p_ali, student_permit)  matches the stored fact
+ 355                              GOAL    student(ali)
+ 356                              FACT    student(ali)  matches the stored fact
+ 357                          PROVED  permit_matches_role(ali, p_ali)  by R07
+ 358                          GOAL    permit_valid(p_ali)
+ 359                          RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+ 360                                  subgoals: permit_status(p_ali, active), permit_start(p_ali, B_50), permit_expiry(p_ali, E_50), current_date(D_50), B_50 =< D_50, E_50 >= D_50
+ 361                              GOAL    permit_status(p_ali, active)
+ 362                              FACT    permit_status(p_ali, active)  matches the stored fact
+ 363                              GOAL    permit_start(p_ali, B_50)
+ 364                              FACT    permit_start(p_ali, 20260701)  matches the stored fact
+ 365                              GOAL    permit_expiry(p_ali, E_50)
+ 366                              FACT    permit_expiry(p_ali, 20270630)  matches the stored fact
+ 367                              GOAL    current_date(D_50)
+ 368                              FACT    current_date(20261002)  matches the stored fact
+ 369                              BUILTIN 20260701 =< 20261002  is true
+ 370                              BUILTIN 20270630 >= 20261002  is true
+ 371                          PROVED  permit_valid(p_ali)  by R06
+ 372                      PROVED  authorized(ali, p_ali)  by R10
+ 373                      GOAL    permit_class(p_ali, C_47)
+ 374                      FACT    permit_class(p_ali, student_permit)  matches the stored fact
+ 375                      GOAL    grants(student_permit, T_47)
+ 376                      FACT    grants(student_permit, student_zone)  matches the stored fact
+ 377                      GOAL    zone_type(Z_47, student_zone)
+ 378                      FACT    zone_type(zone_a, student_zone)  matches the stored fact
+ 379                      GOAL    zone_open(zone_a)
+ 380                      RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+ 381                              subgoals: zone_opens(zone_a, O_51), zone_closes(zone_a, C_51), current_hour(H_51), H_51 >= O_51, H_51 < C_51
+ 382                          GOAL    zone_opens(zone_a, O_51)
+ 383                          FACT    zone_opens(zone_a, 7)  matches the stored fact
+ 384                          GOAL    zone_closes(zone_a, C_51)
+ 385                          FACT    zone_closes(zone_a, 22)  matches the stored fact
+ 386                          GOAL    current_hour(H_51)
+ 387                          FACT    current_hour(10)  matches the stored fact
+ 388                          BUILTIN 10 >= 7  is true
+ 389                          BUILTIN 10 < 22  is true
+ 390                      PROVED  zone_open(zone_a)  by R12
+ 391                  PROVED  zone_access(ali, zone_a)  by R13
+ 392                  GOAL    located_in(s_a1, zone_a)
+ 393                  FACT    located_in(s_a1, zone_a)  matches the stored fact
+ 394                  GOAL    owns(ali, V_46)
+ 395                  FACT    owns(ali, car_ali)  matches the stored fact
+ 396                  GOAL    vehicle_type(car_ali, VT_46)
+ 397                  FACT    vehicle_type(car_ali, car)  matches the stored fact
+ 398                  GOAL    space_type(s_a1, ST_46)
+ 399                  FACT    space_type(s_a1, standard)  matches the stored fact
+ 400                  GOAL    fits(car, standard)
+ 401                  FACT    fits(car, standard)  matches the stored fact
+ 402              PROVED  suitable_space(ali, s_a1)  by R14
+ 403              GOAL    space_type(s_a1, T_45)
+ 404              FACT    space_type(s_a1, standard)  matches the stored fact
+ 405              GOAL    open_type(standard)
+ 406              FACT    open_type(standard)  matches the stored fact
+ 407          PROVED  eligible_for_space(ali, s_a1)  by R15
+ 408          GOAL    space_status(s_a1, reserved)
+ 409          FAIL    space_status(s_a1, reserved)  (no fact matches and no rule succeeds)
+ 410                          RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+ 411                                  subgoals: has_permit(ali, P_52), permit_class(P_52, employee_permit), employee(ali)
+ 412                              GOAL    has_permit(ali, P_52)
+ 413                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 414                              GOAL    permit_class(p_ali, employee_permit)
+ 415                              FAIL    permit_class(p_ali, employee_permit)  (no fact matches and no rule succeeds)
+ 416                          RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 417                                  subgoals: has_permit(ali, P_53), permit_class(P_53, visitor_pass), visitor(ali)
+ 418                              GOAL    has_permit(ali, P_53)
+ 419                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 420                              GOAL    permit_class(p_ali, visitor_pass)
+ 421                              FAIL    permit_class(p_ali, visitor_pass)  (no fact matches and no rule succeeds)
+ 422          RULE    try R16: eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, accessible), accessibility_badge(X, yes).
+ 423                  subgoals: suitable_space(ali, s_a1), space_type(s_a1, accessible), accessibility_badge(ali, yes)
+ 424              GOAL    suitable_space(ali, s_a1)
+ 425              RULE    try R14: suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+ 426                      subgoals: zone_access(ali, Z_55), located_in(s_a1, Z_55), owns(ali, V_55), vehicle_type(V_55, VT_55), space_type(s_a1, ST_55), fits(VT_55, ST_55)
+ 427                  GOAL    zone_access(ali, Z_55)
+ 428                  RULE    try R13: zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+ 429                          subgoals: authorized(ali, P_56), permit_class(P_56, C_56), grants(C_56, T_56), zone_type(Z_56, T_56), zone_open(Z_56)
+ 430                      GOAL    authorized(ali, P_56)
+ 431                      RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+ 432                              subgoals: permit_matches_role(ali, P_57), permit_valid(P_57)
+ 433                          GOAL    permit_matches_role(ali, P_57)
+ 434                          RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+ 435                                  subgoals: has_permit(ali, P_58), permit_class(P_58, student_permit), student(ali)
+ 436                              GOAL    has_permit(ali, P_58)
+ 437                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 438                              GOAL    permit_class(p_ali, student_permit)
+ 439                              FACT    permit_class(p_ali, student_permit)  matches the stored fact
+ 440                              GOAL    student(ali)
+ 441                              FACT    student(ali)  matches the stored fact
+ 442                          PROVED  permit_matches_role(ali, p_ali)  by R07
+ 443                          GOAL    permit_valid(p_ali)
+ 444                          RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+ 445                                  subgoals: permit_status(p_ali, active), permit_start(p_ali, B_59), permit_expiry(p_ali, E_59), current_date(D_59), B_59 =< D_59, E_59 >= D_59
+ 446                              GOAL    permit_status(p_ali, active)
+ 447                              FACT    permit_status(p_ali, active)  matches the stored fact
+ 448                              GOAL    permit_start(p_ali, B_59)
+ 449                              FACT    permit_start(p_ali, 20260701)  matches the stored fact
+ 450                              GOAL    permit_expiry(p_ali, E_59)
+ 451                              FACT    permit_expiry(p_ali, 20270630)  matches the stored fact
+ 452                              GOAL    current_date(D_59)
+ 453                              FACT    current_date(20261002)  matches the stored fact
+ 454                              BUILTIN 20260701 =< 20261002  is true
+ 455                              BUILTIN 20270630 >= 20261002  is true
+ 456                          PROVED  permit_valid(p_ali)  by R06
+ 457                      PROVED  authorized(ali, p_ali)  by R10
+ 458                      GOAL    permit_class(p_ali, C_56)
+ 459                      FACT    permit_class(p_ali, student_permit)  matches the stored fact
+ 460                      GOAL    grants(student_permit, T_56)
+ 461                      FACT    grants(student_permit, student_zone)  matches the stored fact
+ 462                      GOAL    zone_type(Z_56, student_zone)
+ 463                      FACT    zone_type(zone_a, student_zone)  matches the stored fact
+ 464                      GOAL    zone_open(zone_a)
+ 465                      RULE    try R12: zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+ 466                              subgoals: zone_opens(zone_a, O_60), zone_closes(zone_a, C_60), current_hour(H_60), H_60 >= O_60, H_60 < C_60
+ 467                          GOAL    zone_opens(zone_a, O_60)
+ 468                          FACT    zone_opens(zone_a, 7)  matches the stored fact
+ 469                          GOAL    zone_closes(zone_a, C_60)
+ 470                          FACT    zone_closes(zone_a, 22)  matches the stored fact
+ 471                          GOAL    current_hour(H_60)
+ 472                          FACT    current_hour(10)  matches the stored fact
+ 473                          BUILTIN 10 >= 7  is true
+ 474                          BUILTIN 10 < 22  is true
+ 475                      PROVED  zone_open(zone_a)  by R12
+ 476                  PROVED  zone_access(ali, zone_a)  by R13
+ 477                  GOAL    located_in(s_a1, zone_a)
+ 478                  FACT    located_in(s_a1, zone_a)  matches the stored fact
+ 479                  GOAL    owns(ali, V_55)
+ 480                  FACT    owns(ali, car_ali)  matches the stored fact
+ 481                  GOAL    vehicle_type(car_ali, VT_55)
+ 482                  FACT    vehicle_type(car_ali, car)  matches the stored fact
+ 483                  GOAL    space_type(s_a1, ST_55)
+ 484                  FACT    space_type(s_a1, standard)  matches the stored fact
+ 485                  GOAL    fits(car, standard)
+ 486                  FACT    fits(car, standard)  matches the stored fact
+ 487              PROVED  suitable_space(ali, s_a1)  by R14
+ 488              GOAL    space_type(s_a1, accessible)
+ 489              FAIL    space_type(s_a1, accessible)  (no fact matches and no rule succeeds)
+ 490                          RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+ 491                                  subgoals: has_permit(ali, P_61), permit_class(P_61, employee_permit), employee(ali)
+ 492                              GOAL    has_permit(ali, P_61)
+ 493                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 494                              GOAL    permit_class(p_ali, employee_permit)
+ 495                              FAIL    permit_class(p_ali, employee_permit)  (no fact matches and no rule succeeds)
+ 496                          RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+ 497                                  subgoals: has_permit(ali, P_62), permit_class(P_62, visitor_pass), visitor(ali)
+ 498                              GOAL    has_permit(ali, P_62)
+ 499                              FACT    has_permit(ali, p_ali)  matches the stored fact
+ 500                              GOAL    permit_class(p_ali, visitor_pass)
+ 501                              FAIL    permit_class(p_ali, visitor_pass)  (no fact matches and no rule succeeds)
+ 502  FAIL    allocate(ali, s_a1)  (no fact matches and no rule succeeds)
+
+allocate(ali, s_a1): FAILED. No proof exists from the facts and rules.
+
+allocate(ali, s_a1) cannot be proved. Reasons, rule by rule:
+  R28 blocked at not loses(ali, s_a1)  (loses(ali, s_a1) is provable by R25; competing request: requests(sara, s_a1, 910))

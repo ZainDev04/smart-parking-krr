@@ -1,0 +1,181 @@
+Knowledge base facts for scenario morning_rush (164 facts)
+
+[People and roles]  16 facts
+    student(ali).
+    student(sara).
+    student(usman).
+    student(zara).
+    faculty(ahmed).
+    staff(fatima).
+    visitor(bilal).
+    visitor(hina).
+    accessibility_badge(ahmed, no).
+    accessibility_badge(ali, no).
+    accessibility_badge(bilal, no).
+    accessibility_badge(fatima, no).
+    accessibility_badge(hina, no).
+    accessibility_badge(sara, yes).
+    accessibility_badge(usman, no).
+    accessibility_badge(zara, no).
+
+[Vehicles and ownership]  24 facts
+    vehicle(bike_fatima).
+    vehicle(car_ali).
+    vehicle(car_bilal).
+    vehicle(car_hina).
+    vehicle(car_sara).
+    vehicle(car_usman).
+    vehicle(car_zara).
+    vehicle(ev_ahmed).
+    owns(ahmed, ev_ahmed).
+    owns(ali, car_ali).
+    owns(bilal, car_bilal).
+    owns(fatima, bike_fatima).
+    owns(hina, car_hina).
+    owns(sara, car_sara).
+    owns(usman, car_usman).
+    owns(zara, car_zara).
+    vehicle_type(bike_fatima, motorbike).
+    vehicle_type(car_ali, car).
+    vehicle_type(car_bilal, car).
+    vehicle_type(car_hina, car).
+    vehicle_type(car_sara, car).
+    vehicle_type(car_usman, car).
+    vehicle_type(car_zara, car).
+    vehicle_type(ev_ahmed, electric_car).
+
+[Permits]  42 facts
+    permit(p_ahmed).
+    permit(p_ali).
+    permit(p_fatima).
+    permit(p_sara).
+    permit(p_usman).
+    permit(p_zara).
+    permit(vp_bilal).
+    has_permit(ahmed, p_ahmed).
+    has_permit(ali, p_ali).
+    has_permit(bilal, vp_bilal).
+    has_permit(fatima, p_fatima).
+    has_permit(sara, p_sara).
+    has_permit(usman, p_usman).
+    has_permit(zara, p_zara).
+    permit_class(p_ahmed, employee_permit).
+    permit_class(p_ali, student_permit).
+    permit_class(p_fatima, employee_permit).
+    permit_class(p_sara, student_permit).
+    permit_class(p_usman, student_permit).
+    permit_class(p_zara, student_permit).
+    permit_class(vp_bilal, visitor_pass).
+    permit_status(p_ahmed, active).
+    permit_status(p_ali, active).
+    permit_status(p_fatima, active).
+    permit_status(p_sara, active).
+    permit_status(p_usman, active).
+    permit_status(p_zara, active).
+    permit_status(vp_bilal, active).
+    permit_start(p_ahmed, 20260101).
+    permit_start(p_ali, 20260701).
+    permit_start(p_fatima, 20260101).
+    permit_start(p_sara, 20260701).
+    permit_start(p_usman, 20250916).
+    permit_start(p_zara, 20260701).
+    permit_start(vp_bilal, 20261002).
+    permit_expiry(p_ahmed, 20271231).
+    permit_expiry(p_ali, 20270630).
+    permit_expiry(p_fatima, 20271231).
+    permit_expiry(p_sara, 20270630).
+    permit_expiry(p_usman, 20260915).
+    permit_expiry(p_zara, 20270630).
+    permit_expiry(vp_bilal, 20261002).
+
+[Facility and zones]  16 facts
+    parking_facility(ned_lot).
+    parking_zone(zone_a).
+    parking_zone(zone_e).
+    parking_zone(zone_v).
+    part_of(zone_a, ned_lot).
+    part_of(zone_e, ned_lot).
+    part_of(zone_v, ned_lot).
+    zone_type(zone_a, student_zone).
+    zone_type(zone_e, employee_zone).
+    zone_type(zone_v, visitor_zone).
+    zone_opens(zone_a, 7).
+    zone_opens(zone_e, 6).
+    zone_opens(zone_v, 8).
+    zone_closes(zone_a, 22).
+    zone_closes(zone_e, 23).
+    zone_closes(zone_v, 17).
+
+[Parking spaces]  36 facts
+    parking_space(s_a1).
+    parking_space(s_a2).
+    parking_space(s_a3).
+    parking_space(s_a4).
+    parking_space(s_a5).
+    parking_space(s_e1).
+    parking_space(s_e2).
+    parking_space(s_e3).
+    parking_space(s_v1).
+    located_in(s_a1, zone_a).
+    located_in(s_a2, zone_a).
+    located_in(s_a3, zone_a).
+    located_in(s_a4, zone_a).
+    located_in(s_a5, zone_a).
+    located_in(s_e1, zone_e).
+    located_in(s_e2, zone_e).
+    located_in(s_e3, zone_e).
+    located_in(s_v1, zone_v).
+    space_type(s_a1, standard).
+    space_type(s_a2, standard).
+    space_type(s_a3, accessible).
+    space_type(s_a4, motorbike).
+    space_type(s_a5, standard).
+    space_type(s_e1, standard).
+    space_type(s_e2, ev_charging).
+    space_type(s_e3, standard).
+    space_type(s_v1, standard).
+    space_status(s_a1, vacant).
+    space_status(s_a2, occupied).
+    space_status(s_a3, vacant).
+    space_status(s_a4, vacant).
+    space_status(s_a5, reserved).
+    space_status(s_e1, vacant).
+    space_status(s_e2, vacant).
+    space_status(s_e3, reserved).
+    space_status(s_v1, vacant).
+
+[Reservations]  8 facts
+    reservation(r1).
+    reservation(r2).
+    reserved_by(r1, zara).
+    reserved_by(r2, ahmed).
+    reserved_space(r1, s_a5).
+    reserved_space(r2, s_e3).
+    reservation_date(r1, 20261002).
+    reservation_date(r2, 20261002).
+
+[Policy tables]  12 facts
+    grants(employee_permit, employee_zone).
+    grants(student_permit, student_zone).
+    grants(visitor_pass, visitor_zone).
+    fits(car, accessible).
+    fits(car, standard).
+    fits(electric_car, accessible).
+    fits(electric_car, ev_charging).
+    fits(electric_car, standard).
+    fits(motorbike, motorbike).
+    open_type(ev_charging).
+    open_type(motorbike).
+    open_type(standard).
+
+[Context (per scenario)]  10 facts
+    current_date(20261002).
+    current_hour(10).
+    requests(ahmed, s_e3, 800).
+    requests(ali, s_a1, 905).
+    requests(bilal, s_v1, 920).
+    requests(fatima, s_e1, 830).
+    requests(hina, s_v1, 915).
+    requests(sara, s_a1, 910).
+    requests(usman, s_a1, 900).
+    requests(zara, s_a1, 850).

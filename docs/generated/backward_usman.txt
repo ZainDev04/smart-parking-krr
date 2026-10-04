@@ -1,0 +1,53 @@
+?- authorized_driver(usman).
+
+   1  GOAL    authorized_driver(usman)
+   2  RULE    try R11: authorized_driver(X) :- authorized(X, P).
+   3          subgoals: authorized(usman, P_1)
+   4      GOAL    authorized(usman, P_1)
+   5      RULE    try R10: authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+   6              subgoals: permit_matches_role(usman, P_2), permit_valid(P_2)
+   7          GOAL    permit_matches_role(usman, P_2)
+   8          RULE    try R07: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+   9                  subgoals: has_permit(usman, P_3), permit_class(P_3, student_permit), student(usman)
+  10              GOAL    has_permit(usman, P_3)
+  11              FACT    has_permit(usman, p_usman)  matches the stored fact
+  12              GOAL    permit_class(p_usman, student_permit)
+  13              FACT    permit_class(p_usman, student_permit)  matches the stored fact
+  14              GOAL    student(usman)
+  15              FACT    student(usman)  matches the stored fact
+  16          PROVED  permit_matches_role(usman, p_usman)  by R07
+  17          GOAL    permit_valid(p_usman)
+  18          RULE    try R06: permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+  19                  subgoals: permit_status(p_usman, active), permit_start(p_usman, B_4), permit_expiry(p_usman, E_4), current_date(D_4), B_4 =< D_4, E_4 >= D_4
+  20              GOAL    permit_status(p_usman, active)
+  21              FACT    permit_status(p_usman, active)  matches the stored fact
+  22              GOAL    permit_start(p_usman, B_4)
+  23              FACT    permit_start(p_usman, 20250916)  matches the stored fact
+  24              GOAL    permit_expiry(p_usman, E_4)
+  25              FACT    permit_expiry(p_usman, 20260915)  matches the stored fact
+  26              GOAL    current_date(D_4)
+  27              FACT    current_date(20261002)  matches the stored fact
+  28              BUILTIN 20250916 =< 20261002  is true
+  29              BUILTIN 20260915 >= 20261002  is false
+  30          FAIL    permit_valid(p_usman)  (no fact matches and no rule succeeds)
+  31          RULE    try R08: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+  32                  subgoals: has_permit(usman, P_5), permit_class(P_5, employee_permit), employee(usman)
+  33              GOAL    has_permit(usman, P_5)
+  34              FACT    has_permit(usman, p_usman)  matches the stored fact
+  35              GOAL    permit_class(p_usman, employee_permit)
+  36              FAIL    permit_class(p_usman, employee_permit)  (no fact matches and no rule succeeds)
+  37          RULE    try R09: permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+  38                  subgoals: has_permit(usman, P_6), permit_class(P_6, visitor_pass), visitor(usman)
+  39              GOAL    has_permit(usman, P_6)
+  40              FACT    has_permit(usman, p_usman)  matches the stored fact
+  41              GOAL    permit_class(p_usman, visitor_pass)
+  42              FAIL    permit_class(p_usman, visitor_pass)  (no fact matches and no rule succeeds)
+  43      FAIL    authorized(usman, P_1)  (no fact matches and no rule succeeds)
+  44  FAIL    authorized_driver(usman)  (no fact matches and no rule succeeds)
+
+authorized_driver(usman): FAILED. No proof exists from the facts and rules.
+
+authorized_driver(usman) cannot be proved. Reasons, rule by rule:
+  R11 blocked at authorized(usman, P)
+    R10 blocked at permit_valid(p_usman)
+      R06 blocked at 20260915 >= 20261002  (false)

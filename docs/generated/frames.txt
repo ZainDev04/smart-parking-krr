@@ -1,0 +1,206 @@
+FRAME: Person
+  KIND: class
+  ISA:  -
+  NOTE: anyone who may drive onto campus
+  SLOTS:
+    fullName             type: str
+    accessibilityBadge   type: symbol; default: no; range: {yes, no}; predicate: accessibility_badge
+    owns                 type: frame:Vehicle; cardinality: multiple; predicate: owns
+    hasPermit            type: frame:ParkingPermit; cardinality: multiple; predicate: has_permit
+
+FRAME: Student
+  KIND: class
+  ISA:  Person
+  SLOTS:
+    fullName             type: str   (inherited from Person)
+    accessibilityBadge   type: symbol; default: no; range: {yes, no}; predicate: accessibility_badge   (inherited from Person)
+    owns                 type: frame:Vehicle; cardinality: multiple; predicate: owns   (inherited from Person)
+    hasPermit            type: frame:ParkingPermit; cardinality: multiple; predicate: has_permit   (inherited from Person)
+    studentId            type: str
+    department           type: str
+
+FRAME: Employee
+  KIND: class
+  ISA:  Person
+  NOTE: faculty and staff share employee parking rules
+  SLOTS:
+    fullName             type: str   (inherited from Person)
+    accessibilityBadge   type: symbol; default: no; range: {yes, no}; predicate: accessibility_badge   (inherited from Person)
+    owns                 type: frame:Vehicle; cardinality: multiple; predicate: owns   (inherited from Person)
+    hasPermit            type: frame:ParkingPermit; cardinality: multiple; predicate: has_permit   (inherited from Person)
+    employeeId           type: str
+    department           type: str
+
+FRAME: Faculty
+  KIND: class
+  ISA:  Employee
+  SLOTS:
+    fullName             type: str   (inherited from Person)
+    accessibilityBadge   type: symbol; default: no; range: {yes, no}; predicate: accessibility_badge   (inherited from Person)
+    owns                 type: frame:Vehicle; cardinality: multiple; predicate: owns   (inherited from Person)
+    hasPermit            type: frame:ParkingPermit; cardinality: multiple; predicate: has_permit   (inherited from Person)
+    employeeId           type: str   (inherited from Employee)
+    department           type: str   (inherited from Employee)
+    designation          type: str; default: Lecturer
+
+FRAME: Staff
+  KIND: class
+  ISA:  Employee
+  SLOTS:
+    fullName             type: str   (inherited from Person)
+    accessibilityBadge   type: symbol; default: no; range: {yes, no}; predicate: accessibility_badge   (inherited from Person)
+    owns                 type: frame:Vehicle; cardinality: multiple; predicate: owns   (inherited from Person)
+    hasPermit            type: frame:ParkingPermit; cardinality: multiple; predicate: has_permit   (inherited from Person)
+    employeeId           type: str   (inherited from Employee)
+    department           type: str   (inherited from Employee)
+    jobTitle             type: str
+
+FRAME: Visitor
+  KIND: class
+  ISA:  Person
+  SLOTS:
+    fullName             type: str   (inherited from Person)
+    accessibilityBadge   type: symbol; default: no; range: {yes, no}; predicate: accessibility_badge   (inherited from Person)
+    owns                 type: frame:Vehicle; cardinality: multiple; predicate: owns   (inherited from Person)
+    hasPermit            type: frame:ParkingPermit; cardinality: multiple; predicate: has_permit   (inherited from Person)
+    purpose              type: str; default: campus visit
+    hostDepartment       type: str
+
+FRAME: Vehicle
+  KIND: class
+  ISA:  -
+  SLOTS:
+    plateNo              type: str
+    vehicleType          type: symbol; default: car; range: {car, electric_car, motorbike}; predicate: vehicle_type
+
+FRAME: ParkingPermit
+  KIND: class
+  ISA:  -
+  NOTE: a student or employee permit, or a one-day visitor pass
+  SLOTS:
+    permitClass          type: symbol; range: {student_permit, employee_permit, visitor_pass}; predicate: permit_class
+    status               type: symbol; default: active; range: {active, suspended, revoked}; predicate: permit_status
+    startDate            type: int; predicate: permit_start
+    expiryDate           type: int; predicate: permit_expiry
+
+FRAME: ParkingFacility
+  KIND: class
+  ISA:  -
+  SLOTS:
+    campus               type: str; default: NED University main campus
+
+FRAME: ParkingZone
+  KIND: class
+  ISA:  -
+  SLOTS:
+    zoneType             type: symbol; range: {student_zone, employee_zone, visitor_zone}; predicate: zone_type
+    openHour             type: int; default: 7; predicate: zone_opens
+    closeHour            type: int; default: 22; predicate: zone_closes
+    partOf               type: frame:ParkingFacility; predicate: part_of
+    capacity             type: int; if-needed: count of ParkingSpace instances whose locatedIn is this zone
+
+FRAME: ParkingSpace
+  KIND: class
+  ISA:  -
+  SLOTS:
+    locatedIn            type: frame:ParkingZone; predicate: located_in
+    spaceType            type: symbol; default: standard; range: {standard, accessible, ev_charging, motorbike}; predicate: space_type
+    status               type: symbol; default: vacant; range: {vacant, occupied, reserved}; predicate: space_status
+    zoneType             type: symbol; if-needed: zoneType of the zone this space is located in
+
+FRAME: AccessibleSpace
+  KIND: class
+  ISA:  ParkingSpace
+  NOTE: wider bay near the entrance, reserved for badge holders
+  SLOTS:
+    locatedIn            type: frame:ParkingZone; predicate: located_in   (inherited from ParkingSpace)
+    spaceType            type: symbol; default: accessible; range: {standard, accessible, ev_charging, motorbike}; predicate: space_type
+    status               type: symbol; default: vacant; range: {vacant, occupied, reserved}; predicate: space_status   (inherited from ParkingSpace)
+    zoneType             type: symbol; if-needed: zoneType of the zone this space is located in   (inherited from ParkingSpace)
+    widthMetres          type: str; default: 3.6
+
+FRAME: EVChargingSpace
+  KIND: class
+  ISA:  ParkingSpace
+  SLOTS:
+    locatedIn            type: frame:ParkingZone; predicate: located_in   (inherited from ParkingSpace)
+    spaceType            type: symbol; default: ev_charging; range: {standard, accessible, ev_charging, motorbike}; predicate: space_type
+    status               type: symbol; default: vacant; range: {vacant, occupied, reserved}; predicate: space_status   (inherited from ParkingSpace)
+    zoneType             type: symbol; if-needed: zoneType of the zone this space is located in   (inherited from ParkingSpace)
+    chargerKW            type: int; default: 7
+
+FRAME: MotorbikeSpace
+  KIND: class
+  ISA:  ParkingSpace
+  SLOTS:
+    locatedIn            type: frame:ParkingZone; predicate: located_in   (inherited from ParkingSpace)
+    spaceType            type: symbol; default: motorbike; range: {standard, accessible, ev_charging, motorbike}; predicate: space_type
+    status               type: symbol; default: vacant; range: {vacant, occupied, reserved}; predicate: space_status   (inherited from ParkingSpace)
+    zoneType             type: symbol; if-needed: zoneType of the zone this space is located in   (inherited from ParkingSpace)
+
+FRAME: Reservation
+  KIND: class
+  ISA:  -
+  SLOTS:
+    madeBy               type: frame:Person; predicate: reserved_by
+    forSpace             type: frame:ParkingSpace; predicate: reserved_space
+    date                 type: int; predicate: reservation_date
+
+FRAME: ali
+  KIND: instance
+  ISA:  Student
+  SLOTS:
+    fullName             = Ali Raza   [own value]
+    accessibilityBadge   = no   [default from Person]
+    owns                 = car_ali   [own value]
+    hasPermit            = p_ali   [own value]
+    studentId            = CS-22-101   [own value]
+    department           = CSIT   [own value]
+
+FRAME: sara
+  KIND: instance
+  ISA:  Student
+  SLOTS:
+    fullName             = Sara Khan   [own value]
+    accessibilityBadge   = yes   [own value]
+    owns                 = car_sara   [own value]
+    hasPermit            = p_sara   [own value]
+    studentId            = CS-22-114   [own value]
+    department           = CSIT   [own value]
+
+FRAME: s_a3
+  KIND: instance
+  ISA:  AccessibleSpace
+  SLOTS:
+    locatedIn            = zone_a   [own value]
+    spaceType            = accessible   [default from AccessibleSpace]
+    status               = vacant   [default from ParkingSpace]
+    zoneType             = student_zone   [if-needed on ParkingSpace]
+    widthMetres          = 3.6   [default from AccessibleSpace]
+
+FRAME: zone_a
+  KIND: instance
+  ISA:  ParkingZone
+  SLOTS:
+    zoneType             = student_zone   [own value]
+    openHour             = 7   [default from ParkingZone]
+    closeHour            = 22   [default from ParkingZone]
+    partOf               = ned_lot   [own value]
+    capacity             = 5   [if-needed on ParkingZone]
+
+FRAME: p_usman
+  KIND: instance
+  ISA:  ParkingPermit
+  SLOTS:
+    permitClass          = student_permit   [own value]
+    status               = active   [default from ParkingPermit]
+    startDate            = 20250916   [own value]
+    expiryDate           = 20260915   [own value]
+
+FRAME: r1
+  KIND: instance
+  ISA:  Reservation
+  SLOTS:
+    madeBy               = zara   [own value]
+    forSpace             = s_a5   [own value]
+    date                 = 20261002   [own value]

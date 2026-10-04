@@ -1,0 +1,13 @@
+flowchart TD
+    A["Load facts into working memory"] --> B["Stratum := 0"]
+    B --> C["Start a cycle: take a snapshot of the facts"]
+    C --> D["Build the conflict set:<br/>every rule instance whose body<br/>matches the snapshot"]
+    D --> E{"Any instance with<br/>a new conclusion?"}
+    E -->|yes| F["Fire those instances<br/>(refraction skips known facts)"]
+    F --> G["Add the new facts, log<br/>rule, bindings, premises"]
+    G --> C
+    E -->|no| H{"Higher stratum left?"}
+    H -->|yes| I["Stratum := stratum + 1<br/>(rules with not)"]
+    I --> C
+    H -->|no| J["Fixpoint reached:<br/>closure of the KB"]
+    J --> K["Check denial constraints IC1-IC7"]

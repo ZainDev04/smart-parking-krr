@@ -1,0 +1,147 @@
+A. Class hierarchy
+R01  person(X) :- student(X).
+     English: Every student is a person.
+     FOL:     ∀x (student(x) → person(x))
+     Note:    Horn form of the DL axiom Student ⊑ Person.
+R02  person(X) :- employee(X).
+     English: Every employee is a person.
+     FOL:     ∀x (employee(x) → person(x))
+     Note:    Horn form of Employee ⊑ Person.
+R03  person(X) :- visitor(X).
+     English: Every visitor is a person.
+     FOL:     ∀x (visitor(x) → person(x))
+     Note:    Horn form of Visitor ⊑ Person.
+R04  employee(X) :- faculty(X).
+     English: Every faculty member is an employee.
+     FOL:     ∀x (faculty(x) → employee(x))
+     Note:    Horn form of Faculty ⊑ Employee. Faculty and staff share the employee rules.
+R05  employee(X) :- staff(X).
+     English: Every staff member is an employee.
+     FOL:     ∀x (staff(x) → employee(x))
+     Note:    Horn form of Staff ⊑ Employee.
+
+B. Permits and authorization
+R06  permit_valid(P) :- permit_status(P, active), permit_start(P, B), permit_expiry(P, E), current_date(D), B =< D, E >= D.
+     English: A permit is valid if its status is active and today lies between its start date and its expiry date.
+     FOL:     ∀p ∀b ∀e ∀d ((permit_status(p, active) ∧ permit_start(p, b) ∧ permit_expiry(p, e) ∧ current_date(d) ∧ b ≤ d ∧ e ≥ d) → permit_valid(p))
+     Note:    Expired, not-yet-started or suspended permits never satisfy this rule, so they can never authorize parking. B =< D and E >= D are built-in comparisons on YYYYMMDD integers. A one-day visitor pass has B = E.
+R07  permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, student_permit), student(X).
+     English: A student permit only counts when its holder is a student.
+     FOL:     ∀x ∀p ((has_permit(x, p) ∧ permit_class(p, student_permit) ∧ student(x)) → permit_matches_role(x, p))
+     Note:    Stops a permit being used by someone of the wrong category.
+R08  permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, employee_permit), employee(X).
+     English: An employee permit only counts when its holder is faculty or staff.
+     FOL:     ∀x ∀p ((has_permit(x, p) ∧ permit_class(p, employee_permit) ∧ employee(x)) → permit_matches_role(x, p))
+     Note:    employee(X) is itself derived by R04 or R05.
+R09  permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), visitor(X).
+     English: A visitor needs a visitor pass; the pass is the visitor's authorization.
+     FOL:     ∀x ∀p ((has_permit(x, p) ∧ permit_class(p, visitor_pass) ∧ visitor(x)) → permit_matches_role(x, p))
+     Note:    A visitor with no pass has no has_permit fact, so this rule cannot fire for them.
+R10  authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
+     English: A person is authorized by a permit that matches their role and is valid.
+     FOL:     ∀x ∀p ((permit_matches_role(x, p) ∧ permit_valid(p)) → authorized(x, p))
+     Note:    Joins the role check (R07-R09) with the validity check (R06).
+R11  authorized_driver(X) :- authorized(X, P).
+     English: Anyone authorized by at least one permit is an authorized driver.
+     FOL:     ∀x ∀p (authorized(x, p) → authorized_driver(x))
+     Note:    P occurs only in the body, so logically it is existential: ∀x (∃p authorized(x, p) → authorized_driver(x)).
+
+C. Zones and time
+R12  zone_open(Z) :- zone_opens(Z, O), zone_closes(Z, C), current_hour(H), H >= O, H < C.
+     English: A zone is open when the current hour is inside its opening hours.
+     FOL:     ∀z ∀o ∀c ∀h ((zone_opens(z, o) ∧ zone_closes(z, c) ∧ current_hour(h) ∧ h ≥ o ∧ h < c) → zone_open(z))
+     Note:    The time restriction of each zone. The visitor zone closes at 17:00.
+R13  zone_access(X, Z) :- authorized(X, P), permit_class(P, C), grants(C, T), zone_type(Z, T), zone_open(Z).
+     English: An authorized person may enter a zone if their permit class grants that zone type and the zone is open.
+     FOL:     ∀x ∀z ∀p ∀c ∀t ((authorized(x, p) ∧ permit_class(p, c) ∧ grants(c, t) ∧ zone_type(z, t) ∧ zone_open(z)) → zone_access(x, z))
+     Note:    Students reach only student zones, employees only employee zones, visitors only the visitor zone, as listed in the grants/2 policy table.
+
+D. Suitability and eligibility
+R14  suitable_space(X, S) :- zone_access(X, Z), located_in(S, Z), owns(X, V), vehicle_type(V, VT), space_type(S, ST), fits(VT, ST).
+     English: A space suits a person if it is in a zone they may enter and their vehicle fits the bay.
+     FOL:     ∀x ∀s ∀z ∀v ∀vt ∀st ((zone_access(x, z) ∧ located_in(s, z) ∧ owns(x, v) ∧ vehicle_type(v, vt) ∧ space_type(s, st) ∧ fits(vt, st)) → suitable_space(x, s))
+     Note:    A motorbike never fits a car bay and a car never fits a motorbike bay (fits/2 table).
+R15  eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, T), open_type(T).
+     English: A suitable standard, EV or motorbike bay needs nothing more.
+     FOL:     ∀x ∀s ∀t ((suitable_space(x, s) ∧ space_type(s, t) ∧ open_type(t)) → eligible_for_space(x, s))
+     Note:    open_type/1 lists the bay types with no personal requirement.
+R16  eligible_for_space(X, S) :- suitable_space(X, S), space_type(S, accessible), accessibility_badge(X, yes).
+     English: An accessible bay is only for a person who holds an accessibility badge.
+     FOL:     ∀x ∀s ((suitable_space(x, s) ∧ space_type(s, accessible) ∧ accessibility_badge(x, yes)) → eligible_for_space(x, s))
+     Note:    Together R15 and R16 cover every bay type; an accessible bay has no rule that ignores the badge.
+
+E. Availability and allocation
+R17  space_free(S) :- space_status(S, vacant).
+     English: A vacant space is free.
+     FOL:     ∀s (space_status(s, vacant) → space_free(s))
+     Note:    Occupied and reserved spaces are not free.
+R18  holds_reservation(X, S) :- reserved_by(R, X), reserved_space(R, S), reservation_date(R, D), current_date(D).
+     English: A person holds a reservation for a space if they made a reservation for it for today.
+     FOL:     ∀x ∀s ∀r ∀d ((reserved_by(r, x) ∧ reserved_space(r, s) ∧ reservation_date(r, d) ∧ current_date(d)) → holds_reservation(x, s))
+     Note:    Reservation R is an object (reified relation) with three binary links.
+R19  can_allocate(X, S) :- eligible_for_space(X, S), space_free(S).
+     English: A free space can be allocated to any person eligible for it.
+     FOL:     ∀x ∀s ((eligible_for_space(x, s) ∧ space_free(s)) → can_allocate(x, s))
+     Note:    Occupied spaces never satisfy space_free, so they are never allocated.
+R20  can_allocate(X, S) :- eligible_for_space(X, S), space_status(S, reserved), holds_reservation(X, S).
+     English: A reserved space can be allocated only to the person holding today's reservation.
+     FOL:     ∀x ∀s ((eligible_for_space(x, s) ∧ space_status(s, reserved) ∧ holds_reservation(x, s)) → can_allocate(x, s))
+     Note:    Nobody else can be allocated a reserved space because no rule allows it.
+
+F. Priority
+R21  priority(X, 3) :- person(X), accessibility_badge(X, yes).
+     English: Badge holders have priority 3 (highest).
+     FOL:     ∀x ((person(x) ∧ accessibility_badge(x, yes)) → priority(x, 3))
+     Note:    accessibility_badge has exactly one value per person (frame default 'no'), so the priority rules never give one person two levels.
+R22  priority(X, 2) :- employee(X), accessibility_badge(X, no).
+     English: Faculty and staff without a badge have priority 2.
+     FOL:     ∀x ((employee(x) ∧ accessibility_badge(x, no)) → priority(x, 2))
+R23  priority(X, 1) :- student(X), accessibility_badge(X, no).
+     English: Students without a badge have priority 1.
+     FOL:     ∀x ((student(x) ∧ accessibility_badge(x, no)) → priority(x, 1))
+R24  priority(X, 1) :- visitor(X), accessibility_badge(X, no).
+     English: Visitors without a badge have priority 1.
+     FOL:     ∀x ((visitor(x) ∧ accessibility_badge(x, no)) → priority(x, 1))
+
+G. Conflicts
+R25  loses(Y, S) :- requests(Y, S, TY), requests(X, S, TX), X \= Y, can_allocate(X, S), priority(X, PX), priority(Y, PY), PX > PY.
+     English: A requester loses a space to another eligible requester with higher priority.
+     FOL:     ∀y ∀s ∀ty ∀x ∀tx ∀px ∀py ((requests(y, s, ty) ∧ requests(x, s, tx) ∧ x ≠ y ∧ can_allocate(x, s) ∧ priority(x, px) ∧ priority(y, py) ∧ px > py) → loses(y, s))
+     Note:    Only competitors who could actually get the space (can_allocate) count. An ineligible requester cannot block anyone.
+R26  loses(Y, S) :- requests(Y, S, TY), requests(X, S, TX), X \= Y, can_allocate(X, S), priority(X, P), priority(Y, P), TX < TY.
+     English: With equal priority, the earlier request wins (first come, first served).
+     FOL:     ∀y ∀s ∀ty ∀x ∀tx ∀p ((requests(y, s, ty) ∧ requests(x, s, tx) ∧ x ≠ y ∧ can_allocate(x, s) ∧ priority(x, p) ∧ priority(y, p) ∧ tx < ty) → loses(y, s))
+     Note:    Request times are unique gate timestamps, so equal priority and equal time cannot happen; constraint IC1 would report it if it did.
+R27  double_booked(X) :- reserved_by(R1, X), reserved_by(R2, X), R1 \= R2, reservation_date(R1, D), reservation_date(R2, D).
+     English: A person holding two different reservations for the same day is double-booked.
+     FOL:     ∀x ∀r1 ∀r2 ∀d ((reserved_by(r1, x) ∧ reserved_by(r2, x) ∧ r1 ≠ r2 ∧ reservation_date(r1, d) ∧ reservation_date(r2, d)) → double_booked(x))
+     Note:    Detects the policy violation 'one person, one reservation per day'.
+
+H. Decision
+R28  allocate(X, S) :- requests(X, S, T), can_allocate(X, S), not loses(X, S), not double_booked(X).
+     English: Allocate the requested space if it can be allocated, the requester loses no conflict for it and is not double-booked.
+     FOL:     ∀x ∀s ∀t ((requests(x, s, t) ∧ can_allocate(x, s) ∧ ¬loses(x, s) ∧ ¬double_booked(x)) → allocate(x, s))
+     Note:    The only rule with 'not'. It runs after loses/2 and double_booked/1 are fully computed (stratified negation), so 'not' means 'cannot be derived'.
+
+Integrity constraints (denial clauses)
+IC1  :- allocate(X, S), allocate(Y, S), X \= Y.
+     English: One space is never allocated to two people.
+     FOL:     ∀x ∀s ∀y ¬(allocate(x, s) ∧ allocate(y, s) ∧ x ≠ y)
+IC2  :- allocate(X, S1), allocate(X, S2), S1 \= S2.
+     English: One person is never allocated two spaces.
+     FOL:     ∀x ∀s1 ∀s2 ¬(allocate(x, s1) ∧ allocate(x, s2) ∧ s1 ≠ s2)
+IC3  :- allocate(X, S), space_status(S, occupied).
+     English: An occupied space is never allocated.
+     FOL:     ∀x ∀s ¬(allocate(x, s) ∧ space_status(s, occupied))
+IC4  :- student(X), employee(X).
+     English: Nobody is both a student and an employee (Student ⊓ Employee ⊑ ⊥).
+     FOL:     ∀x ¬(student(x) ∧ employee(x))
+IC5  :- student(X), visitor(X).
+     English: Nobody is both a student and a visitor.
+     FOL:     ∀x ¬(student(x) ∧ visitor(x))
+IC6  :- employee(X), visitor(X).
+     English: Nobody is both an employee and a visitor.
+     FOL:     ∀x ¬(employee(x) ∧ visitor(x))
+IC7  :- faculty(X), staff(X).
+     English: Nobody is both faculty and staff.
+     FOL:     ∀x ¬(faculty(x) ∧ staff(x))

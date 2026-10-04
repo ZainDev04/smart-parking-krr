@@ -1,0 +1,12 @@
+ok   TC1  Valid student, valid permit, free student bay         4 checks
+ok   TC2  Expired permit                                        3 checks
+ok   TC3  Visitor without authorization                         3 checks
+ok   TC4  Space already occupied                                4 checks
+ok   TC5  Student requests an employee-only space               3 checks
+ok   TC6  Eligible driver, but no suitable space                4 checks
+ok   TC7  Three drivers request the same space                  5 checks
+ok   TC8  Accessible space requested by an ineligible driver    4 checks
+ok   TC9  Conflicting reservations                              3 checks
+ok   TC10  Visitor zone closed at 19:00                         3 checks
+ok   TC11  Reserved space requested by someone else             3 checks
+ok   TC12  Inconsistent data: a student recorded as faculty     2 checks

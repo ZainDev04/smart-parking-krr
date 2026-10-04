@@ -1,0 +1,52 @@
+SCRIPT: ParkingSession
+  TRACK: campus parking with a permit or visitor pass
+  ROLES: Driver (a Person), Gate system (the reasoner), Parking office (issues permits)
+  PROPS: Vehicle, ParkingPermit or visitor pass, ParkingZone, ParkingSpace, Reservation (optional)
+  ENTRY CONDITIONS:
+    - The driver owns a registered vehicle
+    - The driver has asked the gate for a specific space (requests/3)
+    - The gate knows today's date and the current hour
+  SCENES:
+    1. Arrive at gate: driver stops at the barrier, gate reads the request
+       goal: requests({driver}, {space}, T)
+    2. Permit check: gate checks that a valid permit matches the driver's role
+       goal: authorized_driver({driver})
+    3. Zone check: gate checks that the permit opens the zone and the zone is open
+       goal: zone_access({driver}, {zone})
+    4. Bay check: gate checks vehicle/bay fit and accessibility requirement
+       goal: eligible_for_space({driver}, {space})
+    5. Availability: gate checks the bay is vacant or reserved for this driver
+       goal: can_allocate({driver}, {space})
+    6. Allocation: gate resolves conflicts with other requests and allocates
+       goal: allocate({driver}, {space})
+    7. Park: driver parks; the bay's status becomes occupied
+       goal: 
+  RESULTS:
+    - space_status(space, occupied) replaces the old status
+    - The driver is parked in an allowed bay
+    - No other driver can be allocated that bay
+
+Running script ParkingSession for driver=sara, space=s_a1
+  Scene 1 Arrive at gate   PASS  requests(sara, s_a1, T)
+  Scene 2 Permit check     PASS  authorized_driver(sara)
+  Scene 3 Zone check       PASS  zone_access(sara, zone_a)
+  Scene 4 Bay check        PASS  eligible_for_space(sara, s_a1)
+  Scene 5 Availability     PASS  can_allocate(sara, s_a1)
+  Scene 6 Allocation       PASS  allocate(sara, s_a1)
+  Scene 7 Park             PASS  space_status(s_a1, occupied)
+      status updated in working memory
+  Script completed: the driver is parked.
+
+Running script ParkingSession for driver=usman, space=s_a1
+  Scene 1 Arrive at gate   PASS  requests(usman, s_a1, T)
+  Scene 2 Permit check     STOP  authorized_driver(usman)
+      reason: permit_valid(p_usman) fails at 20260915 >= 20261002 (false)
+  Script stopped: the driver is turned away at the scene above.
+
+Running script ParkingSession for driver=fatima, space=s_e1
+  Scene 1 Arrive at gate   PASS  requests(fatima, s_e1, T)
+  Scene 2 Permit check     PASS  authorized_driver(fatima)
+  Scene 3 Zone check       PASS  zone_access(fatima, zone_e)
+  Scene 4 Bay check        STOP  eligible_for_space(fatima, s_e1)
+      reason: suitable_space(fatima, s_e1) fails at fits(motorbike, standard) (no such fact is stored)
+  Script stopped: the driver is turned away at the scene above.

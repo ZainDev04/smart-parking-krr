@@ -1,0 +1,9 @@
+Driver   Space  Decision   Reason
+ahmed    s_e3   ALLOCATED  
+fatima   s_e1   DENIED     suitable_space(fatima, s_e1) fails at fits(motorbike, standard) (no such fact is stored)
+zara     s_a1   DENIED     allocate(zara, s_a1) fails at not loses(zara, s_a1) (loses(zara, s_a1) is provable by R25; competing request: requests(sara, s_a1, 910))
+usman    s_a1   DENIED     permit_valid(p_usman) fails at 20260915 >= 20261002 (false)
+ali      s_a1   DENIED     allocate(ali, s_a1) fails at not loses(ali, s_a1) (loses(ali, s_a1) is provable by R25; competing request: requests(sara, s_a1, 910))
+sara     s_a1   ALLOCATED  
+hina     s_v1   DENIED     permit_matches_role(hina, P) fails at has_permit(hina, P) (no such fact is stored)
+bilal    s_v1   ALLOCATED  

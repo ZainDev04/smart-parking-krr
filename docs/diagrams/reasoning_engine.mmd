@@ -1,0 +1,14 @@
+flowchart LR
+    Q["Request or query<br/>e.g. allocate(ali, s_a1)"] --> M{"Mode"}
+    M -->|data-driven| FC["Forward chaining<br/>match, fire, add facts"]
+    M -->|goal-driven| BC["Backward chaining<br/>unify head, prove subgoals"]
+    WM[("Working memory<br/>ground facts")] <--> FC
+    RB[("Rule base<br/>R01-R28")] --> FC
+    RB --> BC
+    WM --> BC
+    FC --> S2["Stratum 2<br/>R28 with not"]
+    S2 --> IC{"Integrity constraints<br/>IC1-IC7"}
+    IC -->|ok| D["Decisions<br/>allocate/2 facts"]
+    IC -->|violated| V["Report inconsistency"]
+    BC -->|proved| P["Proof tree"]
+    BC -->|failed| W["Why-not explanation<br/>first blocked literal"]

@@ -1,0 +1,14 @@
+flowchart LR
+    E(["Entry: driver owns a vehicle<br/>and has requested a space"]) --> S1["1 Arrive at gate<br/>requests(D, S, T)"]
+    S1 --> S2["2 Permit check<br/>authorized_driver(D)"]
+    S2 --> S3["3 Zone check<br/>zone_access(D, Z)"]
+    S3 --> S4["4 Bay check<br/>eligible_for_space(D, S)"]
+    S4 --> S5["5 Availability<br/>can_allocate(D, S)"]
+    S5 --> S6["6 Allocation<br/>allocate(D, S)"]
+    S6 --> S7["7 Park<br/>space_status(S, occupied)"]
+    S7 --> RES(["Results: driver parked,<br/>bay occupied"])
+    S2 -. fails .-> T["Turned away<br/>with the reason"]
+    S3 -. fails .-> T
+    S4 -. fails .-> T
+    S5 -. fails .-> T
+    S6 -. fails .-> T
