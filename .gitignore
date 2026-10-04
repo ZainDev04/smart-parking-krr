@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.DS_Store
+~$*.docx
+docs/report/*_new.docx
+
+# local tooling and deployment state
+.vercel/
+.env*
+node_modules/
+.claude/

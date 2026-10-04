@@ -1,0 +1,6 @@
+# The reasoning engine, CLI and tests need only the Python standard library.
+# These packages are for the web interface and for building the Word report.
+streamlit>=1.40
+pandas>=2.0
+python-docx>=1.1
+pillow>=10.0
