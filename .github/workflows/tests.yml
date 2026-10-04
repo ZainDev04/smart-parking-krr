@@ -13,7 +13,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install SWI-Prolog (checks the generated Prolog program)
+        run: sudo apt-get update && sudo apt-get install -y swi-prolog-nox
       - name: Unit tests (standard library only)
         run: python -m unittest discover -s tests -v
       - name: Test cases through the CLI
         run: python main.py cases
+      - name: Generated Prolog agrees with the Python engine
+        run: python main.py prolog

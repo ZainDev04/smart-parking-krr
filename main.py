@@ -6,6 +6,7 @@
     python main.py prove GOAL [-s ...]     backward chaining trace and proof tree
     python main.py why GOAL [-s ...]       why a goal cannot be proved
     python main.py cases                   run every test case with both engines
+    python main.py prolog                  check the generated Prolog in SWI-Prolog
     python main.py kb | frames | network | fol | dl | script DRIVER SPACE | scenarios
 
 Only the Python standard library is needed.
@@ -248,6 +249,33 @@ def interactive() -> None:
         input("\nPress Enter to continue...")
 
 
+def cmd_prolog(args) -> None:
+    """Load the generated Prolog program for every scenario in SWI-Prolog and
+    check that it proves exactly what the Python forward chainer derives."""
+    from krr.export.prolog import conclusions_in_python, conclusions_in_swipl, find_swipl
+    swipl = find_swipl()
+    if not swipl:
+        raise SystemExit("SWI-Prolog (swipl) was not found. Install it from https://www.swi-prolog.org.")
+    heading("Python forward chaining vs SWI-Prolog")
+    mismatches = 0
+    for sc in [SCENARIOS["morning_rush"]] + TEST_CASES:
+        kb = sc.build_kb()
+        py = conclusions_in_python(kb)
+        pl, warnings = conclusions_in_swipl(kb, sc, swipl)
+        same = py == pl and not warnings
+        mismatches += not same
+        print(f"  {'ok  ' if same else 'DIFF'} {sc.key:<32} {len(py):>4} conclusions in Python, {len(pl):>4} in Prolog")
+        for fact in sorted(py - pl):
+            print(f"       only Python: {fact}")
+        for fact in sorted(pl - py):
+            print(f"       only Prolog: {fact}")
+        if warnings:
+            print(f"       SWI-Prolog warnings: {warnings}")
+    print(f"\n{len(TEST_CASES) + 1} scenarios, {mismatches} differences.")
+    if mismatches:
+        raise SystemExit(1)
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Smart Parking Access & Space Allocation "
                                             "Reasoning System (CT-351 KRR)")
@@ -271,6 +299,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--full", action="store_true", help="do not shorten the trace")
     add("why", cmd_why, "explain why a goal fails").add_argument("goal")
     add("cases", cmd_cases, "run all test cases", False)
+    add("prolog", cmd_prolog, "check the generated Prolog program in SWI-Prolog", False)
     add("fol", cmd_fol, "first-order logic")
     add("dl", cmd_dl, "description logic")
     sp = add("script", cmd_script, "run the ParkingSession script")

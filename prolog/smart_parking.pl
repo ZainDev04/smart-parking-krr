@@ -222,7 +222,7 @@ permit_matches_role(X, P) :- has_permit(X, P), permit_class(P, visitor_pass), vi
 % R10: A person is authorized by a permit that matches their role and is valid.
 authorized(X, P) :- permit_matches_role(X, P), permit_valid(P).
 % R11: Anyone authorized by at least one permit is an authorized driver.
-authorized_driver(X) :- authorized(X, P).
+authorized_driver(X) :- authorized(X, _P).
 
 % C. Zones and time
 % R12: A zone is open when the current hour is inside its opening hours.
@@ -260,7 +260,7 @@ priority(X, 1) :- visitor(X), accessibility_badge(X, no).
 
 % G. Conflicts
 % R25: A requester loses a space to another eligible requester with higher priority.
-loses(Y, S) :- requests(Y, S, TY), requests(X, S, TX), X \= Y, can_allocate(X, S), priority(X, PX), priority(Y, PY), PX > PY.
+loses(Y, S) :- requests(Y, S, _TY), requests(X, S, _TX), X \= Y, can_allocate(X, S), priority(X, PX), priority(Y, PY), PX > PY.
 % R26: With equal priority, the earlier request wins (first come, first served).
 loses(Y, S) :- requests(Y, S, TY), requests(X, S, TX), X \= Y, can_allocate(X, S), priority(X, P), priority(Y, P), TX < TY.
 % R27: A person holding two different reservations for the same day is double-booked.
@@ -268,7 +268,7 @@ double_booked(X) :- reserved_by(R1, X), reserved_by(R2, X), R1 \= R2, reservatio
 
 % H. Decision
 % R28: Allocate the requested space if it can be allocated, the requester loses no conflict for it and is not double-booked.
-allocate(X, S) :- requests(X, S, T), can_allocate(X, S), \+ loses(X, S), \+ double_booked(X).
+allocate(X, S) :- requests(X, S, _T), can_allocate(X, S), \+ loses(X, S), \+ double_booked(X).
 
 % ---- Integrity constraints (denial clauses) ----------------------
 % A constraint is violated when its body can be proved.
@@ -277,7 +277,7 @@ violation(ic1) :- allocate(X, S), allocate(Y, S), X \= Y.
 % IC2: One person is never allocated two spaces.
 violation(ic2) :- allocate(X, S1), allocate(X, S2), S1 \= S2.
 % IC3: An occupied space is never allocated.
-violation(ic3) :- allocate(X, S), space_status(S, occupied).
+violation(ic3) :- allocate(_X, S), space_status(S, occupied).
 % IC4: Nobody is both a student and an employee (Student ⊓ Employee ⊑ ⊥).
 violation(ic4) :- student(X), employee(X).
 % IC5: Nobody is both a student and a visitor.

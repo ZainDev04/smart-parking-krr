@@ -109,6 +109,9 @@ class PrologExportTest(unittest.TestCase):
                    and re.match(r"^[a-z]", line)]
         facts, rules = set(), []
         for line in clauses:
+            # "_P" marks a variable used once (no singleton warning in SWI-Prolog);
+            # it is the same variable as P in the rule
+            line = re.sub(r"(?<![A-Za-z0-9_])_([A-Z])", r"\1", line)
             head, body = parse_clause(line.replace("\\+ ", "not "))
             if body:
                 rules.append((head, tuple(body)))

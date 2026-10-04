@@ -8,10 +8,31 @@ forward chainer derives.
 
 from __future__ import annotations
 
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+
 from ..core.kb import KnowledgeBase
 from ..core.terms import format_atom
 from ..knowledge_base.facts import grouped
 from ..knowledge_base.scenarios import Scenario
+from ..reasoning.forward import forward_chain
+
+
+_VAR = re.compile(r"(?<![A-Za-z0-9_])[A-Z][A-Za-z0-9_]*")
+
+
+def mark_singletons(clause: str) -> str:
+    """Prefix variables that occur once in a clause with "_", the Prolog
+    convention for "any value", so SWI-Prolog loads the file without
+    singleton warnings. The clause means exactly the same."""
+    counts: dict[str, int] = {}
+    for v in _VAR.findall(clause):
+        counts[v] = counts.get(v, 0) + 1
+    return _VAR.sub(lambda m: "_" + m.group(0) if counts[m.group(0)] == 1 else m.group(0), clause)
 
 
 def to_prolog(kb: KnowledgeBase, scenario: Scenario) -> str:
@@ -51,14 +72,14 @@ def to_prolog(kb: KnowledgeBase, scenario: Scenario) -> str:
             group = rule.group
             out.append(f"\n% {group}")
         out.append(f"% {rule.rid}: {rule.natural}")
-        out.append(rule.to_prolog())
+        out.append(mark_singletons(rule.to_prolog()))
     out.append("")
     out.append("% ---- Integrity constraints (denial clauses) " + "-" * 22)
     out.append("% A constraint is violated when its body can be proved.")
     for c in kb.constraints:
         body = ", ".join(l.to_prolog() for l in c.body)
         out.append(f"% {c.cid}: {c.natural}")
-        out.append(f"violation({c.cid.lower()}) :- {body}.")
+        out.append(mark_singletons(f"violation({c.cid.lower()}) :- {body}."))
     out += [
         "",
         "% ---- Helpers " + "-" * 50,
@@ -68,3 +89,52 @@ def to_prolog(kb: KnowledgeBase, scenario: Scenario) -> str:
         "",
     ]
     return "\n".join(out)
+
+
+# ---- checking the program in SWI-Prolog ------------------------------------
+
+def find_swipl() -> str | None:
+    """The swipl executable on PATH, or in its usual install folder."""
+    found = shutil.which("swipl")
+    if found:
+        return found
+    for path in (r"C:\Program Files\swipl\bin\swipl.exe", "/usr/bin/swipl",
+                 "/usr/local/bin/swipl", "/opt/homebrew/bin/swipl",
+                 "/Applications/SWI-Prolog.app/Contents/MacOS/swipl"):
+        if os.path.exists(path):
+            return path
+    return None
+
+
+def _text(atom) -> str:
+    """An atom written the way SWI-Prolog's writeq/1 prints it."""
+    return f"{atom[0]}({','.join(str(t) for t in atom[1:])})"
+
+
+def conclusions_in_python(kb: KnowledgeBase) -> set[str]:
+    """Every instance of a rule head the forward chainer derives, plus one
+    violation(icN) per integrity constraint that is broken."""
+    heads = {r.head[0] for r in kb.rules}
+    result = forward_chain(kb)
+    out = {_text(f) for f in result.facts if f[0] in heads}
+    return out | {f"violation({c.cid.lower()})" for c, _ in result.violations}
+
+
+def conclusions_in_swipl(kb: KnowledgeBase, scenario: Scenario, swipl: str) -> tuple[set[str], str]:
+    """Load the generated program in SWI-Prolog and print every provable
+    instance of the same predicates. Returns the answers and SWI-Prolog's
+    warnings (empty when the file loads cleanly)."""
+    preds = sorted({(r.head[0], len(r.head) - 1) for r in kb.rules}) + [("violation", 1)]
+    goal = ("forall(member(P/N, [" + ", ".join(f"{p}/{n}" for p, n in preds) + "]), "
+            "(functor(G, P, N), forall(G, (writeq(G), nl))))")
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / f"{scenario.key}.pl"
+        path.write_text(to_prolog(kb, scenario), encoding="utf-8")
+        done = subprocess.run([swipl, "-q", "-g", goal, "-t", "halt", str(path)],
+                              capture_output=True, text=True, encoding="utf-8",
+                              errors="replace", timeout=120)
+    if done.returncode != 0:
+        raise RuntimeError(f"swipl exited with {done.returncode}: {done.stderr.strip()}")
+    answers = {line.strip() for line in done.stdout.splitlines() if line.strip()}
+    return answers, done.stderr.strip()
+
