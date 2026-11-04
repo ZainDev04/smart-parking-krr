@@ -109,10 +109,10 @@ RUBRIC = [
 # cover values the template asks for; an empty value leaves the field blank
 PROJECT_TITLE = "Smart Parking Access & Space Allocation Reasoning System"
 SELECTED_DOMAIN = "Smart parking: campus parking access and space allocation"
-SECTION = ""
-SUBMISSION_DATE = ""
+SECTION = "A"
+SUBMISSION_DATE = "8 November 2026"
 INSTRUCTOR = "Miss Dure Shahwar"
-GROUP_REPRESENTATIVE = ""
+GROUP_REPRESENTATIVE = "Shaikh Muhammad Zain (AI-23306)"
 
 # colours and fonts measured from the template PDF
 FONT = "Arial"
@@ -645,7 +645,7 @@ def declaration(doc, ctx) -> None:
     p.paragraph_format.space_before = Pt(10)
     p.paragraph_format.keep_with_next = True
     name = GROUP_REPRESENTATIVE or "_" * 30
-    para(doc, f"Group Representative: {name}          Date: {SUBMISSION_DATE or '_' * 15}")
+    para(doc, f"Group Representative: {name}     Signature: {'_' * 18}     Date: {SUBMISSION_DATE or '_' * 15}")
 
 
 def toc_field(doc, ctx, instruction: str, placeholder: str) -> None:
