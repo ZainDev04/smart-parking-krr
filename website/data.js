@@ -1101,11 +1101,11 @@ window.KRR = {
    "derived": [
     {
      "rule": "R01",
-     "fact": "person(usman)"
+     "fact": "person(sara)"
     },
     {
      "rule": "R01",
-     "fact": "person(sara)"
+     "fact": "person(usman)"
     },
     {
      "rule": "R01",
@@ -1133,7 +1133,11 @@ window.KRR = {
     },
     {
      "rule": "R06",
-     "fact": "permit_valid(p_ali)"
+     "fact": "permit_valid(p_ahmed)"
+    },
+    {
+     "rule": "R06",
+     "fact": "permit_valid(p_fatima)"
     },
     {
      "rule": "R06",
@@ -1145,15 +1149,15 @@ window.KRR = {
     },
     {
      "rule": "R06",
+     "fact": "permit_valid(p_ali)"
+    },
+    {
+     "rule": "R06",
      "fact": "permit_valid(p_zara)"
     },
     {
-     "rule": "R06",
-     "fact": "permit_valid(p_fatima)"
-    },
-    {
-     "rule": "R06",
-     "fact": "permit_valid(p_ahmed)"
+     "rule": "R07",
+     "fact": "permit_matches_role(zara, p_zara)"
     },
     {
      "rule": "R07",
@@ -1162,10 +1166,6 @@ window.KRR = {
     {
      "rule": "R07",
      "fact": "permit_matches_role(ali, p_ali)"
-    },
-    {
-     "rule": "R07",
-     "fact": "permit_matches_role(zara, p_zara)"
     },
     {
      "rule": "R07",
@@ -1189,11 +1189,7 @@ window.KRR = {
     },
     {
      "rule": "R17",
-     "fact": "space_free(s_a1)"
-    },
-    {
-     "rule": "R17",
-     "fact": "space_free(s_a4)"
+     "fact": "space_free(s_v1)"
     },
     {
      "rule": "R17",
@@ -1201,15 +1197,19 @@ window.KRR = {
     },
     {
      "rule": "R17",
+     "fact": "space_free(s_a1)"
+    },
+    {
+     "rule": "R17",
      "fact": "space_free(s_a3)"
     },
     {
      "rule": "R17",
-     "fact": "space_free(s_v1)"
+     "fact": "space_free(s_e2)"
     },
     {
      "rule": "R17",
-     "fact": "space_free(s_e2)"
+     "fact": "space_free(s_a4)"
     },
     {
      "rule": "R18",
@@ -1272,11 +1272,11 @@ window.KRR = {
     },
     {
      "rule": "R10",
-     "fact": "authorized(ali, p_ali)"
+     "fact": "authorized(zara, p_zara)"
     },
     {
      "rule": "R10",
-     "fact": "authorized(zara, p_zara)"
+     "fact": "authorized(ali, p_ali)"
     },
     {
      "rule": "R10",
@@ -1313,11 +1313,11 @@ window.KRR = {
    "derived": [
     {
      "rule": "R10",
-     "fact": "authorized(ahmed, p_ahmed)"
+     "fact": "authorized(fatima, p_fatima)"
     },
     {
      "rule": "R10",
-     "fact": "authorized(fatima, p_fatima)"
+     "fact": "authorized(ahmed, p_ahmed)"
     },
     {
      "rule": "R11",
@@ -1325,7 +1325,7 @@ window.KRR = {
     },
     {
      "rule": "R11",
-     "fact": "authorized_driver(bilal)"
+     "fact": "authorized_driver(sara)"
     },
     {
      "rule": "R11",
@@ -1333,7 +1333,7 @@ window.KRR = {
     },
     {
      "rule": "R11",
-     "fact": "authorized_driver(sara)"
+     "fact": "authorized_driver(bilal)"
     },
     {
      "rule": "R13",
@@ -1341,7 +1341,7 @@ window.KRR = {
     },
     {
      "rule": "R13",
-     "fact": "zone_access(bilal, zone_v)"
+     "fact": "zone_access(sara, zone_a)"
     },
     {
      "rule": "R13",
@@ -1349,7 +1349,7 @@ window.KRR = {
     },
     {
      "rule": "R13",
-     "fact": "zone_access(sara, zone_a)"
+     "fact": "zone_access(bilal, zone_v)"
     }
    ]
   },
@@ -1382,39 +1382,7 @@ window.KRR = {
     },
     {
      "rule": "R14",
-     "fact": "suitable_space(bilal, s_v1)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(zara, s_a1)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(zara, s_a3)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(zara, s_a2)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(zara, s_a5)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(ali, s_a1)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(ali, s_a3)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(ali, s_a2)"
-    },
-    {
-     "rule": "R14",
-     "fact": "suitable_space(ali, s_a5)"
+     "fact": "suitable_space(sara, s_a2)"
     },
     {
      "rule": "R14",
@@ -1426,11 +1394,43 @@ window.KRR = {
     },
     {
      "rule": "R14",
-     "fact": "suitable_space(sara, s_a2)"
+     "fact": "suitable_space(sara, s_a5)"
     },
     {
      "rule": "R14",
-     "fact": "suitable_space(sara, s_a5)"
+     "fact": "suitable_space(zara, s_a2)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(zara, s_a1)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(zara, s_a3)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(zara, s_a5)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(ali, s_a2)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(ali, s_a1)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(ali, s_a3)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(ali, s_a5)"
+    },
+    {
+     "rule": "R14",
+     "fact": "suitable_space(bilal, s_v1)"
     }
    ]
   },
@@ -1459,7 +1459,31 @@ window.KRR = {
     },
     {
      "rule": "R15",
+     "fact": "eligible_for_space(bilal, s_v1)"
+    },
+    {
+     "rule": "R15",
+     "fact": "eligible_for_space(sara, s_a1)"
+    },
+    {
+     "rule": "R15",
+     "fact": "eligible_for_space(sara, s_a5)"
+    },
+    {
+     "rule": "R15",
+     "fact": "eligible_for_space(ali, s_a5)"
+    },
+    {
+     "rule": "R15",
      "fact": "eligible_for_space(ali, s_a2)"
+    },
+    {
+     "rule": "R15",
+     "fact": "eligible_for_space(zara, s_a1)"
+    },
+    {
+     "rule": "R15",
+     "fact": "eligible_for_space(zara, s_a2)"
     },
     {
      "rule": "R15",
@@ -1472,30 +1496,6 @@ window.KRR = {
     {
      "rule": "R15",
      "fact": "eligible_for_space(ali, s_a1)"
-    },
-    {
-     "rule": "R15",
-     "fact": "eligible_for_space(sara, s_a1)"
-    },
-    {
-     "rule": "R15",
-     "fact": "eligible_for_space(ali, s_a5)"
-    },
-    {
-     "rule": "R15",
-     "fact": "eligible_for_space(bilal, s_v1)"
-    },
-    {
-     "rule": "R15",
-     "fact": "eligible_for_space(sara, s_a5)"
-    },
-    {
-     "rule": "R15",
-     "fact": "eligible_for_space(zara, s_a2)"
-    },
-    {
-     "rule": "R15",
-     "fact": "eligible_for_space(zara, s_a1)"
     },
     {
      "rule": "R16",
@@ -1516,6 +1516,10 @@ window.KRR = {
    "derived": [
     {
      "rule": "R15",
+     "fact": "eligible_for_space(ahmed, s_e2)"
+    },
+    {
+     "rule": "R15",
      "fact": "eligible_for_space(ahmed, s_e3)"
     },
     {
@@ -1523,20 +1527,8 @@ window.KRR = {
      "fact": "eligible_for_space(ahmed, s_e1)"
     },
     {
-     "rule": "R15",
-     "fact": "eligible_for_space(ahmed, s_e2)"
-    },
-    {
-     "rule": "R19",
-     "fact": "can_allocate(ali, s_a1)"
-    },
-    {
      "rule": "R19",
      "fact": "can_allocate(sara, s_a3)"
-    },
-    {
-     "rule": "R19",
-     "fact": "can_allocate(bilal, s_v1)"
     },
     {
      "rule": "R19",
@@ -1545,6 +1537,14 @@ window.KRR = {
     {
      "rule": "R19",
      "fact": "can_allocate(zara, s_a1)"
+    },
+    {
+     "rule": "R19",
+     "fact": "can_allocate(ali, s_a1)"
+    },
+    {
+     "rule": "R19",
+     "fact": "can_allocate(bilal, s_v1)"
     },
     {
      "rule": "R20",
@@ -1565,11 +1565,11 @@ window.KRR = {
    "derived": [
     {
      "rule": "R19",
-     "fact": "can_allocate(ahmed, s_e2)"
+     "fact": "can_allocate(ahmed, s_e1)"
     },
     {
      "rule": "R19",
-     "fact": "can_allocate(ahmed, s_e1)"
+     "fact": "can_allocate(ahmed, s_e2)"
     },
     {
      "rule": "R20",
@@ -1581,11 +1581,11 @@ window.KRR = {
     },
     {
      "rule": "R25",
-     "fact": "loses(usman, s_a1)"
+     "fact": "loses(zara, s_a1)"
     },
     {
      "rule": "R25",
-     "fact": "loses(zara, s_a1)"
+     "fact": "loses(usman, s_a1)"
     }
    ]
   },
@@ -1608,11 +1608,11 @@ window.KRR = {
    "derived": [
     {
      "rule": "R28",
-     "fact": "allocate(bilal, s_v1)"
+     "fact": "allocate(sara, s_a1)"
     },
     {
      "rule": "R28",
-     "fact": "allocate(sara, s_a1)"
+     "fact": "allocate(bilal, s_v1)"
     },
     {
      "rule": "R28",

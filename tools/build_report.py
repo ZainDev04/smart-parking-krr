@@ -645,8 +645,7 @@ def declaration(doc, ctx) -> None:
     p.paragraph_format.space_before = Pt(10)
     p.paragraph_format.keep_with_next = True
     name = GROUP_REPRESENTATIVE or "_" * 30
-    para(doc, f"Group Representative: {name}")
-    para(doc, f"Signature: {'_' * 30}          Date: {SUBMISSION_DATE or '_' * 15}")
+    para(doc, f"Group Representative: {name}          Date: {SUBMISSION_DATE or '_' * 15}")
 
 
 def toc_field(doc, ctx, instruction: str, placeholder: str) -> None:
