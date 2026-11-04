@@ -27,7 +27,7 @@ def finalize(path: Path = REPORT, pdf: bool = False) -> int:
         # compact contents and caption lists: TOC 1, TOC 2, Table of Figures
         for style_id in (-20, -21, -36):
             st = doc.Styles(style_id)
-            st.Font.Name = "Times New Roman"
+            st.Font.Name = "Arial"
             st.Font.Size = 10
             st.ParagraphFormat.SpaceBefore = 0
             st.ParagraphFormat.SpaceAfter = 0

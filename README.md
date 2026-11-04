@@ -178,7 +178,7 @@ On Windows with Word installed the build also fills in the report's contents pag
 
 ## Report
 
-The full report (36 pages: domain analysis, frames, semantic network, FOL, description logic, Horn clauses, chaining traces, testing, and an expressivity and tractability analysis) is in [`docs/report/`](docs/report/) and can be downloaded from the website.
+The full report (33 pages, following the department CCP report template: domain analysis, frames, semantic network, FOL, description logic, Horn clauses, chaining traces, implementation, results and an expressivity and tractability analysis) is in [`docs/report/`](docs/report/) and can be downloaded from the website.
 
 ## Team
 

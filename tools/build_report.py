@@ -1,23 +1,26 @@
-"""Build the Word report from docs/report/report.md, on top of the CCP template.
+"""Build the Word report from docs/report/report.md.
 
     python tools/build_report.py
 
-The page setup and styles come from
-docs/report/CT351_KRR_Smart_Parking_10-10_Report_Template.docx; its body is
+The structure, headings and look follow the department's CCP report template
+(CT-351_CCP_Report_Template.pdf). The base styles come from
+docs/report/CT351_KRR_Smart_Parking_10-10_Report_Template.docx, whose body is
 replaced. The markdown source holds the prose. Lines in double braces are
 directives that pull tables, traces and diagrams out of the running code,
 so the report always shows what the engines actually do:
 
-    {{titlepage}} {{rubric}} {{contributions}} {{toc}} {{lof}} {{lot}}
+    {{titlepage}} {{rubric}} {{contributions}} {{declaration}} {{toc}}
     {{entities}} {{frame Person}} {{frame Faculty Staff}} {{fol_rules R06 R10 ...}}
     {{fol_statements}} {{dl_roles}} {{dl_axioms sub|equiv|disjoint|restrict}} {{abox}}
-    {{horn_table}} {{cycles}} {{fwd_table GOAL}} {{conflict_table}} {{bwd_table SCENARIO GOAL}}
+    {{horn_table}} {{cycles}} {{fwd_initial GOAL}} {{fwd_table GOAL}} {{conflict_table}}
+    {{bwd_table SCENARIO GOAL}}
     {{decisions}} {{test_table}} {{facts_compact}} {{prolog_rules}} {{all_firings}}
-    {{include PATH}} {{tree}} {{screens}} {{participation}} {{compliance}} {{pagebreak}}
+    {{include PATH}} {{tree}} {{screens}} {{participation}} {{pagebreak}}
     {{stat NAME}}
 
 "Table: caption" on the line before a table or table directive adds a numbered
-caption. Images are written ![caption](path){h=CM}; without {h=CM} a PNG
+caption. A heading ending in {plain} is left out of the contents, and one ending
+in {newpage} starts a new page. Images are written ![caption](path){h=CM}; without {h=CM} a PNG
 with a dpi tag is placed at its printed size.
 
 Run tools/finalize_report.py afterwards (Windows with Word) to fill in the
@@ -30,12 +33,11 @@ import re
 import subprocess
 import sys
 from copy import deepcopy
-from datetime import date
 from pathlib import Path
 
 from docx import Document
-from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
+from docx.enum.table import WD_ALIGN_VERTICAL, WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
@@ -61,21 +63,21 @@ TEAM = [
      "Wrote the problem statement and the 13 domain requirements, ran the knowledge "
      "acquisition sessions, designed the 15 class frames and 38 instance frames with their "
      "facets and defaults, and wrote the ParkingSession script.",
-     "Ch. 1, 2, 4; krr/frames/"),
+     "Sections 1, 2, 3.1; krr/frames/"),
     ("Maaz ur Rehman", "AI-23036", "Semantic network, description logic, trade-offs",
      "Built the semantic network generator with inheritance and path queries, wrote the DL "
      "TBox (T01-T28, D01-D17), the classifier and consistency checker, the OWL export and "
      "the expressivity and tractability analysis.",
-     "Ch. 3, 5, 7, 12; krr/semantic_net/, krr/logic/description_logic.py"),
+     "Sections 3, 3.2, 4.2, 8.2; krr/semantic_net/, krr/logic/description_logic.py"),
     ("Owais Tariq", "AI-23037", "FOL, Horn knowledge base, forward chaining",
      "Wrote the FOL vocabulary, the rule readings and statements F01-F12 with the model "
      "checker, converted the policy into Horn rules R01-R28 and IC1-IC7, and built the "
      "forward chainer with stratified negation and the Prolog export.",
-     "Ch. 6, 8, 9.2-9.3; krr/logic/fol.py, krr/reasoning/forward.py"),
+     "Sections 4.1, 5, 6.1; krr/logic/fol.py, krr/reasoning/forward.py"),
     ("Shaikh Muhammad Zain", "AI-23306", "Backward chaining, interfaces, testing, report",
      "Built the backward chainer, proof trees and why-not explainer, the CLI and Streamlit "
-     "interface, the 12 test scenarios and 59 unit tests, and put the report together.",
-     "Ch. 9.4-9.6, 10, 11; krr/reasoning/backward.py, app.py, tests/"),
+     "interface, the 12 test scenarios and the unit tests, and put the report together.",
+     "Sections 6.2, 7, 8.1; krr/reasoning/backward.py, app.py, tests/"),
 ]
 RUBRIC = [
     ("Criterion 1: Problem Statement & Motivation",
@@ -104,27 +106,24 @@ RUBRIC = [
      "The individual contributed significantly and demonstrated mastery of KR concepts "
      "during viva."),
 ]
-COMPLIANCE = [
-    ("Problem statement and motivation", "Ch. 1", 0),
-    ("Domain requirements", "1.4, 2.5", 0),
-    ("Limitations of traditional databases", "2.6", 0),
-    ("Frames and scripts", "Ch. 4", 0),
-    ("Semantic network", "Ch. 5", 1),
-    ("FOL facts, rules and quantifiers", "Ch. 6", 2),
-    ("Description logic axioms", "Ch. 7", 1),
-    ("Expressivity vs tractability", "Ch. 12", 1),
-    ("Horn clauses", "Ch. 8, App. B", 2),
-    ("Forward chaining trace", "9.2-9.3, App. C", 2),
-    ("Backward chaining trace", "9.4-9.5, App. D", 3),
-    ("Working code", "Ch. 10, App. E", 3),
-    ("Execution output", "10.8, App. F", 3),
-    ("Testing", "Ch. 11", 3),
-    ("Team participation statement", "App. G", 3),
-    ("References", "References", 0),
-]
+# cover values the template asks for; an empty value leaves the field blank
+PROJECT_TITLE = "Smart Parking Access & Space Allocation Reasoning System"
+SELECTED_DOMAIN = "Smart parking: campus parking access and space allocation"
+SECTION = ""
+SUBMISSION_DATE = ""
+INSTRUCTOR = "Miss Dure Shahwar"
+GROUP_REPRESENTATIVE = ""
 
+# colours and fonts measured from the template PDF
+FONT = "Arial"
 MONO = "Consolas"
-HEAD_FILL = "DCE6F1"
+CODE_WIDTH = 108
+NAVY = "17365D"
+BLUE = "2F75B5"
+MUTED = "666666"
+LABEL_FILL = "D9EAF7"
+BORDER = "9EADBD"
+HEAD_FILL = NAVY
 CODE_FILL = "F3F4F6"
 
 
@@ -201,7 +200,7 @@ def add_inline(paragraph, text: str, size: float | None = None, bold: bool = Fal
         if part.startswith("`"):
             r = paragraph.add_run(part[1:-1])
             r.font.name = MONO
-            r.font.size = Pt((size or 11) - 1.5)
+            r.font.size = Pt((size or 10) - 1)
         elif part.startswith("**"):
             r = paragraph.add_run(part[2:-2])
             r.bold = True
@@ -241,6 +240,18 @@ def code_block(doc, text: str, size: float = 7.5) -> None:
         # nested traces keep their shape without wrapping
         lines = [re.sub(r" {4,}", lambda m: " " * (len(m.group()) // 2), line)
                  for line in lines]
+    # anything still too wide for A4 at 7.5 pt wraps with a hanging indent
+    wrapped = []
+    for line in lines:
+        while len(line) > CODE_WIDTH and " " in line.strip():
+            cut = line.rfind(" ", 0, CODE_WIDTH)
+            indent = len(line) - len(line.lstrip())
+            if cut <= indent:
+                break
+            wrapped.append(line[:cut])
+            line = " " * (indent + 6) + line[cut + 1:]
+        wrapped.append(line)
+    lines = wrapped
     p = doc.add_paragraph(style="Code")
     for i, line in enumerate(lines):
         r = p.add_run(line)
@@ -299,6 +310,36 @@ def mark_size(p, pt: float) -> None:
         el.set(qn("w:val"), str(round(pt * 2)))
 
 
+def grid(t) -> None:
+    """Thin grey-blue borders, as in the template's tables."""
+    t.style = "Table Grid"
+    tblpr = t._tbl.tblPr
+    old = tblpr.find(qn("w:tblBorders"))
+    if old is not None:
+        tblpr.remove(old)
+    borders = OxmlElement("w:tblBorders")
+    for side in ("top", "left", "bottom", "right", "insideH", "insideV"):
+        el = OxmlElement(f"w:{side}")
+        el.set(qn("w:val"), "single")
+        el.set(qn("w:sz"), "4")
+        el.set(qn("w:space"), "0")
+        el.set(qn("w:color"), BORDER)
+        borders.append(el)
+    tblpr.append(borders)
+
+
+def head_cell(cell, text: str, size: float = 9, center: bool = False) -> None:
+    """Navy table header cell with white bold text."""
+    cell.text = ""
+    r = cell.paragraphs[0].add_run(text)
+    r.bold = True
+    r.font.size = Pt(size)
+    r.font.color.rgb = RGBColor.from_string("FFFFFF")
+    if center:
+        cell.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    shade(cell._tc, HEAD_FILL)
+
+
 def table(doc, ctx: Ctx, header: list[str], rows: list[list[str]],
           widths: list[float] | None = None, font: float = 8.5, mono_cols=()) -> None:
     # never below 8 pt for text and 7.5 pt for code, whatever the caller asks for
@@ -308,15 +349,10 @@ def table(doc, ctx: Ctx, header: list[str], rows: list[list[str]],
         caption(doc, ctx, "Table", ctx.pending_caption)
         ctx.pending_caption = None
     t = doc.add_table(rows=1, cols=len(header))
-    t.style = "Table Grid"
+    grid(t)
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
     for i, h in enumerate(header):
-        c = t.rows[0].cells[i]
-        c.text = ""
-        r = c.paragraphs[0].add_run(h)
-        r.bold = True
-        r.font.size = Pt(font)
-        shade(c._tc, HEAD_FILL)
+        head_cell(t.rows[0].cells[i], h, font)
     # repeat the header row on every page
     trpr = t.rows[0]._tr.get_or_add_trPr()
     th = OxmlElement("w:tblHeader")
@@ -378,6 +414,53 @@ def image(doc, ctx: Ctx, path: Path, text: str, max_h: float | None = None) -> N
 # document setup
 # --------------------------------------------------------------------------------
 
+def set_font(style, name: str) -> None:
+    """Point every script of a style at one font, overriding theme fonts."""
+    style.font.name = name
+    rpr = style.element.get_or_add_rPr()
+    fonts = rpr.find(qn("w:rFonts"))
+    if fonts is None:
+        fonts = OxmlElement("w:rFonts")
+        rpr.append(fonts)
+    for attr in list(fonts.attrib):
+        if "Theme" in attr:
+            del fonts.attrib[attr]
+    for attr in ("w:ascii", "w:hAnsi", "w:cs", "w:eastAsia"):
+        fonts.set(qn(attr), name)
+
+
+def rule(p, colour: str, side: str = "bottom", size: int = 12) -> None:
+    """A coloured line above or below a paragraph."""
+    ppr = p._p.get_or_add_pPr()
+    bdr = OxmlElement("w:pBdr")
+    el = OxmlElement(f"w:{side}")
+    el.set(qn("w:val"), "single")
+    el.set(qn("w:sz"), str(size))
+    el.set(qn("w:space"), "4")
+    el.set(qn("w:color"), colour)
+    bdr.append(el)
+    ppr.append(bdr)
+
+
+def footer(doc, sec) -> None:
+    """Footer as in the template: course line on the left, page number on the right."""
+    sec.footer.is_linked_to_previous = False
+    p = sec.footer.paragraphs[0]
+    for child in list(p._p):
+        p._p.remove(child)
+    p.style = doc.styles["Footer"]
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    width = sec.page_width - sec.left_margin - sec.right_margin
+    rule(p, "D5DDE6", "top", 4)
+    doc.styles["Footer"].paragraph_format.tab_stops.clear_all()
+    p.paragraph_format.tab_stops.add_tab_stop(width, WD_TAB_ALIGNMENT.RIGHT)
+    p.add_run("CT-351 | Knowledge Representation & Reasoning | CCP Report\tPage ")
+    add_field(p, "PAGE", "1")
+    style = p.style
+    style.font.size = Pt(8)
+    style.font.color.rgb = RGBColor.from_string(MUTED)
+
+
 def setup() -> Document:
     doc = Document(str(TEMPLATE))
     body = doc.element.body
@@ -385,38 +468,46 @@ def setup() -> Document:
         if el.tag != qn("w:sectPr"):
             body.remove(el)
     sec = doc.sections[0]
+    sec.page_width, sec.page_height = Cm(21.0), Cm(29.7)       # A4, as in the template
     sec.left_margin = sec.right_margin = Cm(2.2)
     sec.top_margin = sec.bottom_margin = Cm(2.0)
-    sec.different_first_page_header_footer = True
+    sec.different_first_page_header_footer = False
     styles = doc.styles
     normal = styles["Normal"]
-    normal.font.size = Pt(10.5)
-    normal.paragraph_format.line_spacing = 1.05
-    normal.paragraph_format.space_after = Pt(4)
-    for name, size, before in (("Heading 1", 15, 12), ("Heading 2", 12, 7),
-                               ("Heading 3", 11, 5)):
+    set_font(normal, FONT)
+    normal.font.size = Pt(10)
+    normal.paragraph_format.line_spacing = 1.08
+    normal.paragraph_format.space_after = Pt(5)
+    for name, size, before, colour in (("Heading 1", 14, 14, NAVY), ("Heading 2", 11, 9, BLUE),
+                                       ("Heading 3", 10, 7, NAVY)):
         st = styles[name]
+        set_font(st, FONT)
         st.font.size = Pt(size)
+        st.font.bold = True
+        st.font.color.rgb = RGBColor.from_string(colour)
         st.paragraph_format.space_before = Pt(before)
         st.paragraph_format.space_after = Pt(4)
+    plain = styles.add_style("Contents Heading", 1)
+    set_font(plain, FONT)
+    plain.font.size = Pt(14)
+    plain.font.bold = True
+    plain.font.color.rgb = RGBColor.from_string(NAVY)
+    plain.paragraph_format.space_after = Pt(8)
     cap = styles["Caption"]
-    cap.font.size = Pt(9)
-    cap.font.name = "Times New Roman"
+    set_font(cap, FONT)
+    cap.font.size = Pt(8.5)
+    cap.font.bold = True
+    cap.font.color.rgb = RGBColor.from_string(NAVY)
     code = styles.add_style("Code", 1)
-    code.font.name = MONO
+    set_font(code, MONO)
     code.font.size = Pt(7.5)
     code.paragraph_format.space_after = Pt(6)
     code.paragraph_format.line_spacing = 1.0
-    rpr = code.element.get_or_add_rPr()
-    fonts = rpr.find(qn("w:rFonts"))
-    if fonts is None:
-        fonts = OxmlElement("w:rFonts")
-        rpr.append(fonts)
-    for attr in ("w:ascii", "w:hAnsi", "w:cs", "w:eastAsia"):
-        fonts.set(qn(attr), MONO)
     lb = styles["List Bullet"]
+    set_font(lb, FONT)
     lb.paragraph_format.space_after = Pt(2)
     lb.paragraph_format.line_spacing = 1.1
+    footer(doc, sec)
     upd = OxmlElement("w:updateFields")
     upd.set(qn("w:val"), "true")
     doc.settings.element.append(upd)
@@ -428,42 +519,76 @@ def setup() -> Document:
 # --------------------------------------------------------------------------------
 
 def title_page(doc, ctx) -> None:
-    def line(text, size, bold=True, after=6):
+    """Cover page, laid out field for field like the template's."""
+    def line(text, size, bold=False, after=2.0, colour=MUTED):
         p = para(doc, "", align=WD_ALIGN_PARAGRAPH.CENTER, after=after)
         r = p.add_run(text)
         r.bold = bold
         r.font.size = Pt(size)
+        r.font.color.rgb = RGBColor.from_string(colour)
         return p
 
-    line("NED UNIVERSITY OF ENGINEERING & TECHNOLOGY", 16, after=2)
-    line("DEPARTMENT OF COMPUTER SCIENCE & INFORMATION TECHNOLOGY", 12, after=28)
-    line("CT-351 KNOWLEDGE REPRESENTATION & REASONING", 13, after=2)
-    line("COMPLEX COMPUTING PROBLEM (CCP)", 12, after=36)
-    line("SMART PARKING ACCESS & SPACE ALLOCATION", 18, after=0)
-    line("REASONING SYSTEM", 18, after=10)
-    line("Project Report", 13, bold=False, after=40)
-    line("Group Members", 12, after=6)
-    t = doc.add_table(rows=1, cols=3)
-    t.style = "Table Grid"
+    top = line("DEPARTMENT OF COMPUTER SCIENCE AND IT", 12)
+    top.paragraph_format.space_before = Pt(26)
+    r = line("NED UNIVERSITY OF ENGINEERING & TECHNOLOGY", 12, after=20)
+    rule(r, BLUE, "bottom", 12)
+    line("COMPLEX COMPUTING PROBLEM (CCP)", 20, bold=True, after=6, colour=NAVY)
+    line("REPORT", 20, bold=True, after=12, colour=NAVY)
+    line("Course Code: CT-351", 11, after=2)
+    line("Course Title: Knowledge Representation & Reasoning", 11, after=16)
+
+    t = doc.add_table(rows=0, cols=2)
+    grid(t)
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
-    for i, h in enumerate(("No.", "Name", "Roll No.")):
-        c = t.rows[0].cells[i]
-        c.text = ""
-        c.paragraphs[0].add_run(h).bold = True
-        shade(c._tc, HEAD_FILL)
-    for i, (name, roll, *_) in enumerate(TEAM, 1):
-        for c, v in zip(t.add_row().cells, (f"S{i}", name, roll)):
+    for label, value in (("Project Title:", PROJECT_TITLE), ("Selected Domain:", SELECTED_DOMAIN),
+                         ("Section:", SECTION), ("Submission Date:", SUBMISSION_DATE)):
+        row = t.add_row()
+        row.height = Cm(1.05)
+        row.cells[0].text = ""
+        r = row.cells[0].paragraphs[0].add_run(label)
+        r.bold = True
+        shade(row.cells[0]._tc, LABEL_FILL)
+        row.cells[1].text = value
+        for c, w in zip(row.cells, (3.9, 12.7)):
+            c.width = Cm(w)
+            c.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+            c.paragraphs[0].paragraph_format.space_after = Pt(0)
+
+    h = para(doc, "", after=4)
+    h.paragraph_format.space_before = Pt(18)
+    r = h.add_run("GROUP MEMBERS")
+    r.bold = True
+    r.font.size = Pt(11)
+    r.font.color.rgb = RGBColor.from_string(BLUE)
+    t = doc.add_table(rows=1, cols=4)
+    grid(t)
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    for i, text in enumerate(("S. No.", "Student Name", "Roll Number", "Assigned Contribution")):
+        head_cell(t.rows[0].cells[i], text)
+    t.rows[0].height = Cm(0.85)
+    for i, (name, roll, area, *_) in enumerate(TEAM, 1):
+        row = t.add_row()
+        row.height = Cm(1.05)
+        for c, v in zip(row.cells, (str(i), name, roll, area)):
             c.text = v
     for row in t.rows:
-        for c, w in zip(row.cells, (1.5, 8, 4)):
+        for ci, (c, w) in enumerate(zip(row.cells, (1.3, 5.4, 2.5, 7.4))):
             c.width = Cm(w)
-    para(doc, after=30)
-    for label, value in (("Group Number", "12"), ("Semester", "7th"),
-                         ("Course Instructor", "Miss Dure Shahwar")):
-        line(f"{label}: {value}", 11, bold=False, after=8)
-    para(doc, after=24)
-    line(f"NED University of Engineering & Technology, {date.today():%B %Y}", 10,
-         bold=False, after=0)
+            c.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+            c.paragraphs[0].paragraph_format.space_after = Pt(0)
+            if ci == 0:
+                c.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    def labelled(*pairs, before=0.0):
+        p = para(doc, "", after=5)
+        p.paragraph_format.space_before = Pt(before)
+        for i, (label, value) in enumerate(pairs):
+            p.add_run(("     " if i else "") + label + " ").bold = True
+            p.add_run(value)
+
+    labelled(("Instructor:", INSTRUCTOR), before=16)
+    labelled(("CLO:", "CLO-3 (Design/Analysis)"), ("PLO:", "PLO-10 (Lifelong Learning)"))
+    labelled(("Group:", "12"), ("Semester:", "7th"))
     page_break(doc)
 
 
@@ -478,11 +603,10 @@ def rubric_page(doc, ctx) -> None:
         if i < 2:
             r.add_break()
     t = doc.add_table(rows=1, cols=3)
-    t.style = "Table Grid"
+    grid(t)
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
     for i, h in enumerate(("Student No.", "Name", "Roll No.")):
-        t.rows[0].cells[i].text = h
-        shade(t.rows[0].cells[i]._tc, HEAD_FILL)
+        head_cell(t.rows[0].cells[i], h)
     for i, (name, roll, *_) in enumerate(TEAM, 1):
         for c, v in zip(t.add_row().cells, (f"S{i}", name, roll)):
             c.text = v
@@ -490,14 +614,9 @@ def rubric_page(doc, ctx) -> None:
     header = ["Criteria and scales", "0 (Unsatisfactory)", "1 (Developing)", "2 (Proficient)",
               "S1", "S2", "S3", "S4"]
     t = doc.add_table(rows=1, cols=len(header))
-    t.style = "Table Grid"
+    grid(t)
     for i, h in enumerate(header):
-        c = t.rows[0].cells[i]
-        c.text = ""
-        r = c.paragraphs[0].add_run(h)
-        r.bold = True
-        r.font.size = Pt(8.5)
-        shade(c._tc, HEAD_FILL)
+        head_cell(t.rows[0].cells[i], h, 8.5)
     for row in RUBRIC + [("Total Marks (Out of 10):", "", "", "")]:
         cells = t.add_row().cells
         for i, v in enumerate(list(row) + ["", "", "", ""]):
@@ -506,7 +625,7 @@ def rubric_page(doc, ctx) -> None:
             r.font.size = Pt(8.5)
             r.bold = i == 0
     for row in t.rows:
-        for c, w in zip(row.cells, (3.4, 3.0, 3.0, 3.3, 0.9, 0.9, 0.9, 0.9)):
+        for c, w in zip(row.cells, (3.3, 2.9, 2.9, 3.3, 0.85, 0.85, 0.85, 0.85)):
             c.width = Cm(w)
     para(doc, after=20)
     para(doc, "Teacher's Signature: ___________________________          "
@@ -515,64 +634,23 @@ def rubric_page(doc, ctx) -> None:
 
 
 def contributions(doc, ctx) -> None:
-    table(doc, ctx, ["Member", "Role / area", "Specific contribution", "Evidence"],
-          [[f"{n} ({r})", area, contrib, ev] for n, r, area, contrib, ev in TEAM],
-          [3.2, 3.0, 6.6, 3.7], font=8.5)
+    table(doc, ctx, ["Student Name", "Roll Number", "Contribution / Responsibilities"],
+          [[n, r, f"{contrib} {ev}."] for n, r, area, contrib, ev in TEAM],
+          [4.0, 2.2, 10.4], font=9)
+
+
+def declaration(doc, ctx) -> None:
+    p = para(doc, "**Declaration:** We confirm that the submitted report represents our group's "
+                  "work and that each member has contributed as stated above.", after=18)
+    p.paragraph_format.space_before = Pt(10)
+    p.paragraph_format.keep_with_next = True
+    name = GROUP_REPRESENTATIVE or "_" * 30
+    para(doc, f"Group Representative: {name}          Date: {SUBMISSION_DATE or '_' * 15}")
 
 
 def toc_field(doc, ctx, instruction: str, placeholder: str) -> None:
     p = doc.add_paragraph()
     add_field(p, instruction, placeholder)
-
-
-def end_section(doc, cols: int = 1, first: bool = False) -> None:
-    """End the current section here with `cols` columns. The first section keeps
-    the footer references and a blank first page (the title page)."""
-    body_sect = doc.element.body.find(qn("w:sectPr"))
-    sect = deepcopy(body_sect)
-    for tag in ("w:type", "w:cols", "w:titlePg"):
-        for el in sect.findall(qn(tag)):
-            sect.remove(el)
-    if not first:
-        t = OxmlElement("w:type")
-        t.set(qn("w:val"), "continuous")
-        sect.insert(0, t)
-        for tag in ("w:headerReference", "w:footerReference"):
-            for el in sect.findall(qn(tag)):
-                sect.remove(el)
-    c = OxmlElement("w:cols")
-    c.set(qn("w:num"), str(cols))
-    c.set(qn("w:space"), "567")
-    sect.find(qn("w:pgMar")).addnext(c)
-    if first:
-        c.addnext(OxmlElement("w:titlePg"))
-    p = doc.add_paragraph()
-    p.paragraph_format.space_after = Pt(0)
-    p._p.get_or_add_pPr().append(sect)
-
-
-def finish_sections(doc) -> None:
-    """The body's own sectPr closes the last section: single column, numbered."""
-    body = doc.element.body
-    sect = body.find(qn("w:sectPr"))
-    # a trailing empty spacer after the last table would start a blank page
-    while True:
-        prev = sect.getprevious()
-        if prev is None or prev.tag != qn("w:p") or "".join(prev.itertext()).strip():
-            break
-        if prev.find(f"{qn('w:pPr')}/{qn('w:sectPr')}") is not None:
-            break
-        body.remove(prev)
-    # Word needs a paragraph after a closing table; make it 1pt high
-    tail = doc.add_paragraph()
-    tail.paragraph_format.space_after = Pt(0)
-    tail.paragraph_format.line_spacing = Pt(1)
-    tail.add_run("").font.size = Pt(1)
-    for el in sect.findall(qn("w:titlePg")):
-        sect.remove(el)
-    t = OxmlElement("w:type")
-    t.set(qn("w:val"), "continuous")
-    sect.insert(0, t)
 
 
 # --------------------------------------------------------------------------------
@@ -687,6 +765,17 @@ def cycles(doc, ctx) -> None:
                      ", ".join(fired) if fired else "none (fixpoint)"])
     table(doc, ctx, ["Cycle", "Stratum", "Conflict set", "New facts", "Rules fired"], rows,
           [1.4, 1.6, 2.2, 2.0, 9.3], font=8.5)
+
+
+def fwd_initial(doc, ctx, goal: str) -> None:
+    """The stored facts that the forward trace for a goal rests on."""
+    stored = {fmt(f) for f in ctx.main.kb.facts}
+    seen: list[str] = []
+    for f in support(ctx.main.forward, goal):
+        for premise in f.premises:
+            if premise in stored and premise not in seen:
+                seen.append(premise)
+    code_block(doc, "\n".join("  ".join(seen[i:i + 3]) for i in range(0, len(seen), 3)))
 
 
 def fwd_table(doc, ctx, goal: str) -> None:
@@ -857,12 +946,6 @@ def participation(doc, ctx) -> None:
           [4.2, 7.8, 4.5], font=8.5)
 
 
-def compliance(doc, ctx) -> None:
-    rows = [[req, "Yes", where, TEAM[who][0]] for req, where, who in COMPLIANCE]
-    table(doc, ctx, ["Requirement", "Completed?", "Evidence / section", "Verified by"], rows,
-          [5.8, 2.0, 4.2, 4.5], font=8.5)
-
-
 def tree() -> str:
     """Directories one per line, with their files listed after them."""
     skip = {"__pycache__", "png", "generated", "screenshots", "viva", "diagrams", "report"}
@@ -965,6 +1048,10 @@ def render(doc, ctx: Ctx, text: str) -> None:
             flush()
             level = len(s) - len(s.lstrip("#"))
             title = s[level:].strip()
+            if title.endswith("{plain}"):
+                doc.add_paragraph(title[:-7].strip(), style="Contents Heading")
+                i += 1
+                continue
             if title.endswith("{newpage}"):
                 title = title[:-9].strip()
                 page_break(doc)
@@ -1014,19 +1101,12 @@ def directive(doc, ctx: Ctx, d: str) -> None:
         "facts_compact": facts_compact, "prolog_rules": prolog_rules,
         "prolog_tail": prolog_tail,
         "all_firings": all_firings, "screens": screens, "participation": participation,
-        "compliance": compliance,
+        "declaration": declaration,
     }
     if name in simple:
         simple[name](doc, ctx)
     elif name == "toc":
-        end_section(doc, first=True)
-        toc_field(doc, ctx, 'TOC \\o "1-2" \\h \\z \\u', "Right-click and choose Update Field.")
-    elif name == "endcols":
-        end_section(doc, cols=2)
-    elif name == "lof":
-        toc_field(doc, ctx, 'TOC \\h \\z \\c "Figure"', "Right-click and choose Update Field.")
-    elif name == "lot":
-        toc_field(doc, ctx, 'TOC \\h \\z \\c "Table"', "Right-click and choose Update Field.")
+        toc_field(doc, ctx, 'TOC \\o "1-2" \\h \\z', "Right-click and choose Update Field.")
     elif name == "pagebreak":
         page_break(doc)
     elif name == "entities":
@@ -1038,6 +1118,8 @@ def directive(doc, ctx: Ctx, d: str) -> None:
         fol_rules(doc, ctx, arg.split())
     elif name == "dl_axioms":
         dl_axioms(doc, ctx, arg)
+    elif name == "fwd_initial":
+        fwd_initial(doc, ctx, arg)
     elif name == "fwd_table":
         fwd_table(doc, ctx, arg)
     elif name == "bwd_table":
@@ -1056,7 +1138,6 @@ def build() -> Path:
     ctx = Ctx()
     doc = setup()
     render(doc, ctx, (DOCS / "report" / "report.md").read_text(encoding="utf-8"))
-    finish_sections(doc)
     # document properties (Word copies title and author into the exported PDF)
     props = doc.core_properties
     props.title = "Smart Parking Access and Space Allocation Reasoning System"

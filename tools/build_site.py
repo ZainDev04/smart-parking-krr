@@ -67,7 +67,7 @@ def drivers(kb) -> dict:
 
 def network_json() -> dict:
     """The worked-example semantic network (Ali, Zara's reservation r1 and the
-    values on the paths in report section 5.3), for the 3D view."""
+    values on the paths in report section 3.2.3), for the 3D view."""
     net = build_instance_network(["ali", "r1"])
     return {"nodes": [{"id": n, "kind": k} for n, k in net.nodes.items()],
             "edges": [{"s": e.source, "label": e.label, "t": e.target} for e in net.edges]}

@@ -622,7 +622,7 @@ def semantic_network() -> Path:
 
 def semantic_network_example() -> Path:
     net = build_instance_network(["ali", "r1"])
-    # Zara's own car and permit add nothing to the paths in section 5.3; leave them out.
+    # Zara's own car and permit add nothing to the paths in section 3.2.3; leave them out.
     drop = {"car_zara", "p_zara"}
     for n in drop:
         net.nodes.pop(n, None)

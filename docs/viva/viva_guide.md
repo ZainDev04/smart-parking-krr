@@ -15,7 +15,7 @@ Owners:
    It decides who may park in which campus bay. The decision depends on the person's category, permit validity, zone, opening hours, vehicle type, accessibility, occupancy, reservations and conflicts. Every decision comes with a proof or a reason for refusal.
 
 2. Why does this domain need KRR and not just a database?
-   A database only returns stored rows. It cannot derive that a faculty member is a person, it has no inheritance with defaults, its rules are hidden in application code, and it cannot explain its answers. Our system derives new facts from 28 explicit rules and explains every decision (report section 2.6).
+   A database only returns stored rows. It cannot derive that a faculty member is a person, it has no inheritance with defaults, its rules are hidden in application code, and it cannot explain its answers. Our system derives new facts from 28 explicit rules and explains every decision (report section 2.2.4).
 
 3. What is a knowledge base?
    A set of facts and rules that represent what is known about a domain. Ours has 154 base facts (142 from frames plus 12 policy facts), per-scenario context facts, 28 Horn rules and 7 constraints, all in krr/knowledge_base.
