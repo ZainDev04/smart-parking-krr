@@ -37,18 +37,20 @@ DPI = 300
 SS = 2                      # draw at 2x and downsample for smooth lines
 PX = DPI * SS / 2.54        # canvas pixels per cm
 
-INK = "#0f172a"
-LINE = "#334155"
-MUTED = "#475569"
-FAIL = "#b91c1c"
+# black and white, like a diagram drawn by hand in draw.io or Visio
+INK = "#000000"
+LINE = "#000000"
+MUTED = "#404040"
+FAIL = "#000000"
+WHITE = ("#ffffff", "#000000")
 PALETTE = {
-    "plain": ("#ffffff", "#475569"),
-    "panel": ("#f1f5f9", "#94a3b8"),
-    "class": ("#dbeafe", "#1e40af"),
-    "value": ("#fef3c7", "#b45309"),
-    "instance": ("#dcfce7", "#15803d"),
-    "store": ("#ede9fe", "#6d28d9"),
-    "out": ("#fee2e2", "#b91c1c"),
+    "plain": WHITE,
+    "panel": ("#ffffff", "#808080"),
+    "class": WHITE,
+    "value": WHITE,
+    "instance": WHITE,
+    "store": WHITE,
+    "out": WHITE,
 }
 
 FONT_FILES = {
@@ -195,8 +197,11 @@ class Figure:
         elif b.shape == "pill":
             d.rounded_rectangle([x0, y0, x1, y1], radius=(y1 - y0) / 2, fill=fill,
                                 outline=stroke, width=lw)
+        elif b.shape == "soft":
+            d.rounded_rectangle([x0, y0, x1, y1], radius=0.16 * PX, fill=fill,
+                                outline=stroke, width=lw)
         elif b.shape == "round":
-            d.rounded_rectangle([x0, y0, x1, y1], radius=0.14 * PX, fill=fill,
+            d.rounded_rectangle([x0, y0, x1, y1], radius=0.06 * PX, fill=fill,
                                 outline=stroke, width=lw)
         elif b.shape == "cyl":
             e = 0.12 * PX
@@ -336,7 +341,7 @@ def legend_item(fig: Figure, x: float, y: float, sample: str, text: str) -> None
     elif sample == "slot":
         fig.arrow([(x, y), (x + 0.8, y)])
     elif sample == "dashed":
-        fig.arrow([(x, y), (x + 0.8, y)], dashed=True, color="#15803d")
+        fig.arrow([(x, y), (x + 0.8, y)], dashed=True)
     fig.text(x + 0.95, y, text, "note", "lm")
 
 
@@ -565,7 +570,7 @@ def _net_figure(net, pos: dict[str, tuple[float, float]], width: float, height: 
     assert not missing, f"{name} layout does not place {missing}"
     label_at = label_at or {}
     fig = Figure(width, height)
-    shape = {"class": "rect", "value": "pill", "instance": "round"}
+    shape = {"class": "rect", "value": "pill", "instance": "soft"}
     for n, kind in net.nodes.items():
         w = text_width(n, "body") + (0.44 if kind == "value" else 0.28)
         h = line_height("body") + 0.2
@@ -574,7 +579,7 @@ def _net_figure(net, pos: dict[str, tuple[float, float]], width: float, height: 
         fig.boxes[n] = Box(cx - w / 2, cy - h / 2, w, h, shape[kind])
     for e in net.edges:
         dashed = e.label == "instance-of"
-        color = "#15803d" if dashed else ("#1e40af" if e.label == "is-a" else LINE)
+        color = LINE
         at, off = label_at.get((e.source, e.label, e.target), (0.5, (0, 0)))
         text = None if e.label in quiet else e.label
         fig.link(e.source, e.target, text, dashed=dashed, color=color, at=at, offset=off)
@@ -585,7 +590,7 @@ def _net_figure(net, pos: dict[str, tuple[float, float]], width: float, height: 
     if legend:
         x, y, horizontal = legend
         rows = [("class", "rect", "class"), ("value", "pill", "value"),
-                ("instance", "round", "individual")]
+                ("instance", "soft", "individual")]
         for kind, shp, text in rows:
             if kind not in net.nodes.values():
                 continue
