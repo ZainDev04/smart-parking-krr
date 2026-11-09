@@ -110,21 +110,21 @@ RUBRIC = [
 PROJECT_TITLE = "Smart Parking Access & Space Allocation Reasoning System"
 SELECTED_DOMAIN = "Smart parking: campus parking access and space allocation"
 SECTION = "A"
-SUBMISSION_DATE = "8 November 2026"
+SUBMISSION_DATE = "9 November 2026"
 INSTRUCTOR = "Miss Dure Shahwar"
 GROUP_REPRESENTATIVE = "Shaikh Muhammad Zain (AI-23306)"
 
-# colours and fonts measured from the template PDF
+# fonts and sizes from the template PDF; colours kept to black and grey
 FONT = "Arial"
 MONO = "Consolas"
 CODE_WIDTH = 108
-NAVY = "17365D"
-BLUE = "2F75B5"
+NAVY = "000000"
+BLUE = "000000"
 MUTED = "666666"
-LABEL_FILL = "D9EAF7"
-BORDER = "9EADBD"
-HEAD_FILL = NAVY
-CODE_FILL = "F3F4F6"
+LABEL_FILL = "F2F2F2"
+BORDER = "808080"
+HEAD_FILL = "D9D9D9"
+CODE_FILL = "F2F2F2"
 
 
 # --------------------------------------------------------------------------------
@@ -311,7 +311,7 @@ def mark_size(p, pt: float) -> None:
 
 
 def grid(t) -> None:
-    """Thin grey-blue borders, as in the template's tables."""
+    """Thin grey borders, as in the template's tables."""
     t.style = "Table Grid"
     tblpr = t._tbl.tblPr
     old = tblpr.find(qn("w:tblBorders"))
@@ -334,7 +334,7 @@ def head_cell(cell, text: str, size: float = 9, center: bool = False) -> None:
     r = cell.paragraphs[0].add_run(text)
     r.bold = True
     r.font.size = Pt(size)
-    r.font.color.rgb = RGBColor.from_string("FFFFFF")
+    r.font.color.rgb = RGBColor.from_string("000000")
     if center:
         cell.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
     shade(cell._tc, HEAD_FILL)
@@ -451,7 +451,7 @@ def footer(doc, sec) -> None:
     p.style = doc.styles["Footer"]
     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
     width = sec.page_width - sec.left_margin - sec.right_margin
-    rule(p, "D5DDE6", "top", 4)
+    rule(p, "BFBFBF", "top", 4)
     doc.styles["Footer"].paragraph_format.tab_stops.clear_all()
     p.paragraph_format.tab_stops.add_tab_stop(width, WD_TAB_ALIGNMENT.RIGHT)
     p.add_run("CT-351 | Knowledge Representation & Reasoning | CCP Report\tPage ")
