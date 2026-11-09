@@ -15,7 +15,7 @@ so the report always shows what the engines actually do:
     {{horn_table}} {{cycles}} {{fwd_initial GOAL}} {{fwd_table GOAL}} {{conflict_table}}
     {{bwd_table SCENARIO GOAL}}
     {{decisions}} {{test_table}} {{facts_compact}} {{prolog_rules}} {{all_firings}}
-    {{include PATH}} {{tree}} {{screens}} {{participation}} {{pagebreak}}
+    {{include PATH}} {{tree}} {{screens}} {{pagebreak}}
     {{stat NAME}}
 
 "Table: caption" on the line before a table or table directive adds a numbered
@@ -934,18 +934,6 @@ def screens(doc, ctx) -> None:
         image(doc, ctx, DOCS / "screenshots" / f"{name}.png", text)
 
 
-def participation(doc, ctx) -> None:
-    viva = {
-        "AI-23022": "Problem, frames, script demo",
-        "AI-23036": "Semantic network, DL reasoner demo",
-        "AI-23037": "Horn rules, forward chaining demo",
-        "AI-23306": "Backward chaining, UI, test cases demo",
-    }
-    rows = [[f"{n} ({r})", ev, viva[r]] for n, r, _, _, ev in TEAM]
-    table(doc, ctx, ["Member", "Report sections and code", "Viva presentation part"], rows,
-          [4.2, 7.8, 4.5], font=8.5)
-
-
 def tree() -> str:
     """Directories one per line, with their files listed after them."""
     skip = {"__pycache__", "png", "generated", "screenshots", "viva", "diagrams", "report"}
@@ -958,7 +946,8 @@ def tree() -> str:
         if not files and not any(path.iterdir()):
             return                  # empty folder
         if not files:               # list the sub-folders that are not expanded
-            files = sorted(d.name + "/" for d in path.iterdir() if d.is_dir())
+            files = sorted(d.name + "/" for d in path.iterdir()
+                           if d.is_dir() and d.name != "viva")
         name = "smart-parking-krr/" if depth == 0 else "  " * depth + path.name + "/"
         lines.append(f"{name:<24}{', '.join(files)}")
         if path.name == "docs":
@@ -1100,7 +1089,7 @@ def directive(doc, ctx: Ctx, d: str) -> None:
         "conflict_table": conflict_table, "decisions": decisions, "test_table": test_table,
         "facts_compact": facts_compact, "prolog_rules": prolog_rules,
         "prolog_tail": prolog_tail,
-        "all_firings": all_firings, "screens": screens, "participation": participation,
+        "all_firings": all_firings, "screens": screens,
         "declaration": declaration,
     }
     if name in simple:

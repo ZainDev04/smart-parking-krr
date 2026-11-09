@@ -344,24 +344,24 @@ The DL reasoner uses the open-world assumption. Usman holds a permit, but nothin
 
 # 5. HORN CLAUSE KNOWLEDGE BASE
 
-### 5.1 Knowledge base
+## 5.1 Knowledge base
 
 The knowledge base of the main scenario has {{stat facts}} base facts: 142 from the frames, 12 policy facts (grants/2, fits/2, open_type/1) and 10 context facts (date, hour and eight requests). Forward chaining adds {{stat derived}} derived facts such as permit_valid, zone_access, priority and allocate. Base facts are never changed by the rules; derived facts are recomputed on every run, so a change in the data always gives a fresh, consistent result.
 
-### 5.2 Facts
+## 5.2 Facts
 
 A fact is a Horn clause with no body. All {{stat facts}} facts of the main scenario, in groups:
 
 {{facts_compact}}
 
-### 5.3 Rules
+## 5.3 Rules
 
 A rule is a definite Horn clause: exactly one positive literal (the head) and one or more body literals. The 28 rules fall into eight groups: class hierarchy (R01-R05), permits and authorization (R06-R11), zones and time (R12-R13), suitability and eligibility (R14-R16), availability (R17-R20), priority (R21-R24), conflicts (R25-R27) and the decision (R28). A Horn clause with no positive literal is a denial, written `:- body.`, which says the body must never be true. IC1-IC7 are checked after every forward-chaining run.
 
 Table: Horn rule base and constraints
 {{horn_table}}
 
-### 5.4 Horn clause conversion
+## 5.4 Horn clause conversion
 
 Each requirement went through four steps: an if-then sentence, an FOL formula, a rewrite so that the conclusion is a single atom, and Prolog syntax. Three examples:
 
@@ -373,7 +373,7 @@ Each requirement went through four steps: an if-then sentence, an FOL formula, a
 
 Other negative requirements are handled positively. "Occupied bays cannot be allocated" becomes "only vacant bays, or bays reserved for the requester, can be allocated" (R19, R20), and IC3 confirms the outcome. The built-in comparisons ≥, >, < and ≠ are evaluated, never stored, as in Prolog.
 
-### 5.5 Prolog form
+## 5.5 Prolog form
 
 The rule table in section 5.3 is printed from krr/knowledge_base/rules.py, the same objects the engines run, so it cannot differ from the code. The generated SWI-Prolog program prolog/smart_parking.pl holds the same 28 clauses in the same order. R01-R27 are written there exactly as in the table; the parts that change in Prolog are shown below: R28 writes `not` as `\+`, each denial constraint becomes a `violation/1` clause, and two helper predicates check consistency and print the allocations.
 
@@ -484,7 +484,7 @@ Queries with variables return every answer: `?- can_allocate(ahmed, S).` gives S
 
 ## 7.1 Tools and Technologies
 
-The system is written in Python 3.10 or newer (tested on 3.10, 3.12 and 3.14). The reasoning engines, CLI and tests use only the standard library, so anyone can run them without installing anything and every line of the reasoning is ours to explain in the viva. Streamlit provides the web interface, python-docx builds this report, Pillow draws its figures at print size (tools/figures.py), Mermaid draws the diagrams kept in the repository, and the knowledge base is also exported to SWI-Prolog and to OWL 2 (Turtle) for Protégé. The project website uses Three.js for its 3D scene and Pyodide to run the engine in the browser (section 7.2.9). GitHub Actions runs the tests on every push.
+The system is written in Python 3.10 or newer (tested on 3.10, 3.12 and 3.14). The reasoning engines, CLI and tests use only the standard library, so anyone can run them without installing anything. Streamlit provides the web interface, python-docx builds this report, Pillow draws its figures at print size (tools/figures.py), Mermaid draws the diagrams kept in the repository, and the knowledge base is also exported to SWI-Prolog and to OWL 2 (Turtle) for Protégé. The project website uses Three.js for its 3D scene and Pyodide to run the engine in the browser (section 7.2.9). GitHub Actions runs the tests on every push.
 
 ## 7.2 Code / Execution
 
@@ -579,7 +579,7 @@ Two features run the real engine in the browser. Pyodide, a build of CPython for
 - Scenario clock. Any date and hour can be chosen. krr/site_export.py rebuilds the main scenario with new current_date and current_hour facts and runs forward chaining again. At 23:00, for example, every zone is closed and no request is allocated, and on 3 October 2026 Bilal's one-day pass fails R06.
 - Add a driver. A form asks for name, role, vehicle, permit state, bay, arrival time and accessibility badge. The answers become the same kind of facts the frames give the built-in drivers, such as student(omar), owns(omar, veh_omar), permit_start(pm_omar, D) and requests(omar, s_a1, 905). The engine then decides every request again, and Ask why shows the new driver's proof or the first condition that failed (section 7.2.8).
 
-The second feature lets an examiner describe a new case and see it answered with a proof built from our rules. tests/test_site_export.py checks both features with the same unittest suite as the rest of the system.
+The second feature lets a user describe a new case and see it answered with a proof built from our rules. tests/test_site_export.py checks both features with the same unittest suite as the rest of the system.
 
 # 8. RESULTS AND DISCUSSION
 
@@ -688,7 +688,5 @@ Each member owned one part of the system from design to code to report section. 
 
 Table: Team contributions
 {{contributions}}
-
-In the viva each member presents and demonstrates their own part: Syed Mohmmad Huzaifa the problem, frames and script; Maaz ur Rehman the semantic network and DL reasoner; Owais Tariq the Horn rules and forward chaining; Shaikh Muhammad Zain backward chaining, the interface and the test cases. Each member also prepares the complete system for the individual viva.
 
 {{declaration}}
